@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block predata %}
+	<link rel="stylesheet" type="text/css" href="{% static "css/option.css" %}">
+	<link rel="stylesheet" type="text/css" href="{% static "css/option_2.css" %}">
+	<link rel="stylesheet" type="text/css" href="{% static "css/following.css" %}">
+	<script type="text/javascript" src="{% static "js/following.js"%}"></script>
+	
+{% endblock %}
+	
+{% block content %}
+	{% include "option.html" %}
+	<div>
+		{% for story,person in list %}
+			<div class = "col-lg-12">
+				<div class = "col-lg-1">
+				{% if person.user_image %}
+					{% thumbnail person.user_image "330x330" crop="center" as im %}
+						<img class = "img-circle img-responsive user-pic" style="height: 60px; width: 60px;"  src = "{{im.url}}"/> 
+					{% endthumbnail %}
+				{% else %}
+						<img class = "img-circle img-responsive user-pic" style="height: 60px; width: 60px;"  src = "{{MEDIA_URL}}media/default/DefaultIconBlack_1.png" data-toggle="dropdown" /> 
+				{% endif %}
+				</div>
+				<div class = "col-lg-6" style = " display: table; ">
+				<h3 style = "padding:0;">
+					<a href = "/profile?u={{person.user1}}" >
+						{{person.user1}} 
+					</a>
+					<span>{{person.content}}&nbsp;</span>  
+					{% if person.user2 %}
+						<a href = "/profile?u={{person.user2}}" >
+							{{person.user2}} 
+						</a>	
+				</h3>
+				<h6>{{person.time}} ago</h6>
+				</div>
+					{% else %}
+				</h3>
+				<h6>{{person.time}} ago</h6>
+				</div>
+				<div class = "col-lg-1">
+						{% thumbnail person.story "330x330" crop="center" as im %}
+							<a href = "/stories/read/?s={{story.storyid}}"><img class = "img-rounded img-responsive" style="height: 60px; width: 60px;"  src = "{{im.url}}" /></a>
+						{% endthumbnail %}
+					{% endif %}
+				</div>
+			
+				<div class = "col-lg-12">
+					<hr>
+				</div>
+			</div>
+
+		{% endfor %}
+
+	</div>
+{% endblock %}
+{% block footer %}
+footer
+{% endblock %}

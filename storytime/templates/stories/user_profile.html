@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block predata %}
+	<link rel="stylesheet" type="text/css" href="{% static "css/user_profile.css" %}">
+	<script type="text/javascript" src="{% static "js/user_profile.js"%}"></script>
+{% endblock %}
+{% block content %}
+	<br>
+	<div class = "row">
+		<div class = "col-lg-8 col-lg-push-2">
+			<div class = "col-lg-4" style = "display:block;">	
+					{% if profile.profile_pic.image %}
+						{% thumbnail profile.profile_pic.image "330x330" crop="center" as im %}
+							<img class = "img-circle img-responsive user-pic" style="height: 130px; width: 130px"  src = "{{im.url}}" data-toggle="dropdown" /> 
+						{% endthumbnail %}
+					{% else %}
+						<img class = "img-circle img-responsive user-pic" style="height: 130px; width: 130px"  src = "{{MEDIA_URL}}media/default/DefaultIconBlack_1.png" data-toggle="dropdown" /> 
+					{% endif %}
+			</div>
+			<div class = "col-lg-8 userinfo">
+				<div class = "row">
+					<div class = "col-lg-8">
+						<h2 class = "text-green">{{person.username}}</h2>
+					</div>
+					<div class = "col-lg-4 button">
+					{% if item == "User" %}
+						<a href = "/stories/create_stories/">
+							<button type="button" class="btn btn-success item">New Story</button>
+						<a>
+					{% elif item == "Follow" %}
+						<button type="button" class="btn btn-success item" id = "follow" value = "{{person.username}}">Follow</button>
+					{% elif item == "Unfollow" %}
+						<button type="button" class="btn btn-success item" id = "unfollow" value = "{{person.username}}">Unfollow</button>
+					{% endif %}
+					</div>
+				</div>
+				<div class = "row">
+					<div class = "col-lg-4">
+						<div class = "info">
+							<h5 class = "text-black" >Story</h5>
+							<h5 class = "text-green">{{storycount}}</h5>
+						</div>
+					</div>
+					<div class = "col-lg-4">
+						<div class = "info">
+							<h5 class = "text-black">Reading</h5>
+							<h5 class = "text-green" >{{followingcount}}</h5>
+						</div>
+					</div>
+					<div class = "col-lg-4">
+						<div class = "info">
+							<h5 class = "text-black" >Reader</h5>
+							<h5 class = "text-green" >{{followerscount}}</h5>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<br>
+	<div class = "row">
+		<div class = "col-lg-8 col-lg-push-2">
+			{% for story,image in list %}
+			<div class = "col-lg-4" style ="margin-top:20px;">
+				<a class = "story" href = "/stories/read/?s={{story.storyid}}">
+					{% thumbnail image.source "330x330" crop="center" as im %}
+						<img class = "img-responsive img-rounded"  src="{{im.url}}" ">
+					{% endthumbnail %}
+				</a>
+				<h4 style = "text-align: center">{{story.title}}<h4>
+				
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+{% endblock %}

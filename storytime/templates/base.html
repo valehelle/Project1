@@ -1,0 +1,107 @@
+{% load i18n %}
+{% load staticfiles %}
+{% load thumbnail %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<link rel="icon" href="../../favicon.ico">
+		<title>Mementho</title>
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">	
+		<!-- Latest compiled and Google JavaQuery -->
+		<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+				<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="{% static "css/base.css" %}">
+		<script type="text/javascript" src="{% static "js/base.js"%}"></script>
+		{% block predata %}	
+		<!--Depend on the page it will upload its own css and javascript -->
+		{% endblock %}
+    </head>
+<body>
+    <div id="header" class = "navbar-fixed-top">
+    {% block header %}
+		<div class="container-fluid">
+			<div class = "row " style="background-image:url({% static "image\welcome_header\header_background.jpg" %})" >
+				<div class="col-lg-1 col-md-2 col-xs-12 col-lg-push-1 ">
+					<a href = "/">
+					<img class = "img-responsive btn btn-success" src = "{% static "image\welcome_header\MT-Logo.png" %}"  style="height: 60px; margin-left:auto;margin-right:auto; padding: 0px;" />
+					</a>
+				</div>
+				<div id = "search_bar" class="col-lg-5 col-lg-push-1" >
+					<div id = "search_bar" class="input-group">
+						<input type="text" class="form-control" placeholder="Search User">
+							<span class="input-group-btn">
+								<button type="button" class="btn btn-default btn-md">
+									<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+								</button>
+							</span>
+						</input>
+					</div><!-- /input-group -->
+				</div>
+				<div class="col-lg-2 col-lg-push-1 notification">
+					<div class = "row "  data-toggle="dropdown" data-target="#">
+						<div class="col-lg-12 button">
+							<button class="btn btn-primary" type="button" id = "notificationbutton">Notification
+							<span id = "count">{{count}}</span></button>
+						</div>
+					</div>
+					
+					<ul class="dropdown-menu">
+						{% for noti in notification %}
+							<li>
+								{% if noti.story %}
+									<a href = "/stories/read/?s={{noti.story}}"><h4>{{noti.username}} {{noti.topic}}</h4></a>
+								{% else %}
+									<a href = "/profile?u={{noti.username}}"><h4>{{noti.username}} {{noti.topic}}</h4></a>
+								{% endif %}
+							</li>
+						{% endfor %}
+						<li>
+						<hr>
+						<a href = "/notifications"><h4>See more notification<h4></a>
+						</li>
+					</ul>	
+				</div>
+				<div id = "username" class="col-lg-1 col-lg-push-1">
+					<a href = "/profile?u={{ user.username }}" style = " text-decoration: none;">
+						<h4 class = "text-white">{{ user.username }}</h4> 
+					</a>
+				</div>
+				<div class="col-lg-1 col-lg-push-1" style = "cursor: pointer;" >
+					{% if profile.profile_pic.image %}
+						{% thumbnail profile.profile_pic.image "330x330" crop="center" as im %}
+							<img class = "img-circle img-responsive user-pic" style="height: 50px; width: 50px"  src = "{{im.url}}" data-toggle="dropdown" data-target="#"/> 
+						{% endthumbnail %}
+					{% else %}
+						<img class = "img-circle img-responsive user-pic" style="height: 50px; width: 50px"  src = "{{MEDIA_URL}}media/default/DefaultIconBlack_1.png" data-toggle="dropdown" /> 
+					{% endif %}
+					<ul class="dropdown-menu dropdown-menu-right">
+						<li><a href="/profile/edit">Edit Profile</a></li>
+						<li><a href="/profile/edit/image">Edit Profile Picture</a></li>
+						<li><a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
+						<li><a href="{% url 'auth_password_change' %}">{% trans "Change password" %}</a></li>
+					  </ul>		
+				</div>
+			</div>
+		</div>
+    {% endblock %}
+    </div>
+    <div id="content">
+	<!-- Single button -->
+		<div class= "row" >
+			<div class = "col-lg-8 col-lg-push-2" id = "storyboard" style = "min-height: 100vh;">
+				{% block content %}{% endblock %}
+			</div>
+		</div>
+    </div>
+
+	
+</body>
+
+</html>

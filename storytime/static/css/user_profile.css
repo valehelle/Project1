@@ -1,0 +1,37 @@
+.info{
+	background:#eeffd7;
+	text-align: center;
+	border-radius: 10px;
+}
+.info h5{
+	font-weight: bold;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+.text-green{
+	color : #80c90a
+}
+.text-black{
+	color : black
+}
+.userinfo{
+	margin-top: -10px;
+}
+.border{
+  border-style: solid;
+  border-width: 1px;
+}
+.story{
+  cursor: pointer;
+}
+.item{
+	margin-top: 20px;
+	color: #80c90a
+	text-color:white;
+	width: 100%;
+}
+.btn-success {
+    background: #9ed54c;
+	border-color: #9ed54c;
+    color: #ffffff;
+}

@@ -1,0 +1,56 @@
+.square{
+    position:relative;
+    overflow:hidden;
+    padding-bottom:100%;
+	margin-bottom: 20px;
+	text-decoration:none;
+	color:#000;
+	background:#ffc;
+	 /* Firefox */
+	-moz-box-shadow:5px 5px 7px rgba(33,33,33,1);
+	/* Safari+Chrome */
+	-webkit-box-shadow: 5px 5px 7px rgba(33,33,33,.7);
+	/* Opera */
+	box-shadow: 5px 5px 7px rgba(33,33,33,.7);
+	/*box-shadow: 5px 4px 8px -2px rgba(0,0,0,1);*/
+	font-family: 'Architects Daughter', cursive;
+	
+}
+
+.square h4{
+    position:absolute;
+	color: black;
+	text-align: justify;
+    text-justify: inter-word;
+	margin-left:10px;
+	margin-right:10px;
+
+}
+.text_inside h2{
+	text-align: justify;
+    text-justify: inter-word;
+	margin-left:10px;
+	margin-right:10px;
+}
+.square img{
+    position:absolute;
+
+}
+.link{
+	margin-top: 100px;
+}
+
+
+.no-gutter {
+    padding-left:0;
+	margin-bottom:-1.5%;
+}
+.verticaldot{
+	margin-bottom: 20px;
+}
+#id_honeypot {
+    display: none;
+}
+#id_comment{
+	rows: 3
+}

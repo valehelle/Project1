@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block predata %}
+	<link rel="stylesheet" type="text/css" href="{% static "css/notification.css" %}">
+	<link rel="stylesheet" type="text/css" href="{% static "css/option.css" %}">
+	<script type="text/javascript" src="{% static "js/notification.js"%}"></script>
+	
+{% endblock %}
+	
+{% block content %}
+	{% include "option.html" %}
+	<div>
+		<div id = "notification">
+			{% for item in mainnotification %}
+				<div class = "col-lg-12" >
+						<div class = "col-lg-1">
+						{% if item.image %}
+							{% thumbnail item.image "330x330" crop="center" as im %}
+								<img class = "img-circle img-responsive user-pic" style="height: 60px; width: 60px"  src = "{{im.url}}" data-toggle="dropdown" data-target="#"/> 
+							{% endthumbnail %}
+						{% else %}
+							<img class = "img-circle img-responsive user-pic" style="height: 60px; width: 60px"  src = "{{MEDIA_URL}}media/default/DefaultIconBlack_1.png" data-toggle="dropdown" /> 
+						{% endif %}
+						</div>
+					{% if item.story %}
+						<div class = "col-lg-6">
+							<h3><a href = "/profile?u={{item.username}}">{{item.username}}</a> {{item.topic}}<h6>{{item.time}} ago</h6></h3>
+						</div>
+						<div class = "col-lg-1">
+							{% thumbnail item.story_image "330x330" crop="center" as im %}
+								<a href = "/stories/read/?s={{item.story}}"><img class = "img-rounded img-responsive" style="height: 60px; width: 60px;"  src = "{{im.url}}" /></a> 
+							{% endthumbnail %}
+						</div>
+					{% else %}
+						<div class = "col-lg-6">
+							<h3><a href = "/profile?u={{item.username}}">{{item.username}}</a> {{item.topic}}<h6>{{item.time}} ago</h6></h3>
+						</div>
+					{% endif %}
+					<div class = "col-lg-12">
+						<hr>
+					</div>
+					
+				</div>
+			{% endfor %}
+		</div>
+		<div class = "row">
+				<button type="button" class="btn btn-success col-lg-8 col-lg-push-2" id = "notification">Load more notification</button>
+		</div>
+		<br>
+	</div>
+
+{% endblock %}
+{% block footer %}
+footer
+{% endblock %}

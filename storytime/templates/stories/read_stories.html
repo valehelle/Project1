@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% load comments %}
+{% block predata %}
+	<link rel="stylesheet" type="text/css" href="{% static "css/read_stories.css" %}">
+	<!-- Add mousewheel plugin (this is optional) -->
+	<script type="text/javascript" src="{% static "fancybox/lib/jquery.mousewheel-3.0.6.pack.js" %}"></script>
+	<!-- Add fancyBox -->
+	<link rel="stylesheet" href="{% static "fancybox/source/jquery.fancybox.css"%}?v=2.1.5" type="text/css" media="screen" />
+	<script type="text/javascript" src="{% static "fancybox/source/jquery.fancybox.pack.js"%}?v=2.1.5"></script>
+	<script type="text/javascript" src="{% static "js/read_stories.js"%}"></script>
+	<link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+{% endblock %}
+{% block content %}
+		<br>
+		<div class = "row">
+			<div class = "col-lg-2 col-lg-push-3">
+					{% if author.profile_pic.image %}
+						{% thumbnail author.profile_pic.image "330x330" crop="center" as im %}
+							<img class = "img-circle img-responsive user-pic" style="height: {{im.height}} width: {{im.width}}"  src = "{{im.url}}" data-toggle="dropdown" /> 
+						{% endthumbnail %}
+					{% else %}
+						<img class = "img-circle img-responsive user-pic" style="height: {{im.height}} width: {{im.width}}"  src = "{{MEDIA_URL}}media/default/DefaultIconBlack_1.png" data-toggle="dropdown" /> 
+					{% endif %}
+			</div>
+			<div class = "col-lg-4 col-lg-push-3">
+				<h1>{{story.title}}</h1>
+				<h2>Story by: {{author.username}} </hr>
+				<br>
+			</div>
+		</div>
+		<br>
+		<hr>
+		<br>
+		<div class = "row" >
+			<div class = "col-lg-11 ">
+				{% for item in items %}
+					<div class = "col-lg-3 {% cycle  'col-lg-push-1' 'col-lg-push-1' 'col-lg-push-1' 'col-lg-push-9' 'col-lg-push-1' 'col-lg-pull-7'%}" >
+						{% if item.text %}
+							<div class="item square img-rounded text1" >
+								<h4 class = "text-center">{{item.text}}</h4>
+							</div>
+							<div style="display: none;">									
+								<a  class="fancybox-thumb" rel="fancybox-thumb" href="#inline{{forloop.counter}}" title="" >Inline</a>
+								<div class = "text_inside" id="inline{{forloop.counter}}" style="width:400px;height:400px;overflow:auto;">
+									<h2 >{{item.text}}</h2>
+								</div>		
+							</div>
+						{% elif item.source %}
+							 <div class = "item square text1">
+								{% thumbnail item.source "330x330" crop="center" as im %}
+								<img class = "img-responsive"  src="{{im.url}}" width="{{im.width}}" height="{{im.height}}">
+								{% endthumbnail %}
+							</div>
+								<div style="display: none;">
+								{% thumbnail item.source "x700" as im %}
+									<a class="fancybox-thumb" rel="fancybox-thumb" href="{{im.url}}" title="" width="{{im.width}}" height="{{im.height}}">
+										<img src="{{im.url}}" width="{{im.width}}" height="{{im.height}}" />
+									</a>
+								{% endthumbnail %}
+		
+								</div>
+						{% endif %}
+					</div> 
+						{% if forloop.last %}
+						
+						{% else %}
+						{% cycle '<div class = "col-lg-1 col-lg-push-1 link"><img class="img-responsive" src = "/static/image/welcome_header/smalldot.png"/></div>' '<div class = "col-lg-1 col-lg-push-1 link"><img class="img-responsive" src = "/static/image/welcome_header/smalldot.png"/></div>' '<div class = "col-lg-11 col-lg-push-1 verticaldot"><div class = "col-lg-1 col-lg-push-10"><img class="img-responsive verticalimage" src = "/static/image/welcome_header/verticaldot.png" style="height:50px;"/></div></div>' '<div class = "col-lg-1 col-lg-push-1 link"><img class="img-responsive" src = "/static/image/welcome_header/smalldot.png"/></div>' '<div class = "col-lg-1 col-lg-push-1 link"><img class="img-responsive" src = "/static/image/welcome_header/smalldot.png"/></div>' '<div class = "col-lg-11 col-lg-push-1 verticaldot"><div class = "col-lg-1 col-lg-push-1"><img class="img-responsive verticalimage" src = "/static/image/welcome_header/verticaldot.png" style="height:50px;"/></div></div>'%}
+						{% endif %}
+				{% endfor %}
+			</div>
+			<div class = "row">
+				<div class ="col-lg-2 col-lg-push-5 button">
+				<button type="button" class="btn btn-success" id = "star" value = "{{story.storyid}}">Star <span>{{story.starcount}}</span></button>
+				</div>
+				<div class ="col-lg-12">
+				<hr>
+				</div>
+				<div class = "col-lg-10 col-lg-push-2">
+					<div class = "col-lg-10 button">
+					<button type="button" class="btn btn-success col-lg-12" id = "oldercomment" value = "{{story.storyid}}" >Load more comment</button>
+					</div>
+					<div class = "col-lg-10">
+						<br>
+						<hr>
+					</div>
+					<div id = "comment">
+						{% for comment in comments %}
+							<div class = "col-lg-10">
+								<div class = "col-lg-1" style = "padding-left:0px; padding-right:0px; ">
+									{% if comment.image %}
+										{% thumbnail comment.image "330x330" crop="center" as im %}
+											<img class = "img-circle img-responsive user-pic" style="height:60px; width: 60px; "  src = "{{im.url}}" /> 
+										{% endthumbnail %}
+									{% else %}
+										<img class = "img-circle img-responsive user-pic" style="height:60px;  width: 60px; "  src = "{{MEDIA_URL}}media/default/DefaultIconBlack_1.png" /> 
+									{% endif %}
+								</div>
+								<div class = "col-lg-10">
+									<h4><a href = "/profile?u={{comment.username}}">{{comment.username}}</a> {{comment.comment}}</h4><h6>{{ comment.time}} ago</h6>
+								</div>
+							</div>
+							<div class = "col-lg-10">
+								<hr>
+							</div>
+						{% endfor %}
+					</div>
+					<div class = "col-lg-10 col-lg-push-1">
+						{% if user.is_authenticated %}
+							{% get_comment_form for story as form %}
+							<div id="comment_form">
+								<form action="{% comment_form_target %}" method="POST">
+								{% csrf_token %}
+								<div class = "col-lg-8">
+								<textarea class="form-control" id="id_comment" maxlength="3000" name="comment" rows="1" style="overflow:hidden"></textarea>
+								</div>
+								{{ form.honeypot }}
+								{{ form.content_type }}
+								{{ form.object_pk }}
+								{{ form.timestamp }}
+								{{ form.security_hash }}
+								<div class = "button">
+									<button type="button" class="btn btn-success" id = "id_submit">Comment</button>
+								</div>
+								</form>
+							</div>
+						{% else %}
+							<p>Please <a href="{% url 'auth_login' %}">log in</a> to leave a comment.</p>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	<br>	
+{% endblock %}
+{% block footer %}
+
+{% endblock %}

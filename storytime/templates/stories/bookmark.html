@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block predata %}
+	<link rel="stylesheet" type="text/css" href="{% static "css/option.css" %}">
+	<link rel="stylesheet" type="text/css" href="{% static "css/option_4.css" %}">
+	<link rel="stylesheet" type="text/css" href="{% static "css/feed.css" %}">
+	<script type="text/javascript" src="{% static "js/feed.js"%}"></script>
+	
+{% endblock %}
+	
+{% block content %}
+	{% include "option.html" %}
+	<div class = "row">
+		{% for story,image in list %}
+			<div class = "col-lg-4" style ="margin-top:20px;">
+
+					<div class = "col-lg-12" >
+						<a class = "story" href = "/stories/read/?s={{story.storyid}}" >
+							{% thumbnail image.story "330x330" crop="center" as im %}
+								<img class = "img-responsive img-rounded"  src="{{im.url}}" style = "text-align:center;">
+							{% endthumbnail %}
+						</a>
+					</div>
+					
+					<div class = "col-lg-12">
+						<h3 style = "text-align: center">{{story.title|truncatechars:30}}</h3>
+					</div>
+					<div class = "col-lg-12">
+						<div class = "col-lg-2" style = "padding: 0;">
+							{% if image.user %}
+								{% thumbnail image.user "330x330" crop="center" as im %}
+									<img class = "img-circle img-responsive user-pic" style="height: 50px; width: 50px;"  src = "{{im.url}}" data-toggle="dropdown" data-target="#"/> 
+								{% endthumbnail %}
+							{% else %}
+								<img class = "img-circle img-responsive user-pic" style="height: 50px; width: 50px;"  src = "{{MEDIA_URL}}media/default/DefaultIconBlack_1.png" data-toggle="dropdown" /> 
+							{% endif %}
+						</div>
+						<div class = "col-lg-10" style = "padding-left: 0;">
+							<div  class = "col-lg-7">
+								<h4>{{story.user.username}}</h4>
+								<h5>{{image.time}} ago</h5>
+							</div>
+							<div class = "col-lg-2" style="display: table; height: 50px; width: 50px; background-image:url({% static "image\story\CommentIcon.png" %}); background-size: 50px 50px; "><h4 class = "text-white" style= "display: table-cell; vertical-align: middle; text-align: center;  padding-top: 5px;">{{story.commentcount}}</h4></div>
+							<div class = "col-lg-2 col-lg-push-1" style=" display: table; height: 50px; width: 50px; background-image:url({% static "image\story\StarIcon.png" %}); background-size: 50px 50px;"><h4 class = "text-white" style= "display: table-cell; vertical-align: middle; text-align: center; padding-top: 5px;">{{story.starcount}}</h4></div>
+							
+						</div>
+					</div>
+			</div>
+
+		{% endfor %}
+
+	</div>
+{% endblock %}
+{% block footer %}
+footer
+{% endblock %}

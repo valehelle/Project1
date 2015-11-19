@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block predata %}
+	<link rel="stylesheet" type="text/css" href="{% static "css/user_edit.css" %}">
+	<script type="text/javascript" src="{% static "js/user_edit.js"%}"></script>
+{% endblock %}
+{% block content %}
+	<br>
+	<div class = "row">
+		<div class = "col-lg-3 col-lg-push-1">
+			<h1 id = "editprofile">Edit Profile</h1>
+		</div>
+		
+	</div>
+	<div class = "row">
+		<form  method="post">
+			{% csrf_token %} 
+			<div class = "col-lg-11 col-lg-push-1">
+				<label for="id_username">Name:</label>
+			</div>
+			<div class = "col-lg-6 col-lg-push-1 form-group">
+				<input id="id_username" maxlength="200" name="username" type="text" value = "{{profile.username}}" class="form-control">
+			</div>
+			<div class = "col-lg-11 col-lg-push-1">
+				<label for="id_desc">Profile Description:</label>
+			</div>
+			<div class = "col-lg-6 col-lg-push-1 form-group">
+				<textarea id="id_desc" maxlength="200" name="desc" type="text" class="form-control">{{profile.desc}}</textarea>
+			</div>
+			<div class = "col-lg-11 col-lg-push-1">
+				<input type="submit" value="Submit">
+			</div>
+		</form>
+		<a href = "/profile/edit/image" class ="col-lg-6"></a>
+	</div>
+
+{% endblock %}
