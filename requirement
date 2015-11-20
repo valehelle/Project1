@@ -1,0 +1,9 @@
+Django==1.8.4
+django-contrib-comments==1.6.1
+django-last-seen==0.3
+django-registration-redux==1.2
+git+https://github.com/valehelle/django-user-streams@f72d4ddbd5b104bed797ed1c848310e1fa55876e 
+mysql-python==1.2.5 
+Pillow==3.0.0 
+sorl-thumbnail==12.3 
+wheel==0.24.0
