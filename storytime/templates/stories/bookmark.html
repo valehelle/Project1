@@ -13,7 +13,7 @@
 	{% include "option.html" %}
 	<div class = "row">
 		{% for story,image in list %}
-			<div class = "col-lg-4" style ="margin-top:20px;">
+			<div class = "col-lg-4" style ="margin-top:30px;">
 
 					<div class = "col-lg-12" >
 						<a class = "story" href = "/stories/read/?s={{story.storyid}}" >
@@ -23,27 +23,32 @@
 						</a>
 					</div>
 					
-					<div class = "col-lg-12">
-						<h3 style = "text-align: center">{{story.title|truncatechars:30}}</h3>
+					<div class = "col-lg-12" style="min-height:60px;">
+						<h4 style = "text-align: center">{{story.title}}</h4>
 					</div>
-					<div class = "col-lg-12">
-						<div class = "col-lg-2" style = "padding: 0;">
+					<div class = "col-lg-12"  style="margin-bottom:20px;">
+						<div class = "col-lg-3" style = "padding: 0;">
 							{% if image.user %}
 								{% thumbnail image.user "330x330" crop="center" as im %}
-									<img class = "img-circle img-responsive user-pic" style="height: 50px; width: 50px;"  src = "{{im.url}}" data-toggle="dropdown" data-target="#"/> 
+									<img class = "img-circle img-responsive user-pic"  src = "{{im.url}}" data-toggle="dropdown" data-target="#"/> 
 								{% endthumbnail %}
 							{% else %}
-								<img class = "img-circle img-responsive user-pic" style="height: 50px; width: 50px;"  src = "{{MEDIA_URL}}media/default/DefaultIconBlack_1.png" data-toggle="dropdown" /> 
+								<img class = "img-circle img-responsive user-pic"  src = "{{MEDIA_URL}}media/default/DefaultIconBlack_1.png" data-toggle="dropdown" /> 
 							{% endif %}
 						</div>
-						<div class = "col-lg-10" style = "padding-left: 0;">
-							<div  class = "col-lg-7">
-								<h4>{{story.user.username}}</h4>
+						<div class = "col-lg-9" style = "padding-left: 0;">
+							<div  class = "col-lg-12">
+								<h4>by {{story.user.username}}</h4>
 								<h5>{{image.time}} ago</h5>
 							</div>
-							<div class = "col-lg-2" style="display: table; height: 50px; width: 50px; background-image:url({% static "image\story\CommentIcon.png" %}); background-size: 50px 50px; "><h4 class = "text-white" style= "display: table-cell; vertical-align: middle; text-align: center;  padding-top: 5px;">{{story.commentcount}}</h4></div>
-							<div class = "col-lg-2 col-lg-push-1" style=" display: table; height: 50px; width: 50px; background-image:url({% static "image\story\StarIcon.png" %}); background-size: 50px 50px;"><h4 class = "text-white" style= "display: table-cell; vertical-align: middle; text-align: center; padding-top: 5px;">{{story.starcount}}</h4></div>
-							
+						</div>
+					</div>
+					<div class = "col-lg-12 ">
+						<div class = "col-lg-12 btn btn-success text-green no-effect-hover" style="background-color:white; background-size: 40% 100%; background-repeat:no-repeat; margin-bottom:2px;">
+							{{story.commentcount}} comments
+						</div>
+						<div class = "col-lg-12 btn btn-success text-green no-effect-hover" style="background-color:white; background-size: 40% 100%; background-repeat:no-repeat;">
+							{{story.starcount}} stars
 						</div>
 					</div>
 			</div>

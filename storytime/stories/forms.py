@@ -4,7 +4,7 @@ from models import Text,Image,Story,User_Info,Profile_Image
 class StoryForm(forms.ModelForm):
 	class Meta:
 		model = Story
-		exclude =("user","id","datetime","like","storyid","starcount","complete")
+		exclude =("user","id","datetime","like","storyid","starcount","complete","commentcount")
 
 class TextForm(forms.ModelForm):
 	class Meta:
