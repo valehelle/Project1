@@ -111,8 +111,8 @@ def create_stories(request):
 			if not (request.POST.getlist('text') and request.FILES.getlist('source')):
 				from django.contrib import messages
 				messages.add_message(request, messages.WARNING, 'Please insert at least 1 text and 1 image')
-				return render_page(request,"create_stories.html","custom error")
-				
+				return render_page(request,"create_stories.html","custom error")	
+			print storyform
 			#Handle insertion for the title.
 			if storyform.is_valid():
 				story = storyform.save(commit = False)
