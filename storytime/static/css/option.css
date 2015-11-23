@@ -1,15 +1,21 @@
-#option > .btn-default > h3{
+#option > .btn-default > h5{
 	 color: #9ed54c;
 }
 
 #option .btn-default{
-	border-color: white;
+	margin-left:-48%;
+	border-top-right-radius: 4em;  border-bottom-right-radius: 4em;
+	width:140%;
+	margin-top:10px;
 }
 #option .btn-default:hover{
 	 background-color: #9ed54c;
 }
-#option .btn-default:hover > h3{
+#option .btn-default:hover > h5{
 	color : white;
-	border-color: white;
+
 }
 
+#option{
+	
+}

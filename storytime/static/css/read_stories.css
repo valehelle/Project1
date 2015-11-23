@@ -37,10 +37,12 @@
 
 }
 .link{
-	margin-top: 100px;
+	margin-top: 5%;
 }
 
-
+.item:hover{
+	cursor:pointer;
+}
 .no-gutter {
     padding-left:0;
 	margin-bottom:-1.5%;

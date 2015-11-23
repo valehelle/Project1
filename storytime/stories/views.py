@@ -212,9 +212,7 @@ def read_stories(request):
 		image = Image.objects.filter(storyid = story.id)
 		text = Text.objects.filter(storyid = story.id)
 		profile = User_Info.objects.get(user_id = request.user.id)
-		author = User_Info.objects.get(user_id = story.user_id)
-		
-				
+		author = User_Info.objects.get(user_id = story.user_id)		
 		comment = get_comment(story.id)
 
 		#Combine result for text and image. Sort according to position
@@ -619,13 +617,18 @@ def user_profile(request):
 			count = get_notification_count(request)
 			args = {}
 			args.update(csrf(request))
+			#Get the profile of the user
 			profile = User_Info.objects.get(user_id = request.user.id)
+			#Get the profile info of the person user is seeing
+			author = User_Info.objects.get(user_id = person.id)
+			
 			args['storycount'] = storycount
 			args['list'] = list
 			args['followingcount'] = followingcount
 			args['followerscount'] = followercount
 			args['profile'] = profile
 			args['person'] = person
+			args['author'] = author
 			args['user'] = request.user
 			args['item'] = item
 			args['count'] = count

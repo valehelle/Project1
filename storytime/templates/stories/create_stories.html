@@ -7,14 +7,14 @@
 {% block content %}
 <br>
 <div class = "row">
-	<div class = "col-lg-10 col-lg-push-1">
-		<div class = "col-lg-12">
+	<div class = "col-sm-12 col-xs-12 col-md-10 col-md-push-1 col-lg-10 col-lg-push-1">
+		<div class = "col-md-12 col-lg-12 col-sm-12 col-xs-12">
 			<h1 class = "text-green">Create new story</h1>
 		</div>
-		<div class = "col-lg-8">
+		<div class = "col-md-12 col-lg-12 col-sm-12 col-xs-12">
 			<h3>Create a new story. Make sure that the story contain at least an image and a text!</h3>
 		</div>
-		<div class = "col-lg-12">
+		<div class = "col-md-12 col-lg-12 col-sm-12 col-xs-12">
 			{% if messages %}
 			<div class="messages">
 				{% for message in messages %}
@@ -28,19 +28,19 @@
 				<h5 class = "error">Please insert your title</h5>
 			{% endif %}
 		</div>
-		<div class = "col-lg-12">
+		<div class = "col-md-12 col-lg-12 col-sm-12 col-xs-12">
 			<br>
 		</div>
-			<div class = "col-lg-12">
+			<div class = "col-md-12 col-lg-12 col-sm-12 col-xs-12">
 				<form action="/stories/create_stories/" method="post" enctype = "multipart/form-data">{% csrf_token %}
 				<div class = "item">
 					<div class = "row ">
-						<div class = "col-lg-6">
+						<div class = "col-md-6 col-lg-6 col-sm-12 col-xs-12">
 							<label for="id_Story-title"><h4>Title:</h4></label>
 						</div>
 					</div>
 					<div class = "row">
-						<div class = "col-lg-8">
+						<div class = "col-md-8 col-lg-8 col-sm-12 col-xs-12">
 							<input class = "form-control" id="id_Story-title" maxlength="200" name="Story-title" type="text" placeholder="eg. Summer Vacation `15">
 						</div>
 					</div>
@@ -48,30 +48,31 @@
 					<br>
 					<br>
 			<div class = "row">
-				<div class = "col-lg-12">
+				<div class = "col-md-12 col-lg-12 col-sm-12 col-xs-12">
 					<div id = "page" >
-						<div id = "choice" class = "col-lg-4">
-							<div id="addimage" class = "col-lg-12 btn btn-success" >
+						<div id = "choice" class = "col-sm-4 col-xs-4 col-md-4 col-lg-4">
+							<div id="addimage" class = "col-sm-12 col-xs-12 col-md-12 col-lg-12 btn btn-success" >
 									<h4>Image</h4>
 							</div>
-							<div class = "col-lg-12">
+							<div class = "col-sm-12 col-xs-12 col-md-12 col-lg-12">
 								<hr>
 							</div>
-							<div id = "addtext" class = "col-lg-12 btn btn-success">
+							<div id = "addtext" class = "col-sm-12 col-xs-12 col-md-12 col-lg-12 btn btn-success">
 									<h4>Text</h4>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class = "col-lg-12">
+				<div class = "col-md-12 col-lg-12 col-sm-12 col-xs-12">
 					<br>
 					<br>
 				</div>			
-				<div class = "col-lg-12">
+				<div class = "col-md-12 col-lg-12 col-sm-12 col-xs-12">
 				<input type = "submit"  class = "btn btn-success" name = "submit" value = "Upload Story">
 				</div>
 				</form>
 			</div>
+			
 		</div>
 	</div>
 </div>

@@ -15,97 +15,107 @@
 		<!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">	
 		<!-- Latest compiled and Google JavaQuery -->
+
 		<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-				<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="{% static "css/base.css" %}">
 		<script type="text/javascript" src="{% static "js/base.js"%}"></script>
+		
 		{% block predata %}	
 		<!--Depend on the page it will upload its own css and javascript -->
+		
 		{% endblock %}
     </head>
 <body>
-    <div id="header" class = "navbar-fixed-top">
+<div class = "container-fluid">
+<div class = "row">
+    <div class = "navbar-fixed-top">
     {% block header %}
-		<div class="container-fluid">
-		<div class="device-xs visible-xs">xs</div>
+			<div class = "col-lg-12 col-md-12 col-xs-12 col-sm-12" style="background-image:url({% static "image\welcome_header\header_background.jpg" %})" >
+
+					<div id = "header" class = " col-lg-10 col-lg-push-1 col-md-10 col-md-push-1 col-xs-12 col-sm-12">
+
+							<a id = "logo" class = "v-center col-md-1 col-lg-1 col-xs-3 col-sm-3" href = "/">
+								<img class = "img-responsive " src = "{% static "image\welcome_header\MT-Logo.png" %}" style = "height:35px; width:35px;"  />
+							</a>
+							<div id = "search_bar"  class="v-center visible-lg visible-md  col-md-6 col-lg-5 ">
+								<div class="input-group">
+									<input id="search_input" type="text" class="form-control" placeholder="Search User">
+										<span class="input-group-btn">
+											<button id = "search" type="button" class="btn btn-default btn-md">
+												<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+											</button>
+										</span>
+									</input>
+								</div><!-- /input-group -->
+							</div>
+						<div id = "notification" class="v-center col-md-1 col-lg-2 visible-lg visible-md ">
+							<div data-toggle="dropdown" data-target="#">
+								<div class="col-md-12 col-lg-12 button">
+									<button class="btn btn-success" type="button" id = "notificationbutton" style = "border-color:white;">
+									Notification <span id = "count">{{count}}</span></button>
+								</div>
+							</div>
+							
+							<ul class="dropdown-menu" style="float:left;">
+								{% for noti in notification %}
+									<li>
+										{% if noti.story %}
+											<a href = "/stories/read/?s={{noti.story}}"><h5>{{noti.username}} {{noti.topic}}</h5></a>
+										{% else %}
+											<a href = "/profile?u={{noti.username}}"><h5>{{noti.username}} {{noti.topic}}</h5></a>
+										{% endif %}
+									</li>
+								{% endfor %}
+								<li>
+								<hr>
+								<a href = "/notifications"><h4>See more notification<h4></a>
+								</li>
+							</ul>
+						</div>
+						<!-- For xs notification -->
+						<div id = "small-noti"class = "visible-xs visible-sm col-sm-2 col-sm-pull-1 col-xs-2 col-xs-pull-1 v-center">
+							<a href = "/notifications" style = "text-decoration: none;">
+									<button class="btn btn-success" type="button" id = "notificationbutton" style = "border-color:white;">
+									 <span id = "count">{{count}}</span></button>
+							</a>
+						</div>
+						<div id = "username" class="v-center col-md-2 col-md-push-1 col-lg-2 col-lg-push-1 col-xs-4 ">
+							<a href = "/profile?u={{ user.username }}" style = "text-decoration: none;">
+								<h4 class = "text-white text-right">{{ user.username }}</h4> 
+							</a>
+						</div>
+						<div id = "user-image" class="col-md-1 col-md-push-1 col-lg-1 v-center col-lg-push-1 col-xs-3 col-sm-3" style = "text-align:right; cursor: pointer;" >
+							{% if profile.profile_pic.image %}
+								{% thumbnail profile.profile_pic.image "330x330" crop="center" as im %}
+									<img class = "img-circle img-responsive " style="width: 35px; "  src = "{{im.url}}" data-toggle="dropdown" data-target="#"/> 
+								{% endthumbnail %}
+							{% else %}
+								<img class = "img-circle img-responsive " style="height: 35px;"   src = "{{MEDIA_URL}}media/default/DefaultIconBlack_1.png" data-toggle="dropdown" /> 
+							{% endif %}
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a href="/profile/edit">Edit Profile</a></li>
+								<li><a href="/profile/edit/image">Edit Profile Picture</a></li>
+								<li><a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
+								<li><a href="{% url 'auth_password_change' %}">{% trans "Change password" %}</a></li>
+							  </ul>		
+						</div>
+					</div>
+			</div>
+    {% endblock %}
+    </div>
+
+    <div id="content" class = "col-md-12 col-lg-12 col-xs-12 col-sm-12">
+	<!-- Single button -->
+		<div class= "col-md-8 col-md-push-2 col-lg-8 col-lg-push-2 col-xs-12 col-sm-12" id = "storyboard" style = "min-height: 100vh;">
+				{% block content %}{% endblock %}
+		</div>
+    </div>
+<div class="device-xs visible-xs">xs</div>
 <div class="device-sm visible-sm">sm</div>
 <div class="device-md visible-md">md</div>
 <div class="device-lg visible-lg">lg</div>
-			<div class = "row " style="background-image:url({% static "image\welcome_header\header_background.jpg" %})" >
-				<div class="col-lg-1 col-md-2 col-xs-12 col-lg-push-1 ">
-					<a href = "/">
-					<img class = "img-responsive btn btn-success" src = "{% static "image\welcome_header\MT-Logo.png" %}"  style="height: 60px; margin-left:auto;margin-right:auto; padding: 0px;" />
-					</a>
-				</div>
-				<div id = "search_bar" class="col-lg-5 col-lg-push-1" >
-					<div id = "search_bar" class="input-group">
-						<input type="text" class="form-control" placeholder="Search User">
-							<span class="input-group-btn">
-								<button type="button" class="btn btn-default btn-md">
-									<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-								</button>
-							</span>
-						</input>
-					</div><!-- /input-group -->
-				</div>
-				<div class="col-lg-2 col-lg-push-1 notification">
-					<div class = "row "  data-toggle="dropdown" data-target="#">
-						<div class="col-lg-12 button">
-							<button class="btn btn-primary" type="button" id = "notificationbutton">Notification
-							<span id = "count">{{count}}</span></button>
-						</div>
-					</div>
-					
-					<ul class="dropdown-menu">
-						{% for noti in notification %}
-							<li>
-								{% if noti.story %}
-									<a href = "/stories/read/?s={{noti.story}}"><h4>{{noti.username}} {{noti.topic}}</h4></a>
-								{% else %}
-									<a href = "/profile?u={{noti.username}}"><h4>{{noti.username}} {{noti.topic}}</h4></a>
-								{% endif %}
-							</li>
-						{% endfor %}
-						<li>
-						<hr>
-						<a href = "/notifications"><h4>See more notification<h4></a>
-						</li>
-					</ul>	
-				</div>
-				<div id = "username" class="col-lg-1 col-lg-push-1">
-					<a href = "/profile?u={{ user.username }}" style = " text-decoration: none;">
-						<h4 class = "text-white">{{ user.username }}</h4> 
-					</a>
-				</div>
-				<div class="col-lg-1 col-lg-push-1" style = "cursor: pointer;" >
-					{% if profile.profile_pic.image %}
-						{% thumbnail profile.profile_pic.image "330x330" crop="center" as im %}
-							<img class = "img-circle img-responsive user-pic" style="height: 50px; width: 50px"  src = "{{im.url}}" data-toggle="dropdown" data-target="#"/> 
-						{% endthumbnail %}
-					{% else %}
-						<img class = "img-circle img-responsive user-pic" style="height: 50px; width: 50px"  src = "{{MEDIA_URL}}media/default/DefaultIconBlack_1.png" data-toggle="dropdown" /> 
-					{% endif %}
-					<ul class="dropdown-menu dropdown-menu-right">
-						<li><a href="/profile/edit">Edit Profile</a></li>
-						<li><a href="/profile/edit/image">Edit Profile Picture</a></li>
-						<li><a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
-						<li><a href="{% url 'auth_password_change' %}">{% trans "Change password" %}</a></li>
-					  </ul>		
-				</div>
-			</div>
-		</div>
-    {% endblock %}
-    </div>
-    <div id="content">
-	<!-- Single button -->
-		<div class= "row" >
-			<div class = "col-lg-8 col-lg-push-2" id = "storyboard" style = "min-height: 100vh;">
-				{% block content %}{% endblock %}
-			</div>
-		</div>
-    </div>
-
-	
+</div>
+</div>
 </body>
 
 </html>
