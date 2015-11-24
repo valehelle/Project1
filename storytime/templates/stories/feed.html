@@ -11,7 +11,7 @@
 	
 {% block content %}
 {% include "option.html" %}
-<div id = "feedcontent" class = "col-md-8 col-md-pull-1 col-lg-10 col-xs-12 col-sm-12" style = "margin:0; padding:0;">
+<div id = "feedcontent" class = "col-md-8  col-lg-10 col-lg-pull-1 col-xs-12 col-sm-12" style = "margin:0; padding:0;">
 
 	<div class = "col-md-12 col-lg-12 col-xs-12 col-sm-12 text-green">
 		<h2>Feed</h2>
@@ -20,7 +20,7 @@
 		<hr>
 	</div>
 		{% for story,image in list %}
-			<div class = "col-md-12 col-lg-6 col-xs-12 col-sm-12 " style ="margin-top:30px; ">
+			<div class = "col-md-12 col-lg-6 col-xs-12 col-sm-6" style ="margin-top:30px; ">
 					<div class = "col-md-12 col-lg-12 col-xs-12 col-sm-12" >
 						<a class = "story" href = "/stories/read/?s={{story.storyid}}" >
 							{% thumbnail image.story "500x500" crop="center" as im %}

@@ -5,11 +5,22 @@ html,body
     margin: 0px;
     padding: 0px;
 }
-
 #small-noti{
  position: relative;
   top: 50%;
-  transform: translateY(7%);
+  transform: translateY(1%);
+}
+@media(min-width:768px){
+	#small-noti{
+	position: relative;
+	top: 50%;
+	transform: translateY(7%);
+	}
+}
+#small-search{
+ position: relative;
+  top: 50%;
+  transform: translateY(1%);
 }
 
 .v-center{

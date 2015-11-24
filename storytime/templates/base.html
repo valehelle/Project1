@@ -15,8 +15,8 @@
 		<!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">	
 		<!-- Latest compiled and Google JavaQuery -->
-
 		<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+		<script type="text/javascript"  src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js""></script>
 		<link rel="stylesheet" type="text/css" href="{% static "css/base.css" %}">
 		<script type="text/javascript" src="{% static "js/base.js"%}"></script>
 		
@@ -31,13 +31,11 @@
     <div class = "navbar-fixed-top">
     {% block header %}
 			<div class = "col-lg-12 col-md-12 col-xs-12 col-sm-12" style="background-image:url({% static "image\welcome_header\header_background.jpg" %})" >
-
 					<div id = "header" class = " col-lg-10 col-lg-push-1 col-md-10 col-md-push-1 col-xs-12 col-sm-12">
-
 							<a id = "logo" class = "v-center col-md-1 col-lg-1 col-xs-3 col-sm-3" href = "/">
 								<img class = "img-responsive " src = "{% static "image\welcome_header\MT-Logo.png" %}" style = "height:35px; width:35px;"  />
 							</a>
-							<div id = "search_bar"  class="v-center visible-lg visible-md  col-md-6 col-lg-5 ">
+							<div id = "search_bar"  class="v-center visible-lg visible-md visible-sm col-sm-5  col-md-6 col-lg-5" >
 								<div class="input-group">
 									<input id="search_input" type="text" class="form-control" placeholder="Search User">
 										<span class="input-group-btn">
@@ -55,8 +53,7 @@
 									Notification <span id = "count">{{count}}</span></button>
 								</div>
 							</div>
-							
-							<ul class="dropdown-menu" style="float:left;">
+							<ul class="dropdown-menu" >
 								{% for noti in notification %}
 									<li>
 										{% if noti.story %}
@@ -73,25 +70,36 @@
 							</ul>
 						</div>
 						<!-- For xs notification -->
-						<div id = "small-noti"class = "visible-xs visible-sm col-sm-2 col-sm-pull-1 col-xs-2 col-xs-pull-1 v-center">
+						<div id = "small-noti" class = "visible-xs visible-sm col-xs-2 col-sm-1 v-center">
 							<a href = "/notifications" style = "text-decoration: none;">
-									<button class="btn btn-success" type="button" id = "notificationbutton" style = "border-color:white;">
-									 <span id = "count">{{count}}</span></button>
+									<button class="btn btn-success" type="button" style = "border-color:white;">
+									<span class="glyphicon glyphicon-th-large" aria-hidden="true"></span></button>
 							</a>
 						</div>
-						<div id = "username" class="v-center col-md-2 col-md-push-1 col-lg-2 col-lg-push-1 col-xs-4 ">
+						<!-- For xs search -->
+						<div id = "small-search"class = "visible-xs  col-xs-2 v-center">
+							<a href = "/notifications" style = "text-decoration: none;">
+									<button class="btn btn-success button-xs " type="button" style = "border-color:white;">
+									<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+									</button>
+							</a>
+						</div>
+						
+						<div id = "username" class="v-center col-sm-2 col-md-2 col-md-push-1 col-lg-2 col-lg-push-1 col-xs-2">
 							<a href = "/profile?u={{ user.username }}" style = "text-decoration: none;">
-								<h4 class = "text-white text-right">{{ user.username }}</h4> 
+								<h4 class = "visible-lg visible-md visible-sm text-white text-right">{{ user.username }}</h4> 
+								<h5 class = "visible-xs text-white text-right">User</h5> 
 							</a>
 						</div>
-						<div id = "user-image" class="col-md-1 col-md-push-1 col-lg-1 v-center col-lg-push-1 col-xs-3 col-sm-3" style = "text-align:right; cursor: pointer;" >
+						<div id = "user-image" class="col-md-1 col-md-push-1 col-lg-1 v-center col-lg-push-1 col-xs-3 col-sm-1" style = "text-align:right; cursor: pointer;" >
 							{% if profile.profile_pic.image %}
 								{% thumbnail profile.profile_pic.image "330x330" crop="center" as im %}
-									<img class = "img-circle img-responsive " style="width: 35px; "  src = "{{im.url}}" data-toggle="dropdown" data-target="#"/> 
+									<img class = "img-circle img-responsive " style="height: 33px; "  src = "{{im.url}}" data-toggle="dropdown" data-target="#"/> 
 								{% endthumbnail %}
 							{% else %}
-								<img class = "img-circle img-responsive " style="height: 35px;"   src = "{{MEDIA_URL}}media/default/DefaultIconBlack_1.png" data-toggle="dropdown" /> 
+								<img class = "img-circle img-responsive " style="height: 33px;"   src = "{{MEDIA_URL}}media/default/DefaultIconBlack_1.png" data-toggle="dropdown" data-target="#"/> 
 							{% endif %}
+							
 							<ul class="dropdown-menu dropdown-menu-right">
 								<li><a href="/profile/edit">Edit Profile</a></li>
 								<li><a href="/profile/edit/image">Edit Profile Picture</a></li>
