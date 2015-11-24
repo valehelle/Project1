@@ -1,3 +1,7 @@
+# Media File
+/storytime/static/media
+/storytime/static/cache
+/storytime/stories/migrations/0*
 # Windows image file caches
 Thumbs.db
 ehthumbs.db

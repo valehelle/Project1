@@ -27,7 +27,7 @@ $(document).ready(function() {
 			}
 		}
 	});
-	
+
 
 	$(document).on('click','.button #notificationbutton',function(){
         $.ajax({
@@ -41,6 +41,11 @@ $(document).ready(function() {
 
             }
 		});
+	});
+	
+	$(document).on('click',' #search',function(){
+		$string = "/profile?u=" + $( "#search_input" ).val();
+		window.location.replace($string)
 	});
 
 });
