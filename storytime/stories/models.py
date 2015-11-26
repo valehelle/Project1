@@ -44,7 +44,7 @@ class Profile_Image(models.Model):
 	used = models.BooleanField(default=True)
 
 class User_Info(models.Model):
-	username = models.CharField(max_length = 200)
+	username = models.CharField(max_length = 30)
 	user = models.OneToOneField(settings.AUTH_USER_MODEL,primary_key=True)
 	desc = models.CharField(max_length = 200)
 	profile_pic = models.ForeignKey(Profile_Image,null=True)

@@ -28,6 +28,8 @@ urlpatterns = [
 	url(r'^stories/read',views.read_stories),
 	url(r'^media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.MEDIA_ROOT}),
 	url(r'^profile/edit/image',views.image_edit),
+	url(r'^profile/edit/name',views.name_edit),
+	url(r'^profile/edit/desc',views.desc_edit),
 	url(r'^profile/edit',views.user_edit),
 	url(r'^profile/update_seen',views.update_seen),
 	url(r'^profile',views.user_profile),
@@ -39,5 +41,6 @@ urlpatterns = [
 	url(r'^load_notification',views.load_notification),
 	url(r'^load_comment',views.load_comment),
 	url(r'^notification',views.notification),
+	url(r'^user_search',views.user_search),
 	url(r'^$',views.feed),
 ]

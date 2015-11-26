@@ -44,11 +44,7 @@ html,body
   top: 50%;
   transform: translateY(7%);
 }
-#username{
- position: relative;
-  top: 50%;
-  transform: translateY(7%);
-}
+ 
 #notification{
  position: relative;
   top: 50%;

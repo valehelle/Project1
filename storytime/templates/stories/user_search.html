@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block predata %}	
+	<script type="text/javascript" src="{% static "js/user_search.js"%}"></script>	
+{% endblock %}
+{% block content %}
+<div class = "col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	<div class = "col-lg-8 col-lg-push-2 col-md-12 col-sm-12 col-xs-12">
+		<h2 class = "text-green">Search User</h2>
+	</div>
+	<div id = "search_bar"  class="visible-xs col-xs-12" >
+		<div class="input-group">
+			<input id="search_input_form" type="text" class="form-control" placeholder="Search User">
+				<span class="input-group-btn">
+					<button id = "search" type="button" class="btn btn-default btn-md">
+						<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+					</button>
+				</span>
+			</input>
+		</div><!-- /input-group -->
+	</div>
+	{% if username %}
+		<div class = "col-lg-8 col-lg-push-2 col-md-12 col-sm-12 col-xs-12">
+			<h3>Im sorry but we cannot find user {{username}}. Did you spelled the username correctly?</h3>
+		</div>
+	{% endif %}
+</div>
+{% endblock %}

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from forms import TextForm,ImageForm,StoryForm,EditForm,EditFormImage
+from forms import TextForm,ImageForm,StoryForm,EditFormImage
 from django.template.context_processors import csrf
 from django.forms.formsets import formset_factory
 from models import Story,Text,Image,Person,RELATIONSHIP_FOLLOWING,User_Info,Profile_Image,Star
@@ -508,42 +508,88 @@ def get_notification(request,start=1,multiple = 5):
 		list.append(data)
 	return list
 
-		
-#User edit
-def user_edit(request):
+#Name edit
+def name_edit(request):
+	from forms import EditUsername
 	if request.user.is_authenticated():
 		if request.POST:
-			user_info = EditForm(request.POST)
+			user_info = EditUsername(request.POST)
 			if user_info.is_valid():
 				if not (User.objects.filter(username = user_info.cleaned_data['username']).exists()):
 					auth_user = User.objects.get(id = request.user.id)
 					user = User_Info.objects.get(user_id = request.user.id)
 					#Change data at user info table
 					user.username = user_info.cleaned_data['username']
-					user.desc = user_info.cleaned_data['desc']
 					#Change data at auth_user table
 					auth_user.username = user_info.cleaned_data['username']
 					#Save both to database
 					auth_user.save()
 					user.save()
-					return render_page(request,"user_edit.html",{'form': user_info})
+					return render_page(request,"username_edit.html",{'form': user_info})
 				else:
 					#Return user already exists error
 					return render_page(request,"error.html",{'form': user_info})
 			else:
-				return render_page(request,"user_edit.html",{'form': user_info})
+				return render_page(request,"username_edit.html",{'form': user_info})
 		
 		
 		profile = User_Info.objects.get(user_id = request.user.id)
 		list = get_notification(request)
 		count = get_notification_count(request)
-		form = EditForm()
+		form = EditUsername()
 		args = {}
+		
 		args['form'] = form
 		args['profile'] = profile
 		args['count'] = count
 		args['notification'] = notification
+		return render (request,"username_edit.html",args)
+		
+#Description edit
+def desc_edit(request):
+	from forms import EditDesc
+	if request.user.is_authenticated():
+		if request.POST:
+			user_info = EditDesc(request.POST)
+			if user_info.is_valid():
+				user = User_Info.objects.get(user_id = request.user.id)
+				#Change data at user info table
+				user.desc = user_info.cleaned_data['desc']
+				#Change data at auth_user table
+				#Save both to database
+				user.save()
+				return render_page(request,"desc_edit.html",{'form': user_info})
+			else:
+				return render_page(request,"desc_edit.html",{'form': user_info})
+		
+		
+		profile = User_Info.objects.get(user_id = request.user.id)
+		list = get_notification(request)
+		count = get_notification_count(request)
+		form = EditDesc()
+		args = {}
+		args.update(csrf(request))
+		args['form'] = form
+		args['profile'] = profile
+		args['count'] = count
+		args['notification'] = notification
+		return render (request,"desc_edit.html",args)
+
+#Description edit
+def user_edit(request):
+	if request.user.is_authenticated():
+		profile = User_Info.objects.get(user_id = request.user.id)
+		list = get_notification(request)
+		count = get_notification_count(request)
+		args = {}
+		args['profile'] = profile
+		args['count'] = count
+		args['notification'] = notification
 		return render (request,"user_edit.html",args)
+	else:
+		return HttpResponseRedirect("/")
+		
+		
 
 #User Image edit
 def image_edit(request):
@@ -570,20 +616,36 @@ def image_edit(request):
 		count = get_notification_count(request)
 		form = EditFormImage()
 		args = {}
+		args.update(csrf(request))
 		args['form'] = form
 		args['profile'] = profile
 		args['count'] = count
 		args['notification'] = notification
 		return render (request,"image_edit.html",args)
-				
+			
+			
+#Search user
+def user_search(request):
+	if request.user.is_authenticated():
+		args = {}
+		if request.GET:
+			name = request.GET.get('u')
+			args['username'] = name
+			return render (request,"user_search.html",args)
+		else:
+			return render (request,"user_search.html",args)
 
 #Show the user profile given the url
 def user_profile(request):
 	if request.user.is_authenticated():
 		if request.GET:
 			name = request.GET.get('u')
-			#Get the person from the username
-			person = User.objects.get(username=name)
+			try:
+				#Get the person from the username
+				person = User.objects.get(username=name,is_active = 1)
+			except:
+				return HttpResponseRedirect("/user_search/?u=" + str(name))
+			
 			#Count number of story
 			stories = Story.objects.filter(user_id = person.id)
 			storycount = stories.count()
@@ -618,6 +680,7 @@ def user_profile(request):
 			args = {}
 			args.update(csrf(request))
 			#Get the profile of the user
+			profile = User_Info.objects.get(user_id = request.user.id)
 			profile = User_Info.objects.get(user_id = request.user.id)
 			#Get the profile info of the person user is seeing
 			author = User_Info.objects.get(user_id = person.id)
