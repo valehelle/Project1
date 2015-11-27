@@ -240,8 +240,7 @@ def feed(request):
 		#Create profile for user the first time.
 		user,created = User_Info.objects.get_or_create(username = request.user.username,user_id = request.user.id)
 		#Get the data streams for the user
-		import user_streams
-		items = user_streams.get_stream_feed(request.user)
+		items = get_feed_latest(request.user)
 		imagelist = []
 		storylist = []
 		for item in items:
@@ -253,6 +252,7 @@ def feed(request):
 			storyimage = Image.objects.filter(storyid = story.id).first()
 			image['story'] = storyimage.source
 			image['time'] = timesince(story.datetime).split(', ')[0]
+			image['id'] = item.id
 			try:
 				image['user'] = user_info.profile_pic.image
 			except:
@@ -266,6 +266,7 @@ def feed(request):
 		count = get_notification_count(request)
 
 		args = {}
+		args.update(csrf(request))
 		args['list'] = list
 		args['profile'] = profile
 		args['notification'] = notification
@@ -274,11 +275,83 @@ def feed(request):
 	else:
 		return HttpResponseRedirect("/accounts/login/")
 
+#Get previous feed
+def feed_previous(request):
+	if request.user.is_authenticated():
+		if request.POST:
+			max_id = request.POST.get('max-id')
+			max_id = int(max_id)
+			list = get_feed_previous(request.user,max_id)	
+			string = html_feed(list)
+			import json
+			data = {}
+			data['string'] = string
+			return HttpResponse(json.dumps(data), content_type = "application/json")
+
+	
+#Return feed previous
+def get_feed_latest(user,max_id=0,count=10):
+	import user_streams
+	list = user_streams.get_stream_feed(user).filter(id__gt = max_id)[:count]
+	return list
+	
+#Return feed latest
+def get_feed_previous(user,max_id=0,count=10):
+	import user_streams
+	list = user_streams.get_stream_feed(user).filter(id__lt = max_id)[:count]
+	return list
+	
+#Given a list, return a string of html
+def html_feed(list):
+	storylist = []
+
+	for item in list:
+		string = ""
+		#Split the string into the user id and story id
+		object = item.content.split(":")
+		story = Story.objects.get(storyid = object[1])
+		user_info = User_Info.objects.get(user_id = story.user_id)
+		image = {}
+		storyimage = Image.objects.filter(storyid = story.id).first()
+		im = get_thumbnail(storyimage.source, '500x500', crop='center', quality=99)
+		print im
+		time = timesince(story.datetime).split(', ')[0]
+
+		string = "<div data-id = \" " + str(item.id) + " \" class = \"story-item col-md-12 col-lg-6 col-xs-12 col-sm-6\" style =\"margin-top:30px; margin-bottom:10px; \">"
+		string = string + "<div class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12\" >"
+		string = string + "<a class = \"story\" href = \"/stories/read/?s=" + str(story.id) + "\" >"
+		string = string + "<img class = \"img-responsive img-rounded\"  src=\"" + str(im.url) +"\" style = \"text-align:center;\"></a></div>"
+		string = string + "<div class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12\" style = \"height:80px;\">"
+		string = string + "<h3 class = \"visible-lg visible-md\" style = \"text-align: center\">" + str(story.title) + "</h3>"
+		string = string + "<h4 class = \"visible-xs visible-sm col-xs-12 col-sm-12\" style = \"text-align: center\">" + str(story.title) + "</h4></div>"
+		string = string + "<div  class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12\"  style=\"margin-bottom:20px;\">"
+		string = string + "<div class = \"col-md-4 col-lg-4 visible-lg visible-md\" style=\"margin-bottom:10px;\">"
+
+		try:
+			#Try to get user profile
+			story_user = user_info.profile_pic.image
+			user_im =  get_thumbnail(story_user, '330x330', crop='center', quality=99)
+			string = string + "<img class = \"img-circle img-responsive user-pic\"  src = \"" + str(user_im.url) + "\"/> "
+		except:
+			string = string + "<img class = \"img-circle img-responsive user-pic\"  src = \"media/media/default/DefaultIconBlack_1.png\"/> </div>"
+				
+		string = string + "<div  class = \"v-center story-profile col-md-6 col-lg-6 col-xs-12 col-sm-12\">"
+		string = string + "<h4>by <a href = \"/profile?u=" + str(story.user.username) + "\">" +  str(story.user.username)  + "</a> </h4>"
+		string = string + "<h4>" + time + " ago</h4> </div> </div>"
+		string = string + "<div  class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12\">"
+		string = string + "<div class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12 btn btn-success text-green no-effect-hover\" style=\"background-color:white; margin-bottom:2px;\">"
+		string = string + "	" + str(story.commentcount) + " comments </div>"
+		string = string + "<div class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12 btn btn-success text-green no-effect-hover\" style=\"background-color:white; margin-bottom:2px;\">"
+		string = string + "	" + str(story.starcount) + " stars </div> </div> </div>"		
+		storylist.append(string)
+
+	return storylist
+
 #Show story from people who you starred	
 def bookmark(request):
 	if request.user.is_authenticated():
 		#Create profile for user the first time.
-		stars = Star.objects.filter(user_id = request.user.id)
+		stars = get_star_latest(request.user)
 		
 		imagelist = []
 		storylist = []
@@ -289,6 +362,7 @@ def bookmark(request):
 			storyimage = Image.objects.filter(storyid = story.id).first()
 			image['story'] = storyimage.source
 			image['time'] = timesince(story.datetime).split(', ')[0]
+			image['id'] = item.id
 			try:
 				image['user'] = user_info.profile_pic.image
 			except:
@@ -310,6 +384,68 @@ def bookmark(request):
 	else:
 		return HttpResponseRedirect("/accounts/login/")
 		
+def get_star_previous(user,max_id=0,count=10):
+	stars = Star.objects.filter(user_id = user.id, id__lt = max_id).order_by('-id')[:count]
+	return stars
+def get_star_latest(user,max_id=0,count=10):
+	stars = Star.objects.filter(user_id = user.id,id__gt = max_id).order_by('-id')[:count]
+	return stars	
+
+#Get bookmark feed
+def bookmark_previous(request):
+	if request.user.is_authenticated():
+		if request.POST:
+			max_id = request.POST.get('max-id')
+			max_id = int(max_id)
+			list = get_star_previous(request.user,max_id)	
+			string = html_bookmark(list)
+			import json
+			data = {}
+			data['string'] = string
+			return HttpResponse(json.dumps(data), content_type = "application/json")
+
+#Given a list, return a string of html
+def html_bookmark(list):
+	storylist = []
+
+	for item in list:
+		string = ""
+		#Split the string into the user id and story id
+		story = Story.objects.get(id = item.storyid_id)
+		user_info = User_Info.objects.get(user_id = story.user_id)
+		storyimage = Image.objects.filter(storyid = story.id).first()
+		im = get_thumbnail(storyimage.source, '500x500', crop='center', quality=99)
+		time = timesince(story.datetime).split(', ')[0]
+
+		string = "<div data-id = \"" + str(item.id) + "\" class = \"story-item col-md-12 col-lg-6 col-xs-12 col-sm-6\" style =\"margin-top:30px; margin-bottom:10px; \">"
+		string = string + "<div class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12\" >"
+		string = string + "<a class = \"story\" href = \"/stories/read/?s=" + str(story.id) + "\" >"
+		string = string + "<img class = \"img-responsive img-rounded\"  src=\"" + str(im.url) +"\" style = \"text-align:center;\"></a></div>"
+		string = string + "<div class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12\" style = \"height:80px;\">"
+		string = string + "<h3 class = \"visible-lg visible-md\" style = \"text-align: center\">" + str(story.title) + "</h3>"
+		string = string + "<h4 class = \"visible-xs visible-sm col-xs-12 col-sm-12\" style = \"text-align: center\">" + str(story.title) + "</h4></div>"
+		string = string + "<div  class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12\"  style=\"margin-bottom:20px;\">"
+		string = string + "<div class = \"col-md-4 col-lg-4 visible-lg visible-md\" style=\"margin-bottom:10px;\">"
+
+		try:
+			#Try to get user profile
+			story_user = user_info.profile_pic.image
+			user_im =  get_thumbnail(story_user, '330x330', crop='center', quality=99)
+			string = string + "<img class = \"img-circle img-responsive user-pic\"  src = \"" + str(user_im.url) + "\"/> "
+		except:
+			string = string + "<img class = \"img-circle img-responsive user-pic\"  src = \"media/media/default/DefaultIconBlack_1.png\"/> </div>"
+				
+		string = string + "<div  class = \"v-center story-profile col-md-6 col-lg-6 col-xs-12 col-sm-12\">"
+		string = string + "<h4>by <a href = \"/profile?u=" + str(story.user.username) + "\">" +  str(story.user.username)  + "</a> </h4>"
+		string = string + "<h4>" + time + " ago</h4> </div> </div>"
+		string = string + "<div  class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12\">"
+		string = string + "<div class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12 btn btn-success text-green no-effect-hover\" style=\"background-color:white; margin-bottom:2px;\">"
+		string = string + "	" + str(story.commentcount) + " comments </div>"
+		string = string + "<div class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12 btn btn-success text-green no-effect-hover\" style=\"background-color:white; margin-bottom:2px;\">"
+		string = string + "	" + str(story.starcount) + " stars </div> </div> </div>"		
+		storylist.append(string)
+
+	return storylist
 
 #Show what people you followed are doing
 def following(request):
@@ -511,6 +647,8 @@ def get_notification(request,start=1,multiple = 5):
 #Name edit
 def name_edit(request):
 	from forms import EditUsername
+	from django.contrib import messages
+	
 	if request.user.is_authenticated():
 		if request.POST:
 			user_info = EditUsername(request.POST)
@@ -528,8 +666,10 @@ def name_edit(request):
 					return render_page(request,"username_edit.html",{'form': user_info})
 				else:
 					#Return user already exists error
-					return render_page(request,"error.html",{'form': user_info})
+					messages.add_message(request, messages.WARNING, 'Username already exists')
+					return render_page(request,"username_edit.html",{'form': user_info})
 			else:
+				messages.add_message(request, messages.WARNING, 'Something went wrong. We cannot process your request right now')
 				return render_page(request,"username_edit.html",{'form': user_info})
 		
 		
@@ -542,7 +682,7 @@ def name_edit(request):
 		args['form'] = form
 		args['profile'] = profile
 		args['count'] = count
-		args['notification'] = notification
+		args['notification'] = list
 		return render (request,"username_edit.html",args)
 		
 #Description edit
@@ -560,6 +700,7 @@ def desc_edit(request):
 				user.save()
 				return render_page(request,"desc_edit.html",{'form': user_info})
 			else:
+				messages.add_message(request, messages.WARNING, 'Something went wrong. We cannot process your request right now')
 				return render_page(request,"desc_edit.html",{'form': user_info})
 		
 		
@@ -572,7 +713,7 @@ def desc_edit(request):
 		args['form'] = form
 		args['profile'] = profile
 		args['count'] = count
-		args['notification'] = notification
+		args['notification'] = list
 		return render (request,"desc_edit.html",args)
 
 #Description edit
@@ -584,7 +725,7 @@ def user_edit(request):
 		args = {}
 		args['profile'] = profile
 		args['count'] = count
-		args['notification'] = notification
+		args['notification'] = list
 		return render (request,"user_edit.html",args)
 	else:
 		return HttpResponseRedirect("/")
@@ -620,7 +761,7 @@ def image_edit(request):
 		args['form'] = form
 		args['profile'] = profile
 		args['count'] = count
-		args['notification'] = notification
+		args['notification'] = list
 		return render (request,"image_edit.html",args)
 			
 			

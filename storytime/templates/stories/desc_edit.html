@@ -10,6 +10,13 @@
 		<div class = "col-lg-12">
 			<textarea rows="4" cols="50"  id="id_desc" maxlength="200" name="desc" type="text" style = "margin-top:20px;">{{profile.desc}}</textarea>
 		</div>
+		{% if messages %}
+			{% for message in messages %}
+				<div class = "col-lg-12">
+					<h4>{{message}}</h4>
+				</div>         
+			{% endfor %}
+		{% endif %}
 		<div class = "col-lg-12">	
 			<input class = "btn btn-success" type="submit" value="Edit Description" style = "margin-top:20px;">
 		</div>

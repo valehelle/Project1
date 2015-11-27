@@ -32,7 +32,7 @@ $(document).ready(function() {
 		$data = $( ".story-item" ).last().attr( "data-id" );
 			$.ajax({
 				type:"POST",
-				url:"/feed/previous",
+				url:"/bookmark/previous",
 				data: {
 						'max-id': $data
 					  },

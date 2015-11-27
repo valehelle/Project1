@@ -19,8 +19,9 @@
 	<div class = "col-md-12 col-lg-12 col-xs-12 col-sm-12 text-green">
 		<hr>
 	</div>
+	<div id = "itemcontent">
 		{% for story,image in list %}
-			<div class = "col-md-12 col-lg-6 col-xs-12 col-sm-6" style ="margin-top:30px; ">
+			<div data-id = "{{image.id}}" class = "story-item col-md-12 col-lg-6 col-xs-12 col-sm-6" style ="margin-top:30px; margin-bottom:10px; ">
 					<div class = "col-md-12 col-lg-12 col-xs-12 col-sm-12" >
 						<a class = "story" href = "/stories/read/?s={{story.storyid}}" >
 							{% thumbnail image.story "500x500" crop="center" as im %}
@@ -36,10 +37,10 @@
 						<div class = "col-md-4 col-lg-4 visible-lg visible-md" style="margin-bottom:10px;">
 							{% if image.user %}
 								{% thumbnail image.user "330x330" crop="center" as im %}
-									<img class = "img-circle img-responsive user-pic"  src = "{{im.url}}" data-toggle="dropdown" data-target="#"/> 
+									<img class = "img-circle img-responsive user-pic"  src = "{{im.url}}" /> 
 								{% endthumbnail %}
 							{% else %}
-								<img class = "img-circle img-responsive user-pic"  src = "{{MEDIA_URL}}media/default/DefaultIconBlack_1.png" data-toggle="dropdown" /> 
+								<img class = "img-circle img-responsive user-pic"  src = "{{MEDIA_URL}}media/default/DefaultIconBlack_1.png"/> 
 							{% endif %}
 						</div>
 						<div  class = "v-center story-profile col-md-6 col-lg-6 col-xs-12 col-sm-12">
@@ -58,8 +59,12 @@
 			</div>
 
 		{% endfor %}
-
 	</div>
+		<div id = "readmore" class = "col-lg-12 col-md-12 col-sm-12 col-xs-12 btn btn-success">
+			See more
+		</div>
+	
+</div>
 {% endblock %}
 {% block footer %}
 footer
