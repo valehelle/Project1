@@ -29,17 +29,16 @@ $(document).ready(function() {
 		}
 	});
 	
-	number = 3;
-	$(document).on('click',' #notification',function(){
+	$(document).on('click',' #notibutton',function(){
+		$data = $( ".notification-item" ).last().attr( "data-id" );
         $.ajax({
             type:"POST",
             url:"/load_notification/",
             data: {
-                    'number': number,
+                    'max-id': $data,
                   },
             success: function(result){
-				number++;
-				$( "#notification" ).append(result.string);
+				$( "#mainnotification" ).append(result.string);
 
             }
 		});

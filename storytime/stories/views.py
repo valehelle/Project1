@@ -86,7 +86,7 @@ def custom_posted(request):
 			im = get_thumbnail(image, '330x330', crop='center', quality=99)
 			div = div + "<img class =\"img-circle img-responsive user-pic\" style=\"height:60px; width: 60px;\"  src = \"" + im.url + "\" /></div>"
 		except:
-			div = div + "<img class = \"img-circle img-responsive user-pic\" style=\"height:60px;  width: 60px; \"  src = \"/media/media/default/DefaultIconBlack_1.png\" /></div>"
+			div = div + "<img class = \"img-circle img-responsive user-pic\" style=\"height:60px;  width: 60px; \"  src = \"static/image/default/DefaultIconBlack_1.png\" /></div>"
 		div = div + "<div class = \"col-lg-10\"><h4><a href = \"/profile?u=" + str(request.user.username) + "\">" + str(request.user.username) + "</a> " + " " + str(comment.comment) + "<h6>" + time + " ago</h6></h4></div></div><div class = \"col-lg-10\"><hr></div>"
 		
 		data['string'] = div
@@ -156,7 +156,7 @@ def create_stories(request):
 				#Stream to all users who follows.				
 				stream_feed(request.user.id,str(request.user.id) + ':' + str(story.storyid))
 				
-				return HttpRespondeRedirect('/complete')
+				return HttpResponseRedirect("/stories/read/?s=" + str(story.storyid))
 			else:
 				return render_page(request,"create_stories.html",{'form': storyform})
 		else:
@@ -172,7 +172,7 @@ def render_page(request,html,form):
 	storyform = StoryForm(prefix = "Story")
 	profile = User_Info.objects.get(user_id = request.user.id)
 	count = get_notification_count(request)
-	notification = get_notification(request)
+	notification = get_notification_latest(request)
 	args = {}
 	#Add csrf security
 	args.update(csrf(request))
@@ -213,14 +213,14 @@ def read_stories(request):
 		text = Text.objects.filter(storyid = story.id)
 		profile = User_Info.objects.get(user_id = request.user.id)
 		author = User_Info.objects.get(user_id = story.user_id)		
-		comment = get_comment(story.id)
+		comment = get_comment_latest(story.id)
 
 		#Combine result for text and image. Sort according to position
 		combine = sorted(
 						chain(text,image),
 						key=attrgetter('position'))
 		count = get_notification_count(request)
-		notification = get_notification(request)
+		notification = get_notification_latest(request)
 		args = {}
 		args.update(csrf(request))
 		args['story'] = story
@@ -262,7 +262,7 @@ def feed(request):
 			storylist.append(story)
 		profile = User_Info.objects.get(user_id = request.user.id)
 		list = zip(storylist,imagelist)
-		notification = get_notification(request)
+		notification = get_notification_latest(request)
 		count = get_notification_count(request)
 
 		args = {}
@@ -314,7 +314,6 @@ def html_feed(list):
 		image = {}
 		storyimage = Image.objects.filter(storyid = story.id).first()
 		im = get_thumbnail(storyimage.source, '500x500', crop='center', quality=99)
-		print im
 		time = timesince(story.datetime).split(', ')[0]
 
 		string = "<div data-id = \" " + str(item.id) + " \" class = \"story-item col-md-12 col-lg-6 col-xs-12 col-sm-6\" style =\"margin-top:30px; margin-bottom:10px; \">"
@@ -333,7 +332,7 @@ def html_feed(list):
 			user_im =  get_thumbnail(story_user, '330x330', crop='center', quality=99)
 			string = string + "<img class = \"img-circle img-responsive user-pic\"  src = \"" + str(user_im.url) + "\"/> "
 		except:
-			string = string + "<img class = \"img-circle img-responsive user-pic\"  src = \"media/media/default/DefaultIconBlack_1.png\"/> </div>"
+			string = string + "<img class = \"img-circle img-responsive user-pic\"  src = \"static/image/default/DefaultIconBlack_1.png\"/> </div>"
 				
 		string = string + "<div  class = \"v-center story-profile col-md-6 col-lg-6 col-xs-12 col-sm-12\">"
 		string = string + "<h4>by <a href = \"/profile?u=" + str(story.user.username) + "\">" +  str(story.user.username)  + "</a> </h4>"
@@ -372,7 +371,7 @@ def bookmark(request):
 			storylist.append(story)
 		profile = User_Info.objects.get(user_id = request.user.id)
 		list = zip(storylist,imagelist)
-		notification = get_notification(request)
+		notification = get_notification_latest(request)
 		count = get_notification_count(request)
 
 		args = {}
@@ -433,7 +432,7 @@ def html_bookmark(list):
 			user_im =  get_thumbnail(story_user, '330x330', crop='center', quality=99)
 			string = string + "<img class = \"img-circle img-responsive user-pic\"  src = \"" + str(user_im.url) + "\"/> "
 		except:
-			string = string + "<img class = \"img-circle img-responsive user-pic\"  src = \"media/media/default/DefaultIconBlack_1.png\"/> </div>"
+			string = string + "<img class = \"img-circle img-responsive user-pic\"  src = \"static/image/default/DefaultIconBlack_1.png\"/> </div>"
 				
 		string = string + "<div  class = \"v-center story-profile col-md-6 col-lg-6 col-xs-12 col-sm-12\">"
 		string = string + "<h4>by <a href = \"/profile?u=" + str(story.user.username) + "\">" +  str(story.user.username)  + "</a> </h4>"
@@ -450,9 +449,7 @@ def html_bookmark(list):
 #Show what people you followed are doing
 def following(request):
 	if request.user.is_authenticated():
-		#Get the data streams for the user
-		import user_streams
-		items = user_streams.get_stream_following(request.user)
+		items = following_latest(request.user)
 		personlist = []
 		storylist = []
 		for item in items:
@@ -462,6 +459,10 @@ def following(request):
 			user1 = User.objects.get(id = object[0])
 			hash = {}
 			hash['user1'] = user1.username
+			hash['time'] = timesince(item.created_at).split(', ')[0]
+			hash['content'] = object[1]
+			hash['id'] = item.id
+			
 			user_info_1 = User_Info.objects.get(user_id = user1.id)
 
 			#Try to get the story object if it is a story
@@ -476,8 +477,7 @@ def following(request):
 				story = None
 				user2 = User.objects.get(id = object[2])
 				hash['user2'] = user2.username
-			hash['time'] = timesince(item.created_at).split(', ')[0]
-			hash['content'] = object[1]
+
 			try:
 				hash['user_image'] = user_info_1.profile_pic.image
 			except:
@@ -487,7 +487,7 @@ def following(request):
 			storylist.append(story)
 		profile = User_Info.objects.get(user_id = request.user.id)
 		list = zip(storylist,personlist)
-		notification = get_notification(request)
+		notification = get_notification_latest(request)
 		count = get_notification_count(request)
 
 		args = {}
@@ -499,13 +499,78 @@ def following(request):
 	else:
 		return HttpResponseRedirect("/accounts/login/")
 
+def load_following(request):
+	if request.user.is_authenticated():
+		if request.POST:
+			max_id = request.POST.get('max-id')
+			items = following_previous(request.user,max_id)
+			string = html_following(items)
+			import json
+			data = {}
+			data['string'] = string
+			return HttpResponse(json.dumps(data), content_type = "application/json")
+	else:
+		return HttpResponseRedirect("/accounts/login/")
+
+def html_following(items):
+	div = ""
+	for item in items:
+		#Split the string into the user id and story id
+		object = item.content.split(":")
+		#Get the first user.
+		user1 = User.objects.get(id = object[0])
+		hash = {}
+		hash['user1'] = user1.username
+		time = timesince(item.created_at).split(', ')[0]
+		hash['content'] = object[1]
+		user_info_1 = User_Info.objects.get(user_id = user1.id)
+		div = div + "<div data-item = \"" + str(item.id) + "\" class = \"following-item col-lg-12 col-md-12 col-xs-12 col-sm-12\">"
+		div = div + "<div class = \"visible-md visible-lg visible-sm col-md-2 col-lg-2 col-sm-2\">"
+		try:
+			im =  get_thumbnail(user_info_1.profile_pic.image, '330x330', crop='center', quality=99)
+			div = div + "<img class = \"img-circle img-responsive user-pic\" src = \"" + str(im.url) + "\"/>"
+		except:
+			div = div + "<img class = \"img-circle img-responsive user-pic\"  src = \"static/image/default/DefaultIconBlack_1.png\" /> </div>"
+			
+		div = div + "<div class = \"col-xs-12 col-sm-8 col-md-8 col-lg-8 v-center\" >"
+		div = div + "<h3 style = \"padding:0;\">"
+		div = div + "<a href = \"/profile?u=" + str(user1.username) + "\" >" + str(user1.username) + "</a>"
+		div = div + "<span> " + str(object[1]) + "&nbsp;</span>  "
+		try:
+			user2 = User.objects.get(id = object[2])
+			div = div + "<a href = \"/profile?u=" + str(user2.username) + "\" >" + str(user2.username) + "</a></h3>"
+			div = div + "<h6>" + time +  " ago</h6></div>"
+		except:
+			story = Story.objects.get(storyid = object[2])
+			user_info_2 = User_Info.objects.get(user_id = story.user_id)
+			storyimage = Image.objects.filter(storyid = story.id).first()
+			hash['story'] = storyimage.source
+			im1 =  get_thumbnail(storyimage.source, '330x330', crop='center', quality=99)
+			
+			div = div + "<h6>" + time + " ago</h6></div>"
+			div = div + "<div class = \"col-md-2 col-lg-2 col-xs-12 col-sm-2\">"
+			div = div + "<a href = \"/stories/read/?s=" + str(story.storyid) + "\"><img class = \"img-rounded img-responsive\"   src = \"" + str(im1.url) + "\" /></a></div>"
+		div = div + "<div class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12\"><hr></div></div>"
+	return div
+		
+def following_latest(user,max_id = 0, count = 10):
+	#Get the data streams for the user
+	import user_streams
+	list = user_streams.get_stream_following(user).filter(id__gt = max_id)[:count]
+	return list
+	
+def following_previous(user,max_id = 0, count = 10):
+	#Get the data streams for the user
+	import user_streams
+	list = user_streams.get_stream_following(user).filter(id__lt = max_id)[:count]
+	return list
 
 #Show notifaction 
 def notification(request):
 	if request.user.is_authenticated():
-		list = get_notification(request)
+		list = get_notification_latest(request)
 		#Get more than 5 notification since this is the notification page
-		mainnotification = get_notification(request,1,10)
+		mainnotification = get_notification_latest(request)
 		count = get_notification_count(request)
 		profile = User_Info.objects.get(user_id = request.user.id)
 		args = {}
@@ -520,21 +585,21 @@ def notification(request):
 
 def load_comment(request):
 	if request.POST:
-		start = request.POST.get('number')
+		max_id = request.POST.get('max-id')
 		id = request.POST.get('id')
 		story = Story.objects.get(storyid=id)
-		comments = get_comment(story.id,int(start))
+		comments = get_comment_previous(story.id,int(max_id))
 		divcom = []
 		for comment in comments:
-			div = "<div class = \"col-lg-10\"><div class = \"col-lg-1\" style = \"padding-left:0px; padding-right:0px; \">"
+			div = "<div data-id = \"" + str(comment['id']) +  "\" class = \"comment-item col-xs-12 col-sm-12 col-md-10 col-lg-10\"><div class = \"visible-md visible-lg col-md-1 col-lg-1\" style = \"padding-left:0px; padding-right:0px; \">"
 			try:
 				image = comment['image']
 				im = get_thumbnail(image, '330x330', crop='center', quality=99)
-				div = div + "<img class =\"img-circle img-responsive user-pic\" style=\"height:60px; width: 60px;\"  src = \"" + im.url + "\" /></div>"
+				div = div + "<img class =\"img-circle img-responsive user-pic\"  src = \"" + im.url + "\" /></div>"
 			except:
-				div = div + "<img class = \"img-circle img-responsive user-pic\" style=\"height:60px;  width: 60px; \"  src = \"/media/media/default/DefaultIconBlack_1.png\" /></div>"
+				div = div + "<img class = \"img-circle img-responsive user-pic\" src = \"static/image/default/DefaultIconBlack_1.png\" /></div>"
 		
-			div = div + "<div class = \"col-lg-10\"><h4><a href = \"/profile?u=" + str(comment['username']) + "\">" + str(comment['username']) + "</a> " + " " + str(comment['comment']) + "<h6>" + comment['time'] + " ago</h6></h4></div></div><div class = \"col-lg-10\"><hr></div>"
+			div = div + "<div class = \"col-xs-12 col-sm-12 col-md-10 col-lg-10\"><h4><a href = \"/profile?u=" + str(comment['username']) + "\" class = \"text-green\">" + str(comment['username']) + "</a> " + " " + str(comment['comment']) + "<h6>" + comment['time'] + " ago</h6></h4></div></div><div class = \"col-xs-12 col-sm-12 col-md-10 col-lg-12\"><hr></div>"
 			divcom.append(div)
 		import json
 		data = {}
@@ -542,10 +607,8 @@ def load_comment(request):
 		return HttpResponse(json.dumps(data), content_type = "application/json")
 
 #Get the latest comment
-def get_comment(id,start=1,multiple = 5):
-	end = start * multiple
-	start = end - multiple
-	comments = Comment.objects.filter(object_pk = id).order_by('-id')[start:end]
+def get_comment_latest(id,max_id=0,count=5):
+	comments = Comment.objects.filter(object_pk = id,id__gt = max_id).order_by('-id')[:count]
 	list = []
 	for comment in comments:
 		user = User.objects.get(id = comment.user_id)
@@ -556,7 +619,7 @@ def get_comment(id,start=1,multiple = 5):
 		except:
 			image = None
 			item['image'] = image
-			
+		item['id'] = comment.id
 		item['comment'] = comment.comment
 		item['username'] = user.username
 		item['time'] = timesince(comment.submit_date).split(', ')[0]
@@ -564,6 +627,30 @@ def get_comment(id,start=1,multiple = 5):
 	list.reverse()
 	return list
 
+#Get the latest comment
+def get_comment_previous(id,max_id=0,count=5):
+	print max_id
+	comments = Comment.objects.filter(object_pk = id,id__lt = max_id).order_by('-id')[:count]
+	list = []
+	for comment in comments:
+		user = User.objects.get(id = comment.user_id)
+		profile = User_Info.objects.get(user_id = comment.user_id)
+		item = {}
+		try:
+			item['image'] = profile.profile_pic.image
+		except:
+			image = None
+			item['image'] = image
+		item['id'] = comment.id
+		item['comment'] = comment.comment
+		item['username'] = user.username
+		item['time'] = timesince(comment.submit_date).split(', ')[0]
+		list.append(item)
+	list.reverse()
+	return list
+
+	
+	
 #Update last seen
 def update_seen(request):
 	from last_seen.models import LastSeen
@@ -589,36 +676,34 @@ def get_notification_count(request):
 
 def load_notification(request):	
 	if request.POST:
-		start = request.POST.get('number')
-		list = get_notification(request,int(start))
+		max_id = request.POST.get('max-id')
+		list = get_notification_previous(request,int(max_id))
 		divnoti = ""
 		for notification in list:
-			div = "<div class = \"col-lg-8 col-lg-push-2\" style =\"margin-top:20px;\"><div class =\"row\"><div class = \"col-lg-1\" style = \"padding-left:0px; padding-right:0px; \">"		
+			div = "<div data-id= \"" + str(notification['id']) + "\" class = \"notification-item  col-sm-12 col-xs-12 col-md-12 col-lg-12\">"	
 			try:
-				image = notification['image']
+				image = notification['story_image']
 				im = get_thumbnail(image, '330x330', crop='center', quality=99)
-				div = div + "<img class =\"img-circle img-responsive user-pic\" style=\"height:50px; width: 50px;\"  src = \"" + im.url + "\" /></div>"
-			except:
-				div = div + "<img class = \"img-circle img-responsive user-pic\" style=\"height:50px;  width: 50px; \"  src = \"/media/media/default/DefaultIconBlack_1.png\" /></div>"
-			
-			try:
-				div = div + "<h4>" + "<a href=\"/profile?u=" + str(notification['username']) + "\">" + str(notification['username']) + "</a>" + "<a href = \"/stories/read/?s=" + str(notification['story']) + "\">" + " " + str(notification['topic']) + "</a></h4>"
+				div = div + "<div class = \"col-sm-10 col-xs-8  col-md-10 col-lg-10\">"
+				div = div + "<h3><a href = \"/profile?u=" + str(notification['username']) + "\">" + str(notification['username']) + "</a> " + str(notification['topic']) +" <h6>" + notification['time'] + " ago</h6></h3></div>"
+				div = div + "<div class = \"col-sm-2 col-xs-3  col-md-2 col-lg-2\">"
+				div = div + "<a href = \"/stories/read/?s=" + str(notification['story']) + "\"><img class = \"img-rounded img-responsive\"   src = \"" + str(im.url) + "\" /></a> </div>"
 			except :
-				div = div  + "<h4>" + "<a href=\"/profile?u=" + str(notification['username']) + "\"> " +  str(notification['username']) + "</a> " + str(notification['topic']) + "</h4>"
+				div = div + "<div class = \"col-sm-10 col-xs-8  col-md-10 col-lg-10\">"
+				div = div  + "<h3><a href = \"/profile?u=" + str(notification['username']) + "\">" + str(notification['username'])  + "</a> " + str(notification['topic']) + "<h6> " +  notification['time'] + " ago</h6></h3></div>"
 
-			div = div + "<h6>" + notification['time'] + " ago</h6><hr></div></div>"
+			div = div + "<div class = \"col-sm-12 col-xs-12  col-md-12 col-lg-12\"><hr></div></div>"
 			divnoti = divnoti + div
 		import json
 		data = {}
 		data['string'] = divnoti
 		return HttpResponse(json.dumps(data), content_type = "application/json")
+		
 #Function to retrieve the notification list
-def get_notification(request,start=1,multiple = 5):	
-	end = start * multiple
-	start = end - multiple
+def get_notification_latest(request,max_id=0,count = 5):	
 	#Get the data streams for the user
 	import user_streams
-	items = user_streams.get_stream_items(request.user)[start:end]
+	items = user_streams.get_stream_items(request.user).filter(id__gt = max_id)[:count]
 	list = []
 	for item in items:
 		#Split the string for info about the user.
@@ -627,6 +712,7 @@ def get_notification(request,start=1,multiple = 5):
 		username = User.objects.get(id=object[0])
 		profile = User_Info.objects.get(user_id = object[0])
 		data = {}
+		data['id'] = item.id
 		try:
 			data['image'] = profile.profile_pic.image
 		except:
@@ -644,6 +730,37 @@ def get_notification(request,start=1,multiple = 5):
 		list.append(data)
 	return list
 
+#Function to previous the notification list
+def get_notification_previous(request,max_id=0,count = 5):	
+	#Get the data streams for the user
+	import user_streams
+	items = user_streams.get_stream_items(request.user).filter(id__lt = max_id)[:count]
+	list = []
+	for item in items:
+		#Split the string for info about the user.
+		object = item.content.split(":")
+		#Get the username from the id
+		username = User.objects.get(id=object[0])
+		profile = User_Info.objects.get(user_id = object[0])
+		data = {}
+		data['id'] = item.id
+		try:
+			data['image'] = profile.profile_pic.image
+		except:
+			image = None
+			data['image'] = image
+			
+		data['username'] = username
+		data['topic'] = object[1]
+		data['time'] = timesince(item.created_at).split(', ')[0]
+		if len(object) == 3:
+			story = Story.objects.get(storyid = object[2])
+			image = Image.objects.filter(storyid = story.id).first()
+			data['story_image'] = image.source
+			data['story'] = object[2]
+		list.append(data)
+	return list
+	
 #Name edit
 def name_edit(request):
 	from forms import EditUsername
@@ -663,7 +780,8 @@ def name_edit(request):
 					#Save both to database
 					auth_user.save()
 					user.save()
-					return render_page(request,"username_edit.html",{'form': user_info})
+					newuser = auth_user.username
+					return HttpResponseRedirect("/profile?u=" + str(newuser))
 				else:
 					#Return user already exists error
 					messages.add_message(request, messages.WARNING, 'Username already exists')
@@ -674,7 +792,7 @@ def name_edit(request):
 		
 		
 		profile = User_Info.objects.get(user_id = request.user.id)
-		list = get_notification(request)
+		list = get_notification_latest(request)
 		count = get_notification_count(request)
 		form = EditUsername()
 		args = {}
@@ -698,14 +816,15 @@ def desc_edit(request):
 				#Change data at auth_user table
 				#Save both to database
 				user.save()
-				return render_page(request,"desc_edit.html",{'form': user_info})
+				return HttpResponseRedirect("/profile?u=" + str(user.username))
+				
 			else:
 				messages.add_message(request, messages.WARNING, 'Something went wrong. We cannot process your request right now')
 				return render_page(request,"desc_edit.html",{'form': user_info})
 		
 		
 		profile = User_Info.objects.get(user_id = request.user.id)
-		list = get_notification(request)
+		list = get_notification_latest(request)
 		count = get_notification_count(request)
 		form = EditDesc()
 		args = {}
@@ -720,7 +839,7 @@ def desc_edit(request):
 def user_edit(request):
 	if request.user.is_authenticated():
 		profile = User_Info.objects.get(user_id = request.user.id)
-		list = get_notification(request)
+		list = get_notification_latest(request)
 		count = get_notification_count(request)
 		args = {}
 		args['profile'] = profile
@@ -746,14 +865,14 @@ def image_edit(request):
 				user = User_Info.objects.get(user_id = request.user.id)
 				user.profile_pic = image
 				user.save()
-				return render_page(request,"image_edit.html",{'form': image_info})
+				return HttpResponseRedirect("/profile?u=" + str(user.username))
 			else:
 				print image_info
 				return render_page(request,"image_edit.html",{'form': image_info})
 		
 		
 		profile = User_Info.objects.get(user_id = request.user.id)
-		list = get_notification(request)
+		list = get_notification_latest(request)
 		count = get_notification_count(request)
 		form = EditFormImage()
 		args = {}
@@ -816,7 +935,7 @@ def user_profile(request):
 				except :
 					item = "Follow"
 			
-			notification = get_notification(request)
+			notification = get_notification_latest(request)
 			count = get_notification_count(request)
 			args = {}
 			args.update(csrf(request))

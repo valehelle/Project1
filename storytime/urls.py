@@ -39,6 +39,7 @@ urlpatterns = [
 	url(r'^feed',views.feed),
 	url(r'^bookmark/previous',views.bookmark_previous),
 	url(r'^bookmark',views.bookmark),
+	url(r'^load_following',views.load_following),
 	url(r'^following',views.following),
 	url(r'^load_notification',views.load_notification),
 	url(r'^load_comment',views.load_comment),

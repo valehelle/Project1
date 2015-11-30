@@ -19,9 +19,9 @@
 		<hr>
 	</div>
 	<div>
-		<div id = "notification">
+		<div id = "mainnotification">
 			{% for item in mainnotification %}
-				<div class = "col-sm-12 col-xs-12 col-md-12 col-lg-12 " >
+				<div data-id = "{{item.id}}"  class = "notification-item col-sm-12 col-xs-12 col-md-12 col-lg-12 " >
 					{% if item.story %}
 						<div class = "col-sm-10 col-xs-8  col-md-10 col-lg-10">
 							<h3><a href = "/profile?u={{item.username}}">{{item.username}}</a> {{item.topic}}<h6>{{item.time}} ago</h6></h3>
@@ -45,12 +45,9 @@
 			{% endfor %}
 		</div>
 		<div class = "row">
-				<button type="button" class="btn btn-success col-md-12 col-lg-12 col-sm-12 col-xs-12" id = "notification">Load more notification</button>
+				<button type="button" class="btn btn-success col-md-12 col-lg-12 col-sm-12 col-xs-12" id = "notibutton">Read more</button>
 		</div>
 		<br>
 	</div>
-
-{% endblock %}
-{% block footer %}
-footer
+</div>
 {% endblock %}

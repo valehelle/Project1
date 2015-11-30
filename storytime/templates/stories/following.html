@@ -20,16 +20,16 @@
 	<div class = "col-md-12 col-lg-12 col-sm-12 col-xs-12 text-green">
 		<hr>
 	</div>
-	<div>
+	<div id = "followingcontent">
 		{% for story,person in list %}
-			<div class = "col-lg-12 col-md-12 col-xs-12 col-sm-12">
+			<div data-item = "{{person.id}}" class = "following-item col-lg-12 col-md-12 col-xs-12 col-sm-12">
 				<div class = "visible-md visible-lg visible-sm col-md-2 col-lg-2 col-sm-2">
 				{% if person.user_image %}
 					{% thumbnail person.user_image "330x330" crop="center" as im %}
 						<img class = "img-circle img-responsive user-pic" src = "{{im.url}}"/> 
 					{% endthumbnail %}
 				{% else %}
-						<img class = "img-circle img-responsive user-pic"  src = "{{MEDIA_URL}}media/default/DefaultIconBlack_1.png" data-toggle="dropdown" /> 
+						<img class = "img-circle img-responsive user-pic"  src = "{% static "image\default\DefaultIconBlack_1.png" %}"/> 
 				{% endif %}
 				</div>
 				<div class = "col-xs-12 col-sm-8 col-md-8 col-lg-8 v-center" >
@@ -38,15 +38,14 @@
 							{{person.user1}} 
 						</a>
 						<span>{{person.content}}&nbsp;</span>  
-						{% if person.user2 %}
+				{% if person.user2 %}
 							<a href = "/profile?u={{person.user2}}" >
 								{{person.user2}} 
 							</a>	
 					</h3>
 					<h6>{{person.time}} ago</h6>
 				</div>
-
-					{% else %}
+				{% else %}
 				<h6>{{person.time}} ago</h6>
 				</div>
 				<div class = "col-md-2 col-lg-2 col-xs-12 col-sm-2">
@@ -55,15 +54,17 @@
 						{% endthumbnail %}
 					
 				</div>
-					{% endif %}
+				{% endif %}
 				<div class = "col-md-12 col-lg-12 col-xs-12 col-sm-12">
 					<hr>
 				</div>
 			</div>
 
 		{% endfor %}
-
 	</div>
+		<div class = "row">
+				<button type="button" class="btn btn-success col-md-12 col-lg-12 col-sm-12 col-xs-12" id = "loadbutton">Read more</button>
+		</div>
 </div>
 {% endblock %}
 {% block footer %}

@@ -95,13 +95,13 @@
 								</h5> 
 							
 						</div>
-						<div id = "user-image" class="col-md-1 col-md-push-1 col-lg-1 v-center col-lg-push-1 col-xs-3 col-sm-1" style = " cursor: pointer;" >
+						<div id = "user-image" class="col-md-1 col-md-push-1 col-lg-1 v-center col-lg-push-1 col-xs-3 col-sm-1"  >
 							{% if profile.profile_pic.image %}
 								{% thumbnail profile.profile_pic.image "330x330" crop="center" as im %}
-									<img class = "img-circle img-responsive " style="height: 33px; "  src = "{{im.url}}" data-toggle="dropdown" data-target="#"/> 
+									<img class = "img-circle img-responsive " style="height: 33px; cursor: pointer;"  src = "{{im.url}}" data-toggle="dropdown" data-target="#"/> 
 								{% endthumbnail %}
 							{% else %}
-								<img class = "img-circle img-responsive " style="height: 33px;"   src = "{{MEDIA_URL}}media/default/DefaultIconBlack_1.png" data-toggle="dropdown" data-target="#"/> 
+								<img class = "img-circle img-responsive " style="height: 33px; cursor: pointer;"   src = "{% static "image\default\DefaultIconBlack_1.png" %}" data-toggle="dropdown" data-target="#"/> 
 							{% endif %}
 							
 							<ul class="dropdown-menu dropdown-menu-right">
@@ -116,15 +116,18 @@
     </div>
 
     <div id="content" class = "col-md-12 col-lg-12 col-xs-12 col-sm-12">
-	<!-- Single button -->
-		<div class= "col-md-8 col-md-push-2 col-lg-8 col-lg-push-2 col-xs-12 col-sm-12" id = "storyboard" style = "min-height: 100vh;">
-				{% block content %}{% endblock %}
+	
+		<div class= "col-md-8 col-md-push-2 col-lg-8 col-lg-push-2 col-xs-12 col-sm-12" id = "storyboard" style = "min-height: 100vh; margin-bottom:20px;">
+			{% block content %}{% endblock %}
+		</div>
+		<div class="row">
+			<hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+				© 2015 Mementho |  <a href="">About</a> | <a href="">Privacy</a> | <a href="">Terms</a> | <a href="">Advertising</a> | <a href="">Support</a>
+			</div>
+			<hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 		</div>
     </div>
-<div class="device-xs visible-xs">xs</div>
-<div class="device-sm visible-sm">sm</div>
-<div class="device-md visible-md">md</div>
-<div class="device-lg visible-lg">lg</div>
 </div>
 </div>
 </body>

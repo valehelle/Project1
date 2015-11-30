@@ -1,11 +1,81 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% load i18n %}
+{% block header %} 
+<div class="container-fluid">
+		<div class = "row" style="background-image:url({% static "image\welcome_header\header_background.jpg" %})">
+			<img id = "logo" class="col-lg-4 col-xs-12 col-lg-push-1" src = "{% static "image\welcome_header\logo.png" %} "/>
+		</div>
+	</div>		
+ {% endblock %}
+{% block predata %}
+	<link rel="stylesheet" type="text/css" href="{% static "css/register_form.css" %}">
 
-{% block content %}
+
+{% endblock %}
+
+{% block content %}  
+<br>
+<br>
+<br>
+
 <form method="post" action=".">
   {% csrf_token %}
-  {{ form.as_p }}
+  <div class"row">
+  	<div class"col-lg-2"><h1 id="title">Register now! its always free!</h1></div>
+  		<div class"col-lg-2"><h4>Be a part of community for storytelling and share your amazing story today.</h4></div>
+  		<br>
+  		<br>
+  		<form method="post" action=".">
+  		<div class="row">
+  			<div class="form-group col-lg-6">
+  		<p class="required"><label class="required" for="id_email">What is your email?</label> 
+  		<br><input id="id_email" class="form-control" name="email" type="email"></p>
+  			</div>
+  		</div>
+  			<div class="row">
+ 	  		<div class="form-group col-lg-6">
+  			<p class="required"><label class="required" for="id_username">What your username will be?</label>
+  		<br><input id="id_username" class="form-control" maxlength="30" name="username" type="text"> 
+  		<span class="helptext" id="gray">*You can only chance your username once in a year. Choose wisely!</span></p>
+		</div></div>
+  		<div class="row">
+ 	  		<div class="form-group col-lg-6">
+		<p class="required"><label class="required" for="id_password1">Write a password to protect your account</label> 
+		<br><input id="id_password1" class= "form-control" name="password1" type="password"></p>
 
-  <input type="submit" value="{% trans 'Submit' %}" />
+		<p class="required"><label class="required" for="id_password2">Write it again, just to make sure you get it right this time.</label> <input id="id_password2" class="form-control" name="password2" type="password"> 
+		<span class="helptext" id="gray">*Enter the same password as above, for comformation.</span></p>
+		</div>
+		</div>
+			<div class="row">
+ 	  		<div class="form-group col-lg-12">
+ 	  		<h4>This just an agreement between us, we won't do anything harm using your infomation. We promise!</h4>
+  			<textarea readonly class="form-control">asdasdasdasdasda</textarea>
+			</div>
+ 	  		</div>
+ 	  		</div>
+		<br>
+		<div class="row">
+		<div class="form-group col-lg-2 col-lg-push-5">
+		<input class="btn btn-md btn-success btn-block form-control" type="submit" value="{% trans 'Submit' %}" />
+		</div></div>
+		<br>
+		<hr /><!-- footer -->
+		<div class="row">
+    	<div class="col-lg-10">
+    	© 2015 Mementho |  <a href="">About</a> | <a href="">Pirvacy</a> | <a href="">Terms</a> | <a href="">Advertising</a> | <a href="">Support</a>
+    	</div>
+   		</div>
+   		<hr />
 </form>
+	</div>
+  </div>
+
+
 {% endblock %}
+
+ {% block footer %}
+ {% endblock %}
+
+

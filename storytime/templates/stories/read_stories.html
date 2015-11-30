@@ -23,7 +23,7 @@
 							<img class = "img-circle img-responsive user-pic" style="height: {{im.height}} width: {{im.width}}"  src = "{{im.url}}" data-toggle="dropdown" /> 
 						{% endthumbnail %}
 					{% else %}
-						<img class = "img-circle img-responsive user-pic" style="height: {{im.height}} width: {{im.width}}"  src = "{{MEDIA_URL}}media/default/DefaultIconBlack_1.png" data-toggle="dropdown" /> 
+						<img class = "img-circle img-responsive user-pic" style="height: {{im.height}} width: {{im.width}}"  src = "{% static "image\default\DefaultIconBlack_1.png" %}" data-toggle="dropdown" /> 
 					{% endif %}
 			</div>
 			<div class = "col-md-8 col-lg-9 col-xs-12 col-sm-9">
@@ -90,18 +90,18 @@
 					</div>
 					<div id = "comment">
 						{% for comment in comments %}
-							<div class = "col-xs-12 col-sm-12 col-md-10 col-lg-10">
+							<div data-id = "{{comment.id}}" class = "comment-item col-xs-12 col-sm-12 col-md-10 col-lg-10">
 								<div class = "visible-md visible-lg col-md-1 col-lg-1" style = "padding-left:0px; padding-right:0px; ">
 									{% if comment.image %}
 										{% thumbnail comment.image "330x330" crop="center" as im %}
 											<img class = "img-circle img-responsive user-pic"   src = "{{im.url}}" /> 
 										{% endthumbnail %}
 									{% else %}
-										<img class = "img-circle img-responsive user-pic"   src = "{{MEDIA_URL}}media/default/DefaultIconBlack_1.png" /> 
+										<img class = "img-circle img-responsive user-pic"   src = "{% static "image\default\DefaultIconBlack_1.png" %}" /> 
 									{% endif %}
 								</div>
 								<div class = "col-xs-12 col-sm-12 col-md-10 col-lg-10">
-									<h4><a href = "/profile?u={{comment.username}}">{{comment.username}}</a> {{comment.comment}}</h4><h6>{{ comment.time}} ago</h6>
+									<h4><a href = "/profile?u={{comment.username}}" class = "text-green">{{comment.username}}</a> {{comment.comment}}</h4><h6>{{ comment.time}} ago</h6>
 								</div>
 							</div>
 							<div class = "col-xs-12 col-sm-12 col-md-10 col-lg-12">

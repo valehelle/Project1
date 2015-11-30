@@ -18,6 +18,11 @@
 
 }
 
-#option{
-
+#option .btn-success{
+	margin-left:-48%;
+	width:140%;
+	margin-top:10px;
+	background-color: white;
+	color:  #9ed54c;
+	
 }
