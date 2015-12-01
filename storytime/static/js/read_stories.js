@@ -79,19 +79,17 @@ $(document).ready(function() {
 		});
 		return false;
 	});
-	number = 2;
 	$(document).on('click','.button #oldercomment',function(){
+		$data = $( ".comment-item" ).first().attr( "data-id" );
         $.ajax({
             type:"POST",
             url:"/load_comment/",
             data: {
-                    'number': number,
+					'max-id': $data,
 					'id': $( "#oldercomment" ).val(),
                   },
             success: function(result){
 				$( "#comment" ).prepend(result.string);
-				number++;
-
             }
 		});
 	});

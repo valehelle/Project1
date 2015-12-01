@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block predata %}
+<style>
+div #content{
+	margin-top:150px;
+}
+</style>
+	
+{% endblock %}
+
+{% block header %} 
+<div class="container-fluid">
+		<div class = "row" style="background-image:url({% static "image\welcome_header\header_background.jpg" %})">
+			<a href = "\"><img id = "logo" class="col-lg-4 col-sm-6 col-xs-10 col-md-6 col-lg-push-1" src = "{% static "image\welcome_header\logo.png" %} "/></a>
+		</div>
+</div>	
+ {% endblock %}
+
+{% block content %}
+<div class="row" >
+	<div class = "col-md-10 col-md-push-1 col-lg-10 col-lg-push-1 col-xs-12 col-sm-12">
+		<h1 class = "text-green" style = "margin-bottom:30px;">Privacy</h1>
+		<h2>Welcome to Mementho! This policy is written so you will have a better understanding on what information we are collecting and what do we do with it.</h2>
+		<h2>What information do we collect?</h2>
+		<h3>We collect information in a few different ways:</h3>
+		<h2 style = "font-weight: bold;">1. When you give it to us or give us permission to obtain it</h2>
+		<h3>When you sign up for or use our products, you voluntarily give us certain information. This can include your name, profile photo, photos, comments, stars, stories, email address you used to sign up, and any other information you provide us.</h3>
+		<h2 style = "font-weight: bold;">2. We also get technical information when you use our products</h2>
+		<h3>Today, most website or other internet service will almost always create certain information and recorded it automatically. Here are some of the types of information we collect:</h3>
+		<h3>Log data. When you use Mementho, our servers automatically record information (“log data”), including information that your browser sends whenever you visit a website. This log data may include your Internet Protocol address, the address of the web pages you visited that had Mementho features, browser type and settings, the date and time of your request, how you used Mementho, and cookie data.</h3>
+		<h3>Cookie data. Depending on how you’re accessing our products, we may use “cookies” (a small text file sent by your computer each time you visit our website, unique to your Mementho account or your browser) or similar technologies to record log data. When we use cookies, we may use “session” cookies (that last until you close your browser) or “persistent” cookies (that last until you or your browser delete them). For example, we may use cookies to store your language preferences or other Mementho settings so you don‘t have to set them up every time you visit Mementho. Some of the cookies we use are associated with your Mementho account (including personal information about you, such as the email address you gave us), and other cookies are not.</h3>
+		<h3>Device information. In addition to log data, we may also collect information about the device you’re using Mementho on, including what type of device it is, what operating system you’re using, device settings, unique device identifiers, and crash data. Whether we collect some or all of this information often depends on what type of device you’re using and its settings. For example, different types of information are available depending on whether you’re using a Mac or a PC, or an iPhone or an Android phone. To learn more about what information your device makes available to us, please also check the policies of your device manufacturer or software provider.</h3>
+		<h2 style = "font-weight: bold;">How do we use the information we collect?</h2>
+		<h3>We use the information we collect to provide our products to you and make them better, develop new products, and protect Mementho and our users. For example, we may log how often people use two different versions of a product, which can help us understand which version is better.</h3>
+		<h2 style = "font-weight: bold;">How and when do we share information?</h2>
+		<h3>Mementho is a tool people use to share and read stories. When you create a story, anyone can view them. You may also provide us with profile page information that anyone can view. The other limited instances where we may share your personal information include:</h3>
+		<h3>If we believe that disclosure is reasonably necessary to comply with a law, regulation or legal request; to protect the safety, rights, or property of the public, any person, or Mementho; or to detect, prevent, or otherwise address fraud, security or technical issues.</h3>
+		<h3>We may engage in a merger, acquisition, bankruptcy, dissolution, reorganization, or similar transaction or proceeding that involves the transfer of the information described in this Policy.</h3>
+		<h3>We may also share aggregated or non-personally identifiable information with our partners, advertisers, or others.</h3>
+		<h2 style = "font-weight: bold;">Our policy on children’s information</h2>
+		<h3>Mementho is not directed to children under 13. If you learn that your minor child has provided us with personal information without your consent, please contact us.</h3>
+		<h2 style = "font-weight: bold;">How do we make changes to this policy?</h2>
+		<h3>We may change this policy from time to time, and if we do we’ll post any changes on this page. If you continue to use Mementho after those changes are in effect, you agree to the revised policy. If the changes are significant, we may provide more prominent notice or get your consent as required by law.</h3>
+	</div>
+</div>
+
+
+{% endblock %}
+
+

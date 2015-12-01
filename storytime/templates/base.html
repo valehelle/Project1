@@ -30,11 +30,12 @@
 <div class = "row">
     <div class = "navbar-fixed-top">
     {% block header %}
+	{% if user.is_authenticated %}
 			<div class = "col-lg-12 col-md-12 col-xs-12 col-sm-12" style="background-image:url({% static "image\welcome_header\header_background.jpg" %})" >
 					<div id = "header" class = " col-lg-10 col-lg-push-1 col-md-10 col-md-push-1 col-xs-12 col-sm-12">
-							<a id = "logo" class = "v-center col-md-1 col-lg-1 col-xs-3 col-sm-3" href = "/">
-								<img class = "img-responsive " src = "{% static "image\welcome_header\MT-Logo.png" %}" style = "height:35px; width:35px;"  />
-							</a>
+							<div  class = "v-center col-md-1 col-lg-1 col-xs-3 col-sm-3" href = "/">
+								<a href = "/"><img id = "logo" class = "img-responsive " src = "{% static "image\welcome_header\MT-Logo.png" %}" style = "float: right; height:35px; width:35px;"  /></a>
+							</div>
 							<div id = "search_bar"  class="v-center visible-lg visible-md visible-sm col-sm-5  col-md-6 col-lg-5" >
 								<div class="input-group">
 									<input id="search_input" type="text" class="form-control" placeholder="Search User">
@@ -78,7 +79,7 @@
 						</div>
 						<!-- For xs search -->
 						<div id = "small-search"class = "visible-xs  col-xs-2 v-center">
-							<a href = "/notifications" style = "text-decoration: none;">
+							<a href = "/user_search" style = "text-decoration: none;">
 									<button class="btn btn-success button-xs " type="button" style = "border-color:white;">
 									<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 									</button>
@@ -86,42 +87,72 @@
 						</div>
 						
 						<div id = "username" class="v-center col-sm-2 col-md-2 col-md-push-1 col-lg-2 col-lg-push-1 col-xs-2">
-							<a href = "/profile?u={{ user.username }}" style = "text-decoration: none;">
-								<h4 class = "visible-lg visible-md visible-sm text-white text-right">{{ user.username }}</h4> 
-								<h5 class = "visible-xs text-white text-right">User</h5> 
-							</a>
+							
+								<h4 class = "visible-lg visible-md visible-sm text-white text-right">
+									<a href = "/profile?u={{ user.username }}" style = "color:white;text-decoration: none;">{{ user.username }}</a>
+								</h4> 
+								<h5 class = "visible-xs text-white text-right">
+									<a href = "/profile?u={{ user.username }}" style = "color:white;text-decoration: none;">User</a>
+								</h5> 
+							
 						</div>
-						<div id = "user-image" class="col-md-1 col-md-push-1 col-lg-1 v-center col-lg-push-1 col-xs-3 col-sm-1" style = "text-align:right; cursor: pointer;" >
+						<div id = "user-image" class="col-md-1 col-md-push-1 col-lg-1 v-center col-lg-push-1 col-xs-3 col-sm-1"  >
 							{% if profile.profile_pic.image %}
 								{% thumbnail profile.profile_pic.image "330x330" crop="center" as im %}
-									<img class = "img-circle img-responsive " style="height: 33px; "  src = "{{im.url}}" data-toggle="dropdown" data-target="#"/> 
+									<img class = "img-circle img-responsive " style="height: 33px; cursor: pointer;"  src = "{{im.url}}" data-toggle="dropdown" data-target="#"/> 
 								{% endthumbnail %}
 							{% else %}
-								<img class = "img-circle img-responsive " style="height: 33px;"   src = "{{MEDIA_URL}}media/default/DefaultIconBlack_1.png" data-toggle="dropdown" data-target="#"/> 
+								<img class = "img-circle img-responsive " style="height: 33px; cursor: pointer;"   src = "{% static "image\default\DefaultIconBlack_1.png" %}" data-toggle="dropdown" data-target="#"/> 
 							{% endif %}
 							
 							<ul class="dropdown-menu dropdown-menu-right">
 								<li><a href="/profile/edit">Edit Profile</a></li>
 								<li><a href="/profile/edit/image">Edit Profile Picture</a></li>
 								<li><a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
-								<li><a href="{% url 'auth_password_change' %}">{% trans "Change password" %}</a></li>
 							  </ul>		
 						</div>
 					</div>
 			</div>
+	<script>
+		document.getElementById('search_input').onkeypress = function(e){
+		if (!e) e = window.event;
+		var keyCode = e.keyCode || e.which;
+		if (keyCode == '13'){
+			$string = "/profile?u=" + $( "#search_input" ).val();
+			window.location.replace($string)
+		}
+	}
+	</script>
+	{% else %}
+	<div class="container-fluid">
+		<div class = "row" style="background-image:url({% static "image\welcome_header\header_background.jpg" %})">
+			<a href = "\"><img id = "logo" class="col-lg-4 col-sm-6 col-xs-10 col-md-6 col-lg-push-1" src = "{% static "image\welcome_header\logo.png" %} "/></a>
+		</div>
+	</div>
+	{% endif %}
     {% endblock %}
     </div>
 
     <div id="content" class = "col-md-12 col-lg-12 col-xs-12 col-sm-12">
-	<!-- Single button -->
-		<div class= "col-md-8 col-md-push-2 col-lg-8 col-lg-push-2 col-xs-12 col-sm-12" id = "storyboard" style = "min-height: 100vh;">
-				{% block content %}{% endblock %}
+	{% if user.is_authenticated %}
+	{% else %}
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	{% endif %}
+		<div class= "col-md-8 col-md-push-2 col-lg-8 col-lg-push-2 col-xs-12 col-sm-12" id = "storyboard" style = "min-height: 100vh; margin-bottom:20px; padding-bottom:20px;">
+			{% block content %}{% endblock %}
+		</div>
+		<div class="row">
+			<hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+				© 2015 Mementho |  <a href="/company/about">About</a> | <a href="/company/privacy">Privacy</a> | <a href="/company/terms">Terms</a> | <a href="/company/acceptable">Acceptable Use</a> | <a href="/company/support">Support</a>
+			</div>
+			<hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 		</div>
     </div>
-<div class="device-xs visible-xs">xs</div>
-<div class="device-sm visible-sm">sm</div>
-<div class="device-md visible-md">md</div>
-<div class="device-lg visible-lg">lg</div>
 </div>
 </div>
 </body>

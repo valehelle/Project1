@@ -77,7 +77,7 @@ ROOT_URLCONF = 'storytime.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['storytime/templates','storytime/templates/stories'],
+        'DIRS': ['storytime/templates','storytime/templates/stories','storytime/templates/company'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block predata %}
+<style>
+div #content{
+	margin-top:150px;
+}
+</style>
+	
+{% endblock %}
+
+{% block header %} 
+<div class="container-fluid">
+		<div class = "row" style="background-image:url({% static "image\welcome_header\header_background.jpg" %})">
+			<a href = "\"><img id = "logo" class="col-lg-4 col-sm-6 col-xs-10 col-md-6 col-lg-push-1" src = "{% static "image\welcome_header\logo.png" %} "/></a>
+		</div>
+</div>		
+ {% endblock %}
+
+{% block content %}
+<div class="row" >
+	<div class = "col-md-10 col-md-push-1 col-lg-10 col-lg-push-1 col-xs-12 col-sm-12">
+		<h1 class = "text-green" style = "margin-bottom:30px;">About</h1>
+		<h2>Mementho is a website that is build to allow user to share stories in sequential text and images. Our mission is to allow user more creative freedom in telling their story. We hope you enjoy using our product as much as we love making them!</h2>
+	</div>
+</div>
+
+
+{% endblock %}
+
+

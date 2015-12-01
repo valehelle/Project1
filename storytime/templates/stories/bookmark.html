@@ -5,7 +5,7 @@
 	<link rel="stylesheet" type="text/css" href="{% static "css/option.css" %}">
 	<link rel="stylesheet" type="text/css" href="{% static "css/option_4.css" %}">
 	<link rel="stylesheet" type="text/css" href="{% static "css/feed.css" %}">
-	<script type="text/javascript" src="{% static "js/feed.js"%}"></script>
+	<script type="text/javascript" src="{% static "js/bookmark.js"%}"></script>
 	
 {% endblock %}
 	
@@ -19,8 +19,9 @@
 	<div class = "col-md-12 col-lg-12 col-xs-12 col-sm-12 text-green">
 		<hr>
 	</div>
+	<div id = "itemcontent">
 		{% for story,image in list %}
-			<div class = "col-md-12 col-lg-6 col-xs-12 col-sm-12 " style ="margin-top:30px; ">
+			<div data-id = "{{image.id}}" class = "story-item col-md-12 col-lg-6 col-xs-12 col-sm-12 " style ="margin-top:30px; ">
 					<div class = "col-md-12 col-lg-12" >
 						<a class = "story" href = "/stories/read/?s={{story.storyid}}" >
 							{% thumbnail image.story "500x500" crop="center" as im %}
@@ -39,7 +40,7 @@
 									<img class = "img-circle img-responsive user-pic"  src = "{{im.url}}" data-toggle="dropdown" data-target="#"/> 
 								{% endthumbnail %}
 							{% else %}
-								<img class = "img-circle img-responsive user-pic"  src = "{{MEDIA_URL}}media/default/DefaultIconBlack_1.png" data-toggle="dropdown" /> 
+								<img class = "img-circle img-responsive user-pic"  src = "{% static "image\default\DefaultIconBlack_1.png" %}" data-toggle="dropdown" /> 
 							{% endif %}
 						</div>
 						<div  class = "col-md-6 col-lg-6 col-xs-12 col-sm-12">
@@ -55,7 +56,10 @@
 					</div>
 			</div>
 		{% endfor %}
-
+	</div>
+		<div id = "readmore" class = "col-lg-12 col-md-12 col-sm-12 col-xs-12 btn btn-success">
+			Read more
+		</div>
 	</div>
 {% endblock %}
 {% block footer %}

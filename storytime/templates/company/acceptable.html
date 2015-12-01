@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block predata %}
+<style>
+div #content{
+	margin-top:150px;
+}
+</style>
+	
+{% endblock %}
+
+{% block header %} 
+<div class="container-fluid">
+		<div class = "row" style="background-image:url({% static "image\welcome_header\header_background.jpg" %})">
+			<a href = "\"><img id = "logo" class="col-lg-4 col-sm-6 col-xs-10 col-md-6 col-lg-push-1" src = "{% static "image\welcome_header\logo.png" %} "/></a>
+		</div>
+</div>			
+ {% endblock %}
+
+{% block content %}
+<div class="row" >
+	<div class = "col-md-10 col-md-push-1 col-lg-10 col-lg-push-1 col-xs-12 col-sm-12">
+		<h1 class = "text-green" style = "margin-bottom:30px;">Acceptable Use Policy</h1>
+		<h2>Mementho is a place to share and read stories. To make Mementho a comfortable place for people to unleash their creativity, we require everyone to agree and follow our rules.</h2>
+		<h3>Stuff you can’t post</h3>
+		<h4>You aren’t allowed to post anything that:</h4>
+		<ul>
+		<li>sexually explicit or pornographic, exploits or presents minors in a sexual way, or promotes adult sexual services </li>
+		<li>Creates a genuine risk of physical injury or property damage, credibly threatens people or public safety, or organizes or encourages harm</li>
+		<li>Promotes self-harm, eating disorders or hard drug abuse</li>
+		<li>Attacks, bullies or harasses nonpublic people</li>
+		<li>Includes hate speech</li>
+		<li>Is gratuitously violent or gory </li>
+		<li>Infringes anyone's intellectual property, privacy or other rights</li>
+		<li>Is fraudulent or deceptive</li>
+		<li>Is someone else's personal information or requests a minor's personal information </li>
+		<li>Contains any information or content that’s illegal </li>
+		</ul>
+		<h3>Things you can’t do</h3>
+		<h3>You also aren’t allowed to:</h3>
+		<ul>
+		<li>Use Mementho's name, logo, trademark or branding without our consent (our brand guidelines tell you how to use these things)</li>
+		<li>Access, tamper with or use non-public areas of Mementho, our systems or our technical providers' systems</li>
+		<li>Break or circumvent our security measures or otherwise test the vulnerability of our systems or networks</li>
+		<li>Use any method to access, search, scrape, download or change Mementho or anything on it</li>
+		<li>Artificially boost views</li>
+		<li>Use Mementho user information to forge any TCP/IP packet header or any part of the header information in any email or newsgroup posting, or in any way use Mementho to send altered source-identifying information</li>
+		<li>Try to reverse engineer any of Mementho's software</li>
+		<li>Try to interfere with any Mementho user, host or network, for example by sending a virus, overloading, spamming or mail-bombing</li>
+		<li>Collect or store personally identifiable information from Mementho or its users without their permission</li>
+		<li>Impersonate or misrepresent your affiliation with any person or entity, including Mementho</li>
+		<li>Do anything that violates applicable law or regulations</li>
+		<li>Share your password, let anyone access your account or do anything that might put your account at risk</h4>
+		<li>Sell your username or otherwise transfer it for compensation</li>
+		<li>Create or show ads that look like or could be confused with Mementho content</li>
+		<li>Encourage or help anyone do any of the things on this list</li>
+		</ul>
+		<h3>If you run a contest or other type of promotion on Mementho, please don’t:</h3>
+		<ul>
+		<li>Suggest that Mementho sponsors or endorses you or the promotion</li>
+		</ul>
+		<h4>We may remove anything for any reason, including if we think it goes against any of these rules or our Terms of Service.</h4>
+		
+	</div>
+</div>
+
+
+{% endblock %}
+
+

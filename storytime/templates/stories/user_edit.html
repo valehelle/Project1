@@ -6,33 +6,20 @@
 	<script type="text/javascript" src="{% static "js/user_edit.js"%}"></script>
 {% endblock %}
 {% block content %}
-	<br>
-	<div class = "row">
-		<div class = "col-lg-3 col-lg-push-1">
-			<h1 id = "editprofile">Edit Profile</h1>
-		</div>
-		
-	</div>
-	<div class = "row">
-		<form  method="post">
-			{% csrf_token %} 
-			<div class = "col-lg-11 col-lg-push-1">
-				<label for="id_username">Name:</label>
-			</div>
-			<div class = "col-lg-6 col-lg-push-1 form-group">
-				<input id="id_username" maxlength="200" name="username" type="text" value = "{{profile.username}}" class="form-control">
-			</div>
-			<div class = "col-lg-11 col-lg-push-1">
-				<label for="id_desc">Profile Description:</label>
-			</div>
-			<div class = "col-lg-6 col-lg-push-1 form-group">
-				<textarea id="id_desc" maxlength="200" name="desc" type="text" class="form-control">{{profile.desc}}</textarea>
-			</div>
-			<div class = "col-lg-11 col-lg-push-1">
-				<input type="submit" value="Submit">
-			</div>
-		</form>
-		<a href = "/profile/edit/image" class ="col-lg-6"></a>
+	<div class = "col-lg-10 col-lg-push-1">
+		<h1 class = "col-lg-12 text-green" >Edit Profile</h1>
+		<div class = "col-lg-12"><br></div>
+		<hr class = "col-lg-12"/>
+		<h4 class = "col-lg-10">Name: {{profile.username}}</h4>
+		<a class = "col-lg-2 btn btn-success" href = "/profile/edit/name" style = "color:white;">Edit</a>
+		<hr class = "col-lg-12"/>
+		<h4 class = "col-lg-10">Description:</h4>
+		<a class = "col-lg-2 btn btn-success" href = "/profile/edit/description" style = "color:white;" >Edit</a>
+		<h4 class = "col-lg-10">{{profile.desc}}</h4>
+		<hr class = "col-lg-12"/>
+		<h4 class = "col-lg-10">Password:</h4>
+		<a class = "col-lg-2 btn btn-success" href="{% url 'auth_password_change' %}" style = "color:white;">Edit</a>
+		<hr class = "col-lg-12"/>
 	</div>
 
 {% endblock %}

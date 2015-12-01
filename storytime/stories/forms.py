@@ -16,10 +16,15 @@ class ImageForm(forms.ModelForm):
 		model = Image
 		exclude = ("storyid","user","imageid")
 		
-class EditForm(forms.ModelForm):
+class EditUsername(forms.ModelForm):
 	class Meta:
 		model = User_Info
-		exclude = ("profile_pic","user")
+		exclude = ("profile_pic","user","desc")
+		
+class EditDesc(forms.ModelForm):
+	class Meta:
+		model = User_Info
+		exclude = ("profile_pic","user","username")
 		
 class EditFormImage(forms.ModelForm):
 	class Meta:

@@ -47,5 +47,7 @@ $(document).ready(function() {
 		$string = "/profile?u=" + $( "#search_input" ).val();
 		window.location.replace($string)
 	});
+	
+
 
 });

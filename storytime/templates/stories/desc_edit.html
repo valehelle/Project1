@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load thumbnail %}
+
+{% block content %}
+<div class = "col-lg-10 col-lg-push-1">
+	<h1 class = "col-lg-12 text-green">Description</h1>
+	<form class = "col-lg-12" action="/profile/edit/desc/" method="post">
+		 {% csrf_token %}
+		<div class = "col-lg-12">
+			<textarea rows="4" cols="50"  id="id_desc" maxlength="200" name="desc" type="text" style = "margin-top:20px;">{{profile.desc}}</textarea>
+		</div>
+		{% if messages %}
+			{% for message in messages %}
+				<div class = "col-lg-12">
+					<h4>{{message}}</h4>
+				</div>         
+			{% endfor %}
+		{% endif %}
+		<div class = "col-lg-12">	
+			<input class = "btn btn-success" type="submit" value="Edit Description" style = "margin-top:20px;">
+		</div>
+	</form>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+footer
+{% endblock %}

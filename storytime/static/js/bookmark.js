@@ -16,7 +16,6 @@ $(document).ready(function() {
 		return cookieValue;
 	}
 	var csrftoken = getCookie('csrftoken');
-	
 	function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
 		return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
@@ -28,20 +27,23 @@ $(document).ready(function() {
 			}
 		}
 	});
-	
-	$(document).on('click',' #notibutton',function(){
-		$data = $( ".notification-item" ).last().attr( "data-id" );
-        $.ajax({
-            type:"POST",
-            url:"/load_notification/",
-            data: {
-                    'max-id': $data,
-                  },
-            success: function(result){
-				$( "#mainnotification" ).append(result.string);
 
-            }
-		});
+	$(document).on('click',' #readmore',function(){
+		$data = $( ".story-item" ).last().attr( "data-id" );
+			$.ajax({
+				type:"POST",
+				url:"/bookmark/previous",
+				data: {
+						'max-id': $data
+					  },
+				success: function(result){
+					$( "#itemcontent" ).append(result.string);
+
+				}
+			});
+		
 	});
+	
+
 
 });

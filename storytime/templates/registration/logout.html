@@ -1,6 +1,32 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% load i18n %}
+{% block predata %}
+<style>
+div #content{
+	margin-top:200px;
+}
+</style>
+	
+{% endblock %}
+{% block header %} 
+<div class="container-fluid">
+		<div class = "row" style="background-image:url({% static "image\welcome_header\header_background.jpg" %})">
+			<a href = "\"><img id = "logo" class="col-lg-4 col-xs-4 col-lg-push-1" src = "{% static "image\welcome_header\logo.png" %} "/></a>
+		</div>
+</div>		
+ {% endblock %}
 
 {% block content %}
-<p>{% trans "Logged out" %}</p>
+
+<div class="row">
+<div class="col-lg-10">
+<h2 class="form-group">You have successfully logged out</h2>
+<h3><a class = "text-green"href="/">Click here</a> to Log in.</h3>
+</div>
+</div>
+
+
 {% endblock %}
+
+
