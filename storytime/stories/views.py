@@ -11,6 +11,26 @@ from django_comments.models import Comment
 from django.utils.timesince import timesince
 from sorl.thumbnail import get_thumbnail
 
+def about(request):
+	args = []
+	return render(request,'about.html',args)
+	
+def privacy(request):
+	args = []
+	return render(request,'privacy.html',args)
+
+def terms(request):
+	args = []
+	return render(request,'terms.html',args)
+
+def acceptable(request):
+	args = []
+	return render(request,'acceptable.html',args)
+
+def support(request):
+	args = []
+	return render(request,'support.html',args)
+	
 def stream_readers(id,string):
 	#Stream to all users who follows.
 	user,created = Person.objects.get_or_create(name_id = id,id = id)
@@ -51,10 +71,11 @@ def add_star(request):
 			stream_user(story.user_id,str(request.user.id)+":star your story:"+str(story.storyid))
 			#Tell the user following that the user has star the story
 			stream_readers(request.user.id,str(request.user.id)+":star a story:"+str(story.storyid))
-			
+		div = div + "<div class =\"col-md-8 col-lg-9 col-xs-12 col-sm-9 button\">"
+		div = div + "<button type=\"button\" class=\"col-xs-12 col-sm-12 col-md-9 col-lg-6 btn btn-success\" id = \"star\" value = \"" + str(story.storyid) + "\"><span class =\"glyphicon glyphicon-star\"></span><span>" + str(story.starcount) + "</span></button></div>"
 		import json
 		data = {}
-		data['string'] = "<button type=\"button\" class=\"btn btn-success\" id = \"star\" value = \"" + str(story.storyid) + "\">Star <span>" + str(story.starcount) + "</span></button>"
+		data['string'] = div
 		return HttpResponse(json.dumps(data), content_type = "application/json")
 			
 		
@@ -80,15 +101,18 @@ def custom_posted(request):
 		time = timesince(comment.submit_date).split(', ')[0]
 		import json
 		data = {}
-		div = "<div class = \"col-lg-10\"><div class = \"col-lg-1\" style = \"padding-left:0px; padding-right:0px; \">"
+		div = "<div data-id = \"" + str(comment.id) + "\" class = \"comment-item col-xs-12 col-sm-12 col-md-10 col-lg-10\">"
+		div = div + "<div class = \"visible-md visible-lg col-md-1 col-lg-1\" style = \"padding-left:0px; padding-right:0px; \">"
 		try:
 			image = profile.profile_pic.image
 			im = get_thumbnail(image, '330x330', crop='center', quality=99)
-			div = div + "<img class =\"img-circle img-responsive user-pic\" style=\"height:60px; width: 60px;\"  src = \"" + im.url + "\" /></div>"
+			div = div + "<img class =\"img-circle img-responsive user-pic\" src = \"" + str(im.url) + "\" /></div>"
 		except:
-			div = div + "<img class = \"img-circle img-responsive user-pic\" style=\"height:60px;  width: 60px; \"  src = \"static/image/default/DefaultIconBlack_1.png\" /></div>"
-		div = div + "<div class = \"col-lg-10\"><h4><a href = \"/profile?u=" + str(request.user.username) + "\">" + str(request.user.username) + "</a> " + " " + str(comment.comment) + "<h6>" + time + " ago</h6></h4></div></div><div class = \"col-lg-10\"><hr></div>"
-		
+			div = div + "<img class = \"img-circle img-responsive user-pic\"  src = \"static/image/default/DefaultIconBlack_1.png\" /></div>"	
+		div = div + "<div class = \"col-xs-12 col-sm-12 col-md-10 col-lg-10\">"
+		div = div + "<h4><a href = \"/profile?u=" + str(comment.user_name) + "\" class = \"text-green\">" + str(comment.user_name) + "</a> " + str(comment.comment) + "</h4><h6>" + time + " ago</h6>"
+		div = div + "</div></div>"
+		div = div + "<div class = \"col-xs-12 col-sm-12 col-md-10 col-lg-12\"><hr></div>"
 		data['string'] = div
 		return HttpResponse(json.dumps(data), content_type = "application/json")
 			
@@ -196,7 +220,6 @@ def read_stories(request):
 	from uuid import UUID
 	from operator import attrgetter
 	from itertools import chain
-	
 	if request.GET:
 		#Get the story id from url.
 		r_id = request.GET.get('s')
@@ -211,18 +234,23 @@ def read_stories(request):
 		story = Story.objects.get(storyid = r_id)
 		image = Image.objects.filter(storyid = story.id)
 		text = Text.objects.filter(storyid = story.id)
-		profile = User_Info.objects.get(user_id = request.user.id)
+		args = {}
+		if request.user.is_authenticated():
+			profile = User_Info.objects.get(user_id = request.user.id)
+			count = get_notification_count(request)
+			notification = get_notification_latest(request)
+			args.update(csrf(request))
+		else:
+			profile = None
+			count = None
+			notification = None
 		author = User_Info.objects.get(user_id = story.user_id)		
 		comment = get_comment_latest(story.id)
-
-		#Combine result for text and image. Sort according to position
+			#Combine result for text and image. Sort according to position
 		combine = sorted(
 						chain(text,image),
 						key=attrgetter('position'))
-		count = get_notification_count(request)
-		notification = get_notification_latest(request)
-		args = {}
-		args.update(csrf(request))
+
 		args['story'] = story
 		args['items'] = combine
 		args['author'] = author
@@ -232,7 +260,10 @@ def read_stories(request):
 		args['comments'] = comment
 		return render (request,"read_stories.html",args)
 	else:
-		return HttpRespondeRedirect("/home")
+		return HttpRespondeRedirect("/")
+
+		
+		
 	
 #Show story from people who you followed	
 def feed(request):
@@ -890,7 +921,13 @@ def user_search(request):
 		args = {}
 		if request.GET:
 			name = request.GET.get('u')
+			notification = get_notification_latest(request)
+			count = get_notification_count(request)
+			args = {}
+			args.update(csrf(request))
 			args['username'] = name
+			args['count'] = count
+			args['notification'] = notification
 			return render (request,"user_search.html",args)
 		else:
 			return render (request,"user_search.html",args)

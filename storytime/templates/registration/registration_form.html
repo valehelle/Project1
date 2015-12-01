@@ -1,23 +1,24 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% load i18n %}
+{% block predata %}
+<style>
+div #content{
+	margin-top:150px;
+}
+</style>
+	
+{% endblock %}
+
 {% block header %} 
 <div class="container-fluid">
 		<div class = "row" style="background-image:url({% static "image\welcome_header\header_background.jpg" %})">
-			<img id = "logo" class="col-lg-4 col-xs-12 col-lg-push-1" src = "{% static "image\welcome_header\logo.png" %} "/>
+			<a href = "\"><img id = "logo" class="col-lg-4 col-sm-6 col-xs-10 col-md-6 col-lg-push-1" src = "{% static "image\welcome_header\logo.png" %} "/></a>
 		</div>
-	</div>		
+</div>	
  {% endblock %}
-{% block predata %}
-	<link rel="stylesheet" type="text/css" href="{% static "css/register_form.css" %}">
-
-
-{% endblock %}
 
 {% block content %}  
-<br>
-<br>
-<br>
 
 <form method="post" action=".">
   {% csrf_token %}
@@ -26,7 +27,7 @@
   		<div class"col-lg-2"><h4>Be a part of community for storytelling and share your amazing story today.</h4></div>
   		<br>
   		<br>
-  		<form method="post" action=".">
+  	<form method="post" action=".">
   		<div class="row">
   			<div class="form-group col-lg-6">
   		<p class="required"><label class="required" for="id_email">What is your email?</label> 
@@ -50,8 +51,7 @@
 		</div>
 			<div class="row">
  	  		<div class="form-group col-lg-12">
- 	  		<h4>This just an agreement between us, we won't do anything harm using your infomation. We promise!</h4>
-  			<textarea readonly class="form-control">asdasdasdasdasda</textarea>
+ 	  		<h4>Creating an account means you agree with Mementho's Terms of Service, Privacy Policy</h4>
 			</div>
  	  		</div>
  	  		</div>
@@ -60,22 +60,10 @@
 		<div class="form-group col-lg-2 col-lg-push-5">
 		<input class="btn btn-md btn-success btn-block form-control" type="submit" value="{% trans 'Submit' %}" />
 		</div></div>
-		<br>
-		<hr /><!-- footer -->
-		<div class="row">
-    	<div class="col-lg-10">
-    	© 2015 Mementho |  <a href="">About</a> | <a href="">Pirvacy</a> | <a href="">Terms</a> | <a href="">Advertising</a> | <a href="">Support</a>
-    	</div>
-   		</div>
-   		<hr />
-</form>
-	</div>
-  </div>
+	</form>
 
 
 {% endblock %}
 
- {% block footer %}
- {% endblock %}
 
 

@@ -30,6 +30,7 @@
 <div class = "row">
     <div class = "navbar-fixed-top">
     {% block header %}
+	{% if user.is_authenticated %}
 			<div class = "col-lg-12 col-md-12 col-xs-12 col-sm-12" style="background-image:url({% static "image\welcome_header\header_background.jpg" %})" >
 					<div id = "header" class = " col-lg-10 col-lg-push-1 col-md-10 col-md-push-1 col-xs-12 col-sm-12">
 							<div  class = "v-center col-md-1 col-lg-1 col-xs-3 col-sm-3" href = "/">
@@ -112,18 +113,42 @@
 						</div>
 					</div>
 			</div>
+	<script>
+		document.getElementById('search_input').onkeypress = function(e){
+		if (!e) e = window.event;
+		var keyCode = e.keyCode || e.which;
+		if (keyCode == '13'){
+			$string = "/profile?u=" + $( "#search_input" ).val();
+			window.location.replace($string)
+		}
+	}
+	</script>
+	{% else %}
+	<div class="container-fluid">
+		<div class = "row" style="background-image:url({% static "image\welcome_header\header_background.jpg" %})">
+			<a href = "\"><img id = "logo" class="col-lg-4 col-sm-6 col-xs-10 col-md-6 col-lg-push-1" src = "{% static "image\welcome_header\logo.png" %} "/></a>
+		</div>
+	</div>
+	{% endif %}
     {% endblock %}
     </div>
 
     <div id="content" class = "col-md-12 col-lg-12 col-xs-12 col-sm-12">
-	
-		<div class= "col-md-8 col-md-push-2 col-lg-8 col-lg-push-2 col-xs-12 col-sm-12" id = "storyboard" style = "min-height: 100vh; margin-bottom:20px;">
+	{% if user.is_authenticated %}
+	{% else %}
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	{% endif %}
+		<div class= "col-md-8 col-md-push-2 col-lg-8 col-lg-push-2 col-xs-12 col-sm-12" id = "storyboard" style = "min-height: 100vh; margin-bottom:20px; padding-bottom:20px;">
 			{% block content %}{% endblock %}
 		</div>
 		<div class="row">
 			<hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
-				© 2015 Mementho |  <a href="">About</a> | <a href="">Privacy</a> | <a href="">Terms</a> | <a href="">Advertising</a> | <a href="">Support</a>
+				© 2015 Mementho |  <a href="/company/about">About</a> | <a href="/company/privacy">Privacy</a> | <a href="/company/terms">Terms</a> | <a href="/company/acceptable">Acceptable Use</a> | <a href="/company/support">Support</a>
 			</div>
 			<hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 		</div>

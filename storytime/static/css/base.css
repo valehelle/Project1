@@ -86,7 +86,9 @@ textarea {
 }
 a:link {
     color: #9ed54c;
+	
 }
+a:visited { text-decoration: none; color: #9ed54c; }
 .no-effect-hover:hover{
 	color: #9ed54c;
 	border-color: #9ed54c;

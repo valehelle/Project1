@@ -20,6 +20,11 @@ import settings
 
 urlpatterns = [
 	url(r'^accounts/login$',views.custom_login),
+	url(r'^company/about$',views.about),
+	url(r'^company/privacy$',views.privacy),
+	url(r'^company/terms$',views.terms),
+	url(r'^company/acceptable$',views.acceptable),
+	url(r'^company/support$',views.support),
 	url(r'^accounts/', include('registration.backends.default.urls')),
 	url(r'^stories/create_stories/',views.create_stories),
 	url(r'^stories/add_star',views.add_star),
