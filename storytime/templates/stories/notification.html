@@ -9,36 +9,26 @@
 {% endblock %}
 	
 {% block content %}
-
-<div id = "feedcontent" class = "col-md-10 col-md-push-1 col-lg-10 col-lg-push-1 col-xs-12 col-sm-12" style = "margin:0; padding:0;">
-
-	<div class = "col-md-12 col-lg-12 col-xs-12 col-sm-12 text-green">
-		<h2>Notifications</h2>
+	<div class = "col-md-12 col-lg-12 col-xs-12 col-sm-12 text-green card">
+		<h3 style = "text-align:center;">Notifications</h3>
 	</div>
-	<div class = "col-md-12 col-lg-12 col-xs-12 col-sm-12 text-green">
-		<hr>
-	</div>
-	<div>
 		<div id = "mainnotification">
 			{% for item in mainnotification %}
-				<div data-id = "{{item.id}}"  class = "notification-item col-sm-12 col-xs-12 col-md-12 col-lg-12 " >
+				<div data-id = "{{item.id}}"  class = "notification-item col-sm-12 col-xs-12 col-md-12 col-lg-12 card" >
 					{% if item.story %}
-						<div class = "col-sm-10 col-xs-8  col-md-10 col-lg-10">
-							<h3><a href = "/profile?u={{item.username}}">{{item.username}}</a> {{item.topic}}<h6>{{item.time}} ago</h6></h3>
+						<div class = "col-sm-10 col-xs-12  col-md-10 col-lg-9">
+							<h4><a href = "/profile?u={{item.username}}">{{item.username}}</a> {{item.topic}}<h6>{{item.time}} ago</h6></h4>
 						</div>
-						<div class = "col-sm-2 col-xs-3  col-md-2 col-lg-2">
+						<div class = "col-sm-2 col-xs-12  col-md-2 col-lg-3">
 							{% thumbnail item.story_image "330x330" crop="center" as im %}
 								<a href = "/stories/read/?s={{item.story}}"><img class = "img-rounded img-responsive"   src = "{{im.url}}" /></a> 
 							{% endthumbnail %}
 						</div>
 					{% else %}
-						<div class = "col-sm-10 col-xs-8  col-md-10 col-lg-10">
-							<h3><a href = "/profile?u={{item.username}}">{{item.username}}</a> {{item.topic}}<h6>{{item.time}} ago</h6></h3>
+						<div class = "col-sm-10 col-xs-8  col-md-10 col-lg-9">
+							<h4><a href = "/profile?u={{item.username}}">{{item.username}}</a> {{item.topic}}<h6>{{item.time}} ago</h6></h4>
 						</div>
 					{% endif %}
-					<div class = "col-sm-12 col-xs-12  col-md-12 col-lg-12">
-						<hr>
-					</div>
 					
 				</div>
 
@@ -48,6 +38,5 @@
 				<button type="button" class="btn btn-success col-md-12 col-lg-12 col-sm-12 col-xs-12" id = "notibutton">Read more</button>
 		</div>
 		<br>
-	</div>
-</div>
+
 {% endblock %}

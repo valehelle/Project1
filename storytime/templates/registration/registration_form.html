@@ -1,66 +1,71 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% load i18n %}
-{% block predata %}
-<style>
-div #content{
-	margin-top:150px;
-}
-</style>
-	
-{% endblock %}
 
-{% block header %} 
-<div class="container-fluid">
-		<div class = "row" style="background-image:url({% static "image\welcome_header\header_background.jpg" %})">
-			<a href = "\"><img id = "logo" class="col-lg-4 col-sm-6 col-xs-10 col-md-6 col-lg-push-1" src = "{% static "image\welcome_header\logo.png" %} "/></a>
-		</div>
-</div>	
- {% endblock %}
 
-{% block content %}  
 
-<form method="post" action=".">
-  {% csrf_token %}
-  <div class"row">
+{% block content %} 
+
+<div class = "col-lg-10 col-lg-push-1">
   	<div class"col-lg-2"><h1 id="title">Register now! its always free!</h1></div>
   		<div class"col-lg-2"><h4>Be a part of community for storytelling and share your amazing story today.</h4></div>
   		<br>
   		<br>
+{% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-error">
+                <strong style = "color:red;">{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-error">
+            <strong style = "color:red;">{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
   	<form method="post" action=".">
+	  {% csrf_token %}
   		<div class="row">
   			<div class="form-group col-lg-6">
-  		<p class="required"><label class="required" for="id_email">What is your email?</label> 
-  		<br><input id="id_email" class="form-control" name="email" type="email"></p>
+				<p class="required"><label class="required" for="id_email">What is your email?</label></p>
+				<br>
+				<input id="id_email" class="form-control" name="email" type="email">
   			</div>
   		</div>
-  			<div class="row">
- 	  		<div class="form-group col-lg-6">
-  			<p class="required"><label class="required" for="id_username">What your username will be?</label>
-  		<br><input id="id_username" class="form-control" maxlength="30" name="username" type="text"> 
-  		<span class="helptext" id="gray">*You can only chance your username once in a year. Choose wisely!</span></p>
-		</div></div>
   		<div class="row">
  	  		<div class="form-group col-lg-6">
-		<p class="required"><label class="required" for="id_password1">Write a password to protect your account</label> 
-		<br><input id="id_password1" class= "form-control" name="password1" type="password"></p>
-
-		<p class="required"><label class="required" for="id_password2">Write it again, just to make sure you get it right this time.</label> <input id="id_password2" class="form-control" name="password2" type="password"> 
-		<span class="helptext" id="gray">*Enter the same password as above, for comformation.</span></p>
-		</div>
-		</div>
-			<div class="row">
- 	  		<div class="form-group col-lg-12">
- 	  		<h4>Creating an account means you agree with Mementho's Terms of Service, Privacy Policy</h4>
+				<p class="required"><label class="required" for="id_username">What your username will be?</label></p>
+				<br>
+				<input id="id_username" class="form-control" maxlength="30" name="username" type="text"> 
+				<span class="helptext" id="gray">*You can only chance your username once in a year. Choose wisely!</span>
 			</div>
- 	  		</div>
- 	  		</div>
+		</div>
+  		<div class="row">
+			<div class="form-group col-lg-6">
+				<p class="required"><label class="required" for="id_password1">Write a password to protect your account</label> 
+				<br><input id="id_password1" class= "form-control" name="password1" type="password"></p>
+				<p class="required"><label class="required" for="id_password2">Write it again, just to make sure you get it right this time.</label> <input id="id_password2" class="form-control" name="password2" type="password"> 
+					<span class="helptext" id="gray">*Enter the same password as above, for confirmation.</span>
+				</p>
+			</div>
+		</div>
+		<div class="row">
+ 	  		<div class="form-group col-lg-12">
+				<h4>Creating an account means you agree with Mementho's Terms of Service, Privacy Policy</h4>
+			</div>
+ 	  	</div>
 		<br>
 		<div class="row">
-		<div class="form-group col-lg-2 col-lg-push-5">
-		<input class="btn btn-md btn-success btn-block form-control" type="submit" value="{% trans 'Submit' %}" />
-		</div></div>
-	</form>
+			<div class="form-group col-lg-2 col-lg-push-5">
+				<input class="btn btn-md btn-success btn-block form-control" type="submit" value="{% trans 'Submit' %}" />
+			</div>
+		</div>
+		</form>
+</div>
+
+
 
 
 {% endblock %}

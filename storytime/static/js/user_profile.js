@@ -33,7 +33,7 @@ $(document).ready(function() {
 	$(document).on('click','.button #unfollow',function(){
         $.ajax({
             type:"POST",
-            url:"/relationship/unfollow",
+            url:"/relationship/unfollow/",
             data: {
                     'username': $( "#unfollow" ).val()
                   },
@@ -47,7 +47,7 @@ $(document).ready(function() {
 	$(document).on('click','.button #follow',function(){
         $.ajax({
             type:"POST",
-            url:"/relationship/follow",
+            url:"/relationship/follow/",
             data: {
                     'username': $( "#follow" ).val()
                   },

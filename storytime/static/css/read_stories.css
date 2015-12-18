@@ -1,3 +1,4 @@
+
 .square{
     position:relative;
     overflow:hidden;
@@ -16,7 +17,27 @@
 	font-family: 'Architects Daughter', cursive;
 	
 }
+.fancybox-skin{
+	background:none;
+}
 
+.blur{
+    -webkit-filter: blur(3px);
+	-webkit-filter: blur(3px);
+  -moz-filter: blur(3px);
+  -o-filter: blur(3px);
+  -ms-filter: blur(3px);
+  filter: blur(3px);
+}
+#line:before {
+  content: '';
+  width: 0;
+  height: 97%;
+  position: absolute;
+  border: 3px solid #9ed54c;
+  top: 0;
+  left: 49.4%;
+}
 .square h4{
     position:absolute;
 	color: black;
@@ -26,7 +47,39 @@
 	margin-right:10px;
 
 }
-.text_inside h2{
+
+.text_inside{
+	color:white;
+}
+.fancybox-inner .text_inside h2{
+	max-width:800px !important;
+
+}
+.fancybox-close {
+    position: fixed !important;
+    top: 15px !important;
+    right: 40px !important;
+}
+.fancybox-nav {
+    position: fixed !important;
+    top: 0 !important;
+}
+.fancybox-nav span {
+    visibility: visible !important;
+}
+
+.fancybox-next span {
+    right: 40px !important;
+}
+
+.fancybox-prev span {
+    left: 40px !important;
+}
+
+.fancybox-nav span {
+   visibility: visible !important;
+}​
+.text_inside_note h2{
 	text-align: justify;
     text-justify: inter-word;
 	margin-left:10px;
@@ -55,4 +108,29 @@
 }
 #id_comment{
 	rows: 3
+}
+#linkimage {
+    position: fixed;
+    bottom: 10px;
+    padding-top: 10px;
+    list-style: none;
+    z-index: 99999;
+}
+
+#linkimage li {
+    display: inline;
+    padding: 0 5px;
+}
+
+#linkimage li label {
+    width: 12px;
+    height: 12px;
+    border-radius: 100%;
+    display: inline-block;
+    background-color: rgba(0, 0, 0, 0.6);
+    cursor: pointer;
+}
+
+#linkimage li.active label {
+    background-color: white;
 }

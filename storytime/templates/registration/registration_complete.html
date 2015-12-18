@@ -1,17 +1,11 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% block predata %}
-	<link rel="stylesheet" type="text/css" href="{% static "css/register_form.css" %}">
-
-
-{% endblock %}
-
+{% load static from staticfiles %}
+ 
 {% block content %}
-<br>
-<br>
-<br>
-<div class"row">
+
+<div class = "col-lg-10 col-lg-push-1">
   	<div class"col-lg-2"><h1 id="title">Almost there!</h1></div>
-<p>{% trans "You are now registered. Activation email sent. PLease check your registration email." %}</p>
+<p>{% trans "You are now registered. Activation email sent. Please check your registration email. If you cannot find the email, please wait for few minutes. Also check in spam." %}</p>
 </div>
 {% endblock %}

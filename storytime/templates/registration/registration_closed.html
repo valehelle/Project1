@@ -2,5 +2,26 @@
 {% load i18n %}
 
 {% block content %}
-	<p>{% trans "Registration is currently closed." %}</p>
+	<h2 class = "col-lg-10 col-lg-push-1">
+		{% trans "Mementho is in beta therefore it is currently closed for registration. If you are interested in becoming a beta user please provide your email below." %}
+	</h2>
+	<br><br>
+	{% if messages %}
+		<div class="col-lg-10 col-lg-push-1 messages" style = "color:green;">
+			{% for message in messages %}
+			<div{% if message.tags %} class="{{ message.tags }}"{% endif %}><h2 class = "error">{{ message }}</h2></div>
+			{% endfor %}
+		</div>
+		<br><br>
+	{% endif %}
+	<div class = "col-lg-10 col-lg-push-1">
+		<form  action="/request_access/" method="post">
+			{% csrf_token %}
+			<h4>Email:</h4><input class = "col-lg-4 col-md-4 col-sm-4 col-xs-12" type="text" name="email">
+			<br><br>
+			<h4>Username:</h4><input class = "col-lg-4 col-md-4 col-sm-4 col-xs-12" type="text" name="username">
+		<br><br>
+		<input class = "col-lg-4 col-md-4 col-sm-4 col-xs-12 btn btn-success" type="submit" value="Submit">
+		</form>
+	</div>
 {% endblock %}

@@ -30,31 +30,6 @@ $(document).ready(function() {
 	});
 	
 
-	$(document).on('click','.button #unfollow',function(){
-        $.ajax({
-            type:"POST",
-            url:"/relationship/unfollow",
-            data: {
-                    'username': $( "#unfollow" ).val()
-                  },
-            success: function(result){
-				$( "#unfollow" ).replaceWith(result.string);
 
-            }
-		});
-	});
-	
-	$(document).on('click','.button #follow',function(){
-        $.ajax({
-            type:"POST",
-            url:"/relationship/follow",
-            data: {
-                    'username': $( "#follow" ).val()
-                  },
-            success: function(result){
-				$( "#follow" ).replaceWith(result.string);
-            }
-		});
-	});
 
 });

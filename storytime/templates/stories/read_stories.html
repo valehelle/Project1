@@ -2,10 +2,16 @@
 {% load staticfiles %}
 {% load thumbnail %}
 {% load comments %}
+{% block meta %}
+	<meta property="og:title" content="{{story.title}}" />	
+	{% for image in metaimage %}
+		{% thumbnail image.source "x700" as im %}
+		<meta property="og:image" content="{{im.url}}"/>
+		{% endthumbnail %}
+	{% endfor %}
+{% endblock %}
 {% block predata %}
 	<link rel="stylesheet" type="text/css" href="{% static "css/read_stories.css" %}">
-	<!-- Add mousewheel plugin (this is optional) -->
-	<script type="text/javascript" src="{% static "fancybox/lib/jquery.mousewheel-3.0.6.pack.js" %}"></script>
 	<!-- Add fancyBox -->
 	<link rel="stylesheet" href="{% static "fancybox/source/jquery.fancybox.css"%}?v=2.1.5" type="text/css" media="screen" />
 	<script type="text/javascript" src="{% static "fancybox/source/jquery.fancybox.pack.js"%}?v=2.1.5"></script>
@@ -13,83 +19,61 @@
 	<link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
 {% endblock %}
 {% block content %}
-		<div class = "col-md-10 col-md-push-1 col-lg-10 col-lg-push-1 col-xs-12 col-sm-12">
-			<div class = "col-md-4 col-lg-3 col-xs-12 col-sm-3">
+	<div id = "line">
+		<div class = "col-md-12 col-lg-12 col-xs-12 col-sm-12 card" style = "padding-bottom:20px;">
+			<div class = "col-md-4 col-lg-4 col-xs-4 col-sm-4">
 					{% if author.profile_pic.image %}
 						{% thumbnail author.profile_pic.image "330x330" crop="center" as im %}
-							<img class = "img-circle img-responsive user-pic" style="height: {{im.height}} width: {{im.width}}"  src = "{{im.url}}" data-toggle="dropdown" /> 
+							<img class = "img-thumbnail img-responsive user-pic"  src = "{{im.url}}"  /> 
 						{% endthumbnail %}
 					{% else %}
-						<img class = "img-circle img-responsive user-pic" style="height: {{im.height}} width: {{im.width}}"  src = "{% static "image\default\DefaultIconBlack_1.png" %}" data-toggle="dropdown" /> 
+						<img class = "img-thumbnail img-responsive user-pic"  src = "{% static "image\default\DefaultIconBlack_1.png" %}"  /> 
 					{% endif %}
 			</div>
-			<div class = "col-md-8 col-lg-9 col-xs-12 col-sm-9">
-				<h1>{{story.title}}</h1>
-				<h2>Story by  <a href= "/profile?u={{author.username}}">{{author.username}}</a> </hr>
+			<div class = "col-md-8 col-lg-8 col-xs-8 col-sm-8">
+				<h3>{{story.title}}</h3>
+				<h4>Story by  <a href= "/profile?u={{author.username}}">{{author.username}}</a> </h4>
 				<br>
 			</div>
-			<div class ="col-md-8 col-lg-9 col-xs-12 col-sm-9 button">
-				<button type="button" class="col-xs-12 col-sm-12 col-md-9 col-lg-6 btn btn-success" id = "star" value = "{{story.storyid}}"><span class = "glyphicon glyphicon-star"></span><span> {{story.starcount}}</span></button>
+			<div class ="col-md-12 col-lg-12 col-xs-12 col-sm-12 button"style = "margin-top:20px;">
+				<button type="button" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 btn btn-success" id = "star" value = "{{story.storyid}}"><span class = "glyphicon glyphicon-star"></span><span id = "starcount"> {{story.starcount}}</span></button>
+				<button type="button" class="col-xs-6 col-xs-push-1  col-sm-6 col-sm-push-1   col-md-6 col-md-push-1 col-lg-6 col-lg-push-1  btn btn-success" id = "autoplay" >Auto Play</button>
 			</div>
 		</div>
-
-		<div class = "col-md-12 col-lg-12 col-sm-12 col-xs-12"><br></div>
-		<div class = "col-md-12 col-lg-12 col-sm-12 col-xs-12"><hr></div>
-		<div class = "col-md-12 col-lg-12 col-sm-12 col-xs-12"><br></div>
-		<div class = "row" >
-			<div class = "col-md-11 col-lg-11 col-md-12 col-xs-12">
-				{% for item in items %}
-					<div class = "item col-xs-12 col-sm-3 col-md-3 col-lg-3 {% cycle  'col-md-push-1 col-lg-push-1' 'col-md-push-1 col-lg-push-1' 'col-md-push-1 col-lg-push-1' 'col-md-push-9 col-lg-push-9' ' col-md-push-1 col-lg-push-1' 'col-md-pull-7 col-lg-pull-7'%}" >
-						{% if item.text %}
-							<div class="item square img-rounded text_inside" >
-								<h4 class = "text-center">{{item.text}}</h4>
-							</div>
-							<div style="display: none;">									
-								<a  class="fancybox-thumb" rel="fancybox-thumb" href="#inline{{forloop.counter}}" title="" >Inline</a>
-								<div class = "text_inside" id="inline{{forloop.counter}}" style="max-width:500px; overflow:hidden;">
-									<h2>{{item.text}}</h2>
-								</div>		
-							</div>
-						{% elif item.source %}
-							 <div class = "item square text1">
-								{% thumbnail item.source "330x330" crop="center" as im %}
-								<img class = "img-responsive"  src="{{im.url}}" width="{{im.width}}" height="{{im.height}}">
-								{% endthumbnail %}
-							</div>
-								<div style="display: none;">
-								{% thumbnail item.source "x700" as im %}
-									<a class="fancybox-thumb" rel="fancybox-thumb" href="{{im.url}}" title="" width="{{im.width}}" height="{{im.height}}">
-										<img src="{{im.url}}" width="{{im.width}}" height="{{im.height}}" />
-									</a>
-								{% endthumbnail %}
 		
-								</div>
+			{% for item in items %}
+					<div class = "item col-xs-12 col-sm-12 col-md-12 col-lg-12 card" >
+						{% if item.text %}
+							<a  style = "text-decoration: none; " class="fancybox-thumb" rel="fancybox-thumb" href="#inline{{forloop.counter}}" >
+									<h4 style = "text-align:justify; color:black; ">{{item.text}}</h4>
+									<div style="display: none;" class = "text_inside" id="inline{{forloop.counter}}">
+										<h2>{{item.text}}</h2>
+									</div>
+							</a>
+						{% elif item.source %}
+									{% thumbnail item.source "x700" crop="center" as im %}
+									<a class="fancybox-thumb" rel="fancybox-thumb" href="{{im.url}}">
+									{% endthumbnail %}
+									{% thumbnail item.source "500x500" crop="center" as im %}
+										<img class = "img-responsive" src="{{im.url}}" alt="" />
+									{% endthumbnail %}
+									</a>
 						{% endif %}
 					</div> 
-						{% if forloop.last %}
-						
-						{% else %}
-							{% cycle '<div class = "visible-md visible-lg visible-sm col-sm-1 col-md-1 col-md-push-1 col-lg-1 col-lg-push-1 link"><img class="img-responsive" src = "/static/image/welcome_header/smalldot.png"/></div>' '<div class = "visible-sm col-sm-1 visible-md visible-lg col-md-1 col-md-push-1 col-lg-1 col-lg-push-1 link"><img class="img-responsive" src = "/static/image/welcome_header/smalldot.png"/></div>' '<div class = "visible-sm col-sm-11 col-sm-push-9 visible-md visible-lg col-md-11 col-md-push-1 col-lg-11 col-lg-push-1 verticaldot"><div class = "col-md-1 col-md-push-10 col-lg-1 col-lg-push-10"><img class="img-responsive verticalimage" src = "/static/image/welcome_header/verticaldot.png" style = "height:50px;"/></div></div>' '<div class = "visible-sm col-sm-1 visible-md visible-lg col-md-1 col-md-push-1 col-lg-1 col-lg-push-1 link"><img class="img-responsive" src = "/static/image/welcome_header/smalldot.png"/></div>' '<div class = "visible-sm col-sm-1 visible-md visible-lg col-md-1 col-md-push-1 col-lg-1 col-lg-push-1 link"><img class="img-responsive" src = "/static/image/welcome_header/smalldot.png"/></div>' '<div class = "visible-sm col-sm-12 visible-md visible-lg col-md-11 col-md-push-1 col-lg-11 verticaldot"><div class = "col-sm-1 col-sm-push-1 col-md-1 col-md-push-1 col-lg-1 col-lg-push-1"><img class="img-responsive verticalimage" src = "/static/image/welcome_header/verticaldot.png" style="height:50px;"/></div></div>'%}
-						{% endif %}
-				{% endfor %}
-			</div>
-			<div class = "row">
-				<div class ="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-				<hr>
-				</div>
+			{% endfor %}
+	</div>
 				{% if user.is_authenticated %}
-				<div class = "col-xs-12 col-sm-12 col-md-12 col-md-push-1 col-lg-12 col-lg-push-1">
-					<div class = "col-xs-12 col-md-12 col-md-10 col-lg-10 button">
+				<div class = "col-xs-12 col-sm-12 col-md-12 col-lg-12 card">
+					<div class = "col-xs-12 col-md-12 col-md-12 col-lg-12 button">
 						<button type="button" class="btn btn-success col-xs-12 col-sm-12 col-md-12 col-lg-12" id = "oldercomment" value = "{{story.storyid}}" >Read more comment</button>
 					</div>
 
-					<div class = "col-xs-12 col-sm-12 col-md-10 col-lg-10">
-						<br>
+					<div class = "col-xs-12 col-sm-12 col-md-12 col-lg-12">
 						<hr>
 					</div>
 					<div id = "comment">
 						{% for comment in comments %}
-							<div data-id = "{{comment.id}}" class = "comment-item col-xs-12 col-sm-12 col-md-10 col-lg-10">
+							<div data-id = "{{comment.id}}" class = "comment-item col-xs-12 col-sm-12 col-md-12 col-lg-12">
 								<div class = "visible-md visible-lg col-md-1 col-lg-1" style = "padding-left:0px; padding-right:0px; ">
 									{% if comment.image %}
 										{% thumbnail comment.image "330x330" crop="center" as im %}
@@ -103,17 +87,17 @@
 									<h4><a href = "/profile?u={{comment.username}}" class = "text-green">{{comment.username}}</a> {{comment.comment}}</h4><h6>{{ comment.time}} ago</h6>
 								</div>
 							</div>
-							<div class = "col-xs-12 col-sm-12 col-md-10 col-lg-12">
+							<div class = "col-xs-12 col-sm-12 col-md-12 col-lg-12">
 								<hr>
 							</div>
 						{% endfor %}
 					</div>
-					<div class = "col-xs-12 col-sm-12 col-md-10 col-md-push-1 col-lg-10 col-lg-push-1">
+					<div class = "col-xs-12 col-sm-12 col-md-12 col-lg-12">
 							{% get_comment_form for story as form %}
 							<div id="comment_form">
 								<form action="{% comment_form_target %}" method="POST">
 								{% csrf_token %}
-								<div class = "col-md-8 col-lg-8 col-xs-6 col-sm-8">
+								<div class = "col-md-9 col-lg-9 col-xs-12 col-sm-8" style = "margin-bottom:10px;">
 								<textarea class="form-control" id="id_comment" maxlength="3000" name="comment" rows="1" style="overflow:hidden"></textarea>
 								</div>
 								{{ form.honeypot }}
@@ -122,7 +106,7 @@
 								{{ form.timestamp }}
 								{{ form.security_hash }}
 								<div class = "button">
-									<button type="button" class="btn btn-success" id = "id_submit">Comment</button>
+									<button type="button" class="btn btn-success col-lg-3 col-md-3 col-xs-12 col-sm-4" id = "id_submit">Comment</button>
 								</div>
 								</form>
 							</div>
@@ -131,8 +115,7 @@
 				{% else %}
 						<h3 class = "col-xs-12 col-sm-12 col-md-12 col-md-push-1 col-lg-12 col-lg-push-1">Please <a href="{% url 'auth_login' %}">log in</a> to leave a comment.</h3>
 				{% endif %}
-			</div>
-		</div>	
+		
 {% endblock %}
 {% block footer %}
 

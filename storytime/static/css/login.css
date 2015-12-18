@@ -4,8 +4,27 @@
 #signin{
 	margin-top: 0px;
 }
+.btn-link {
+color:white;
+}
 .btn-success {
-    background: #9ed54c;
-	border-color: #9ed54c;
-    color: #ffffff;
+border-style: solid;
+border-color:white;
+}
+#middle{
+	padding-left:0px;
+	padding-right:0px;
+}
+#container-middle{
+	width:100%;
+	height:100%;
+
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+
+@media screen and (max-width: 770px) {
+	#middle{
+		height: 80%;
+	}
 }

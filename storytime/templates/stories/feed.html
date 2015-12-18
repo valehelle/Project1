@@ -20,45 +20,49 @@
 		<hr>
 	</div>
 	<div id = "itemcontent">
-		{% for story,image in list %}
-			<div data-id = "{{image.id}}" class = "story-item col-md-12 col-lg-6 col-xs-12 col-sm-6" style ="margin-top:30px; margin-bottom:10px; ">
-					<div class = "col-md-12 col-lg-12 col-xs-12 col-sm-12" >
-						<a class = "story" href = "/stories/read/?s={{story.storyid}}" >
-							{% thumbnail image.story "500x500" crop="center" as im %}
-								<img class = "img-responsive img-rounded"  src="{{im.url}}" style = "text-align:center;">
-							{% endthumbnail %}
-						</a>
-					</div>
-					<div class = "col-md-12 col-lg-12 col-xs-12 col-sm-12" style = "height:80px;">
-						<h3 class = "visible-lg visible-md"style = "text-align: center">{{story.title}}</h3>
-						<h4 class = "visible-xs visible-sm col-xs-12 col-sm-12"style = "text-align: center">{{story.title}}</h4>
-					</div>
-					<div  class = "col-md-12 col-lg-12 col-xs-12 col-sm-12"  style="margin-bottom:20px;">
-						<div class = "col-md-4 col-lg-4 visible-lg visible-md" style="margin-bottom:10px;">
-							{% if image.user %}
-								{% thumbnail image.user "330x330" crop="center" as im %}
-									<img class = "img-circle img-responsive user-pic"  src = "{{im.url}}" /> 
+		{% if list %}
+			{% for story,image in list %}
+				<div data-id = "{{image.id}}" class = "story-item col-md-12 col-lg-6 col-xs-12 col-sm-6" style ="margin-top:30px; margin-bottom:10px; ">
+						<div class = "col-md-12 col-lg-12 col-xs-12 col-sm-12" >
+							<a class = "story" href = "/stories/read/?s={{story.storyid}}" >
+								{% thumbnail image.story "500x500" crop="center" as im %}
+									<img class = "img-responsive img-rounded"  src="{{im.url}}" style = "text-align:center;">
 								{% endthumbnail %}
-							{% else %}
-								<img class = "img-circle img-responsive user-pic"  src = "{% static "image\default\DefaultIconBlack_1.png" %}"/> 
-							{% endif %}
+							</a>
 						</div>
-						<div  class = "v-center story-profile col-md-6 col-lg-6 col-xs-12 col-sm-12">
-							<h4>by <a href = "/profile?u={{story.user.username}}">{{story.user.username}}</a> </h4>
-							<h4>{{image.time}} ago</h4>
+						<div class = "col-md-12 col-lg-12 col-xs-12 col-sm-12" style = "height:80px;">
+							<h3 class = "visible-lg visible-md"style = "text-align: center">{{story.title}}</h3>
+							<h4 class = "visible-xs visible-sm col-xs-12 col-sm-12"style = "text-align: center">{{story.title}}</h4>
 						</div>
-					</div>
-					<div  class = "col-md-12 col-lg-12 col-xs-12 col-sm-12">
-						<div class = "col-md-12 col-lg-12 col-xs-12 col-sm-12 btn btn-success text-green no-effect-hover" style="background-color:white; margin-bottom:2px;">
-							{{story.commentcount}} comments
+						<div  class = "col-md-12 col-lg-12 col-xs-12 col-sm-12"  style="margin-bottom:20px;">
+							<div class = "col-md-4 col-lg-4 visible-lg visible-md" style="margin-bottom:10px;">
+								{% if image.user %}
+									{% thumbnail image.user "330x330" crop="center" as im %}
+										<img class = "img-circle img-responsive user-pic"  src = "{{im.url}}" /> 
+									{% endthumbnail %}
+								{% else %}
+									<img class = "img-circle img-responsive user-pic"  src = "{% static "image\default\DefaultIconBlack_1.png" %}"/> 
+								{% endif %}
+							</div>
+							<div  class = "v-center story-profile col-md-6 col-lg-6 col-xs-12 col-sm-12">
+								<h4>by <a href = "/profile?u={{story.user.username}}">{{story.user.username}}</a> </h4>
+								<h4>{{image.time}} ago</h4>
+							</div>
 						</div>
-						<div class = "col-md-12 col-lg-12 col-xs-12 col-sm-12 btn btn-success text-green no-effect-hover" style="background-color:white;">
-							{{story.starcount}} stars
+						<div  class = "col-md-12 col-lg-12 col-xs-12 col-sm-12">
+							<div class = "col-md-12 col-lg-12 col-xs-12 col-sm-12 btn btn-success text-green no-effect-hover" style="background-color:white; margin-bottom:2px;">
+								{{story.commentcount}} comments
+							</div>
+							<div class = "col-md-12 col-lg-12 col-xs-12 col-sm-12 btn btn-success text-green no-effect-hover" style="background-color:white;">
+								{{story.starcount}} stars
+							</div>
 						</div>
-					</div>
-			</div>
+				</div>
 
-		{% endfor %}
+			{% endfor %}
+		{% else %}
+		<div class = "col-lg-12"><h4>You have no feed at this moment. Please follow a few author to fill it :D</h4></div>
+		{% endif %}
 	</div>
 		<div id = "readmore" class = "col-lg-12 col-md-12 col-sm-12 col-xs-12 btn btn-success" style = "margin-bottom:10px;">
 			Read more

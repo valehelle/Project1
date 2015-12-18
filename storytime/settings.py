@@ -26,15 +26,15 @@ SECRET_KEY = 'ekv2z_viy2hd&1wd0yy-*c$*wucb!(2dy!g*npr8!n$ke90@ui'
 DEBUG = True
 THUMBNAIL_DEBUG = True 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'hazmiirfan92@gmail.com'
-EMAIL_HOST_PASSWORD = 'tquroszalppclpux'
+EMAIL_HOST_USER = 'activation@mementho.com'
+EMAIL_HOST_PASSWORD = 'D26Anfd82a'
 EMAIL_PORT = '587'
 
-
+REGISTRATION_OPEN = False
 
 
 # Application definition
@@ -77,7 +77,7 @@ ROOT_URLCONF = 'storytime.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['storytime/templates','storytime/templates/stories','storytime/templates/company'],
+        'DIRS': ['storytime/templates','storytime/templates/stories','storytime/templates/company','storytime/templates/registration'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -98,17 +98,18 @@ WSGI_APPLICATION = 'storytime.wsgi.application'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 DATABASES = {
-'default': {
-    'ENGINE': 'django.db.backends.mysql',
-    'NAME': 'neufeedc_storytime',
-    'HOST': 'localhost',
-    'PORT': '3306',
-    'USER': 'root',
-    'PASSWORD': 'root',
-	'OPTIONS': {
-         "init_command": "SET foreign_key_checks = 0;",
-    },
-}}
+	'default': {
+		'ENGINE': 'django.db.backends.mysql',
+		'NAME': 'neufeedc_storytime',
+		'HOST': 'localhost',
+		'PORT': '3306',
+		'USER': 'root',
+		'PASSWORD': 'root',
+		'OPTIONS': {
+			 "init_command": "SET foreign_key_checks = 0;",
+		},
+	}
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/

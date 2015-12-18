@@ -8,7 +8,7 @@ from sorl.thumbnail import ImageField
 # Create your models here.
 #Return the name to the Image file.
 def get_upload_file_name(instance,filename):
-	return "media/" + str(instance.user_id) + "/%s_%s" % (str(time()).replace('.','_'),filename)
+	return "media/" + str(instance.user_id) + "/%s_%s" % (str(time()).replace('.','_'),filename.lower())
 
 
 # User can have multiple story

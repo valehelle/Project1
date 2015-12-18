@@ -1,3 +1,21 @@
-.item{
-	margin-bottom:50px;
+.delete{
+	margin-top:50px;
+}
+body > div.loading-indicator-wrapper.loader-visible{
+    position: fixed;
+	color: white;
+
+}
+
+body > div.loading-indicator-wrapper.loader-visible > span{
+	position: relative;
+	top: 50%;
+	transform: translateY(44%);
+	margin-right:10px;
+}
+body > div.loading-indicator-wrapper.loader-visible > div{
+
+ position: relative;
+  top: 50%;
+  transform: translateY(100%);
 }

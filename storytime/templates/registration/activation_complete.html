@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 {% load i18n %}
-
+{% load static from staticfiles %}
+ 
 {% block content %}
-<p>{% trans "Your account is now activated. Welcome to Mementho! You will directly go to creating profile page." %}</p>
+
+	<div class = "col-lg-10 col-lg-push-1">
+		<div class"col-lg-2"><h1 id="title">Congratulation!</h1></div>
+	<h3>You have activate your account. Please <a href = "/">log in</a> </h3>
+	</div>
 {% endblock %}
+

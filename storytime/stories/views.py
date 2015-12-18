@@ -10,6 +10,8 @@ from django_comments.views.comments import post_comment
 from django_comments.models import Comment
 from django.utils.timesince import timesince
 from sorl.thumbnail import get_thumbnail
+from django.contrib.staticfiles.templatetags.staticfiles import static
+
 
 def about(request):
 	args = []
@@ -38,8 +40,39 @@ def stream_readers(id,string):
 	import user_streams
 	user_streams.add_stream_following(followers, string)
 	return True
-	
 
+def register_closed(request):
+	args = {}
+	args.update(csrf(request))
+	return render(request,'registration_closed.html',args)	
+	
+def request_access(request):
+	from django.core.mail import send_mail
+	from django.contrib import messages
+	if request.POST:
+		email = request.POST.get('email')
+		if not email:
+			messages.add_message(request, messages.SUCCESS, 'Please insert your email')
+			args = {}
+			args.update(csrf(request))
+			return render(request,'login.html',args)	
+		username = request.POST.get('username')
+		if not username:
+			messages.add_message(request, messages.SUCCESS, 'Please insert your username')
+			args = {}
+			args.update(csrf(request))
+			return render(request,'login.html',args)	
+		send_mail('Mementho Registration', username + ":" + email, 'mementhoactivate@google.com',['hazmiirfan92@gmail.com','bakhtiarateyz@gmail.com','syahmi2555@gmail.com'], fail_silently=False)
+		send_mail('Mementho', 'Thank You ' + username + ' for subscribing to Mementho. We hope to maintain this relationship and will update you everytime we can.', 'mementhoactivate@google.com',[email], fail_silently=False)
+		messages.add_message(request, messages.SUCCESS, 'Thank You for subscribing to our website. We will be in touch :D')
+		args = {}
+		args.update(csrf(request))
+		return render(request,'login.html',args)	
+	args = {}
+	args.update(csrf(request))
+	return render(request,'login.html',args)
+
+	
 def stream_feed(id,string):
 	#Stream to all users who follows.
 	user,created = Person.objects.get_or_create(name_id = id,id = id)
@@ -55,30 +88,34 @@ def stream_user(id,string):
 	return True
 
 def add_star(request):
-	if request.POST:
-		#Get the story ID
-		id = request.POST.get("storyid")
-		#Fetch the story
-		story = Story.objects.get(storyid = id)
-		star = story.starcount
-		#Get the star object. If it is not created, create 1 for user.
-		starobject,created = Star.objects.get_or_create(storyid = story,user_id = request.user)
-		if created:
-			#Increment the story star by 1
-			story.starcount = star + 1
-			story.save()
-			#Tell the author of story that the user has star the story
-			stream_user(story.user_id,str(request.user.id)+":star your story:"+str(story.storyid))
-			#Tell the user following that the user has star the story
-			stream_readers(request.user.id,str(request.user.id)+":star a story:"+str(story.storyid))
-		div = div + "<div class =\"col-md-8 col-lg-9 col-xs-12 col-sm-9 button\">"
-		div = div + "<button type=\"button\" class=\"col-xs-12 col-sm-12 col-md-9 col-lg-6 btn btn-success\" id = \"star\" value = \"" + str(story.storyid) + "\"><span class =\"glyphicon glyphicon-star\"></span><span>" + str(story.starcount) + "</span></button></div>"
-		import json
-		data = {}
-		data['string'] = div
-		return HttpResponse(json.dumps(data), content_type = "application/json")
+	if request.user.is_authenticated():
+		if request.POST:
+			#Get the story ID
+			id = request.POST.get("storyid")
+			#Fetch the story
+			story = Story.objects.get(storyid = id)
+			#Author of the story cannot star his/her own story
+			if not (story.user_id == request.user.id):
+				star = story.starcount
+				#Get the star object. If it is not created, create 1 for user.
+				starobject,created = Star.objects.get_or_create(storyid = story,user_id = request.user)
+				if created:
+					#Increment the story star by 1
+					story.starcount = star + 1
+					story.save()
+					#Tell the author of story that the user has star the story
+					stream_user(story.user_id,str(request.user.id)+":star your story:"+str(story.storyid))
+					#Tell the user following that the user has star the story
+					stream_readers(request.user.id,str(request.user.id)+":star a story:"+str(story.storyid))
+
 			
-		
+			div = "<span id = \"starcount\"> " + str(story.starcount) + "</span>"
+			import json
+			data = {}
+			data['string'] = div
+			return HttpResponse(json.dumps(data), content_type = "application/json")			
+	else:
+		return False
 
 def custom_posted(request):
 	if request.GET:
@@ -108,7 +145,7 @@ def custom_posted(request):
 			im = get_thumbnail(image, '330x330', crop='center', quality=99)
 			div = div + "<img class =\"img-circle img-responsive user-pic\" src = \"" + str(im.url) + "\" /></div>"
 		except:
-			div = div + "<img class = \"img-circle img-responsive user-pic\"  src = \"static/image/default/DefaultIconBlack_1.png\" /></div>"	
+			div = div + "<img class = \"img-circle img-responsive user-pic\"  src = \"" + static('image/default/DefaultIconBlack_1.png') + "\" /></div>"	
 		div = div + "<div class = \"col-xs-12 col-sm-12 col-md-10 col-lg-10\">"
 		div = div + "<h4><a href = \"/profile?u=" + str(comment.user_name) + "\" class = \"text-green\">" + str(comment.user_name) + "</a> " + str(comment.comment) + "</h4><h6>" + time + " ago</h6>"
 		div = div + "</div></div>"
@@ -127,6 +164,7 @@ def custom_login(request):
 def create_stories(request):
 	if request.user.is_authenticated():
 		if request.POST:
+			print request.POST
 			current_user = request.user
 			list_form = []
 			#Get the story form
@@ -158,7 +196,7 @@ def create_stories(request):
 
 				#Handle insertion of the image
 				for f,p in zip(request.FILES.getlist('source'),request.POST.getlist('position')):
-					if f.size > 5000000:
+					if f.size > 10000000:
 						from django.contrib import messages
 						messages.add_message(request, messages.WARNING, 'Image size should not be more than 5MB.')
 						return render_page(request,"create_stories.html","custom error")
@@ -235,6 +273,7 @@ def read_stories(request):
 		image = Image.objects.filter(storyid = story.id)
 		text = Text.objects.filter(storyid = story.id)
 		args = {}
+		
 		if request.user.is_authenticated():
 			profile = User_Info.objects.get(user_id = request.user.id)
 			count = get_notification_count(request)
@@ -244,6 +283,7 @@ def read_stories(request):
 			profile = None
 			count = None
 			notification = None
+			
 		author = User_Info.objects.get(user_id = story.user_id)		
 		comment = get_comment_latest(story.id)
 			#Combine result for text and image. Sort according to position
@@ -258,6 +298,7 @@ def read_stories(request):
 		args['notification'] = notification
 		args['count'] = count
 		args['comments'] = comment
+		args['metaimage'] = image
 		return render (request,"read_stories.html",args)
 	else:
 		return HttpRespondeRedirect("/")
@@ -361,9 +402,9 @@ def html_feed(list):
 			#Try to get user profile
 			story_user = user_info.profile_pic.image
 			user_im =  get_thumbnail(story_user, '330x330', crop='center', quality=99)
-			string = string + "<img class = \"img-circle img-responsive user-pic\"  src = \"" + str(user_im.url) + "\"/> "
+			string = string + "<img class = \"img-circle img-responsive user-pic\"  src = \"" + str(user_im.url) + "\"/> </div> "
 		except:
-			string = string + "<img class = \"img-circle img-responsive user-pic\"  src = \"static/image/default/DefaultIconBlack_1.png\"/> </div>"
+			string = string + "<img class = \"img-circle img-responsive user-pic\"  src = \""  + static('image/default/DefaultIconBlack_1.png') + "\"/> </div>"
 				
 		string = string + "<div  class = \"v-center story-profile col-md-6 col-lg-6 col-xs-12 col-sm-12\">"
 		string = string + "<h4>by <a href = \"/profile?u=" + str(story.user.username) + "\">" +  str(story.user.username)  + "</a> </h4>"
@@ -461,9 +502,9 @@ def html_bookmark(list):
 			#Try to get user profile
 			story_user = user_info.profile_pic.image
 			user_im =  get_thumbnail(story_user, '330x330', crop='center', quality=99)
-			string = string + "<img class = \"img-circle img-responsive user-pic\"  src = \"" + str(user_im.url) + "\"/> "
+			string = string + "<img class = \"img-circle img-responsive user-pic\"  src = \"" + str(user_im.url) + "\"/> </div>"
 		except:
-			string = string + "<img class = \"img-circle img-responsive user-pic\"  src = \"static/image/default/DefaultIconBlack_1.png\"/> </div>"
+			string = string + "<img class = \"img-circle img-responsive user-pic\"  src = \""  + static('image/default/DefaultIconBlack_1.png') + "\"/> </div>"
 				
 		string = string + "<div  class = \"v-center story-profile col-md-6 col-lg-6 col-xs-12 col-sm-12\">"
 		string = string + "<h4>by <a href = \"/profile?u=" + str(story.user.username) + "\">" +  str(story.user.username)  + "</a> </h4>"
@@ -559,9 +600,9 @@ def html_following(items):
 		div = div + "<div class = \"visible-md visible-lg visible-sm col-md-2 col-lg-2 col-sm-2\">"
 		try:
 			im =  get_thumbnail(user_info_1.profile_pic.image, '330x330', crop='center', quality=99)
-			div = div + "<img class = \"img-circle img-responsive user-pic\" src = \"" + str(im.url) + "\"/>"
+			div = div + "<img class = \"img-circle img-responsive user-pic\" src = \"" + str(im.url) + "\"/></div>"
 		except:
-			div = div + "<img class = \"img-circle img-responsive user-pic\"  src = \"static/image/default/DefaultIconBlack_1.png\" /> </div>"
+			div = div + "<img class = \"img-circle img-responsive user-pic\"  src = \""  + static('image/default/DefaultIconBlack_1.png') + "\" /> </div>"
 			
 		div = div + "<div class = \"col-xs-12 col-sm-8 col-md-8 col-lg-8 v-center\" >"
 		div = div + "<h3 style = \"padding:0;\">"
@@ -575,7 +616,6 @@ def html_following(items):
 			story = Story.objects.get(storyid = object[2])
 			user_info_2 = User_Info.objects.get(user_id = story.user_id)
 			storyimage = Image.objects.filter(storyid = story.id).first()
-			hash['story'] = storyimage.source
 			im1 =  get_thumbnail(storyimage.source, '330x330', crop='center', quality=99)
 			
 			div = div + "<h6>" + time + " ago</h6></div>"
@@ -628,7 +668,7 @@ def load_comment(request):
 				im = get_thumbnail(image, '330x330', crop='center', quality=99)
 				div = div + "<img class =\"img-circle img-responsive user-pic\"  src = \"" + im.url + "\" /></div>"
 			except:
-				div = div + "<img class = \"img-circle img-responsive user-pic\" src = \"static/image/default/DefaultIconBlack_1.png\" /></div>"
+				div = div + "<img class = \"img-circle img-responsive user-pic\" src = \""  + static('image/default/DefaultIconBlack_1.png') + "\" /></div>"
 		
 			div = div + "<div class = \"col-xs-12 col-sm-12 col-md-10 col-lg-10\"><h4><a href = \"/profile?u=" + str(comment['username']) + "\" class = \"text-green\">" + str(comment['username']) + "</a> " + " " + str(comment['comment']) + "<h6>" + comment['time'] + " ago</h6></h4></div></div><div class = \"col-xs-12 col-sm-12 col-md-10 col-lg-12\"><hr></div>"
 			divcom.append(div)
@@ -715,9 +755,9 @@ def load_notification(request):
 			try:
 				image = notification['story_image']
 				im = get_thumbnail(image, '330x330', crop='center', quality=99)
-				div = div + "<div class = \"col-sm-10 col-xs-8  col-md-10 col-lg-10\">"
+				div = div + "<div class = \"col-sm-10 col-xs-12  col-md-10 col-lg-10\">"
 				div = div + "<h3><a href = \"/profile?u=" + str(notification['username']) + "\">" + str(notification['username']) + "</a> " + str(notification['topic']) +" <h6>" + notification['time'] + " ago</h6></h3></div>"
-				div = div + "<div class = \"col-sm-2 col-xs-3  col-md-2 col-lg-2\">"
+				div = div + "<div class = \"col-sm-2 col-xs-12  col-md-2 col-lg-2\">"
 				div = div + "<a href = \"/stories/read/?s=" + str(notification['story']) + "\"><img class = \"img-rounded img-responsive\"   src = \"" + str(im.url) + "\" /></a> </div>"
 			except :
 				div = div + "<div class = \"col-sm-10 col-xs-8  col-md-10 col-lg-10\">"
@@ -944,10 +984,12 @@ def user_profile(request):
 				return HttpResponseRedirect("/user_search/?u=" + str(name))
 			
 			#Count number of story
-			stories = Story.objects.filter(user_id = person.id)
+			stories = Story.objects.filter(user_id = person.id,complete = 1)
+			
 			storycount = stories.count()
 			#Get the first image of the story
 			imagelist = []
+			stories.reverse()
 			for story in stories:
 				#Get the first image of every story and append to image list.
 				image = Image.objects.filter(storyid = story.id).first()

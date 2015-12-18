@@ -1,0 +1,9 @@
+Django==1.8.4
+django-contrib-comments==1.6.1
+django-last-seen==0.3
+django-registration-redux==1.2
+django-user-streams==0.6.0
+mysql-python==1.2.5
+Pillow==3.0.0
+sorl-thumbnail==12.3
+wheel==0.24.0
