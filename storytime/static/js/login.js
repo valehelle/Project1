@@ -1,9 +1,15 @@
 $(document).ready(function() {
+
 	$(document).on('click','#subscribe-button',function(){
 		 $(this).val('Please wait ...')
 		.attr('disabled','disabled');
 		$( '#subscribe-form' ).submit();
 	});
+	
+if (document.getElementById("message")) {
+	$('#login').click();
+}
+
 });
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

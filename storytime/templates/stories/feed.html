@@ -17,7 +17,7 @@
 		{% if list %}
 			<div id = "feedcontent" class = "col-xs-12 col-md-12 col-lg-12" style = "padding:0">
 			{% for story,image in list %}
-				<div data-id = "{{image.id}}" class = "story-item col-xs-12 col-sm-12 col-md-6 col-lg-6" style ="padding:3px; background-color:transparent">
+				<div data-id = "{{image.id}}" class = "story-item col-xs-12 col-sm-6 col-md-6 col-lg-6" style ="padding:3px; background-color:transparent">
 					<div class = "col-md-12 col-lg-12 col-xs-12 col-sm-12 card" style = "padding:0; margin-bottom:0px;">
 						<div id = "card-image" class = "col-md-12 col-lg-12 col-xs-12 col-sm-12" style = "padding:0;" >
 							<a class = "story" href = "/stories/read/?s={{story.storyid}}" >

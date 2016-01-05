@@ -1,14 +1,81 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% block predata %}
+<style>
+#terms{
+	border-left:medium solid #629632;	
+}
+#terms > h5{
+	color:black;
+	
+}
+#acceptable{
+border-left:thick solid transparent;	
+}
+#acceptable > h5{
+	color:#A2A2A1;
+	
+}
+#acceptable:hover > h5{
+	color:black;
+	
+}
+#support{
+border-left:thick solid transparent;	
+}
+#support > h5{
+	color:#A2A2A1;
+	
+}
+#support:hover > h5{
+	color:black;
+	
+}
+#privacy{
+border-left:thick solid transparent;	
+}
+#privacy > h5{
+	color:#A2A2A1;
+	
+}
+#privacy:hover > h5{
+	color:black;
+	
+}
+#about{
+border-left:thick solid transparent;	
+}
+#about > h5{
+	color:#A2A2A1;
+	
+}
+#about:hover > h5{
+	color:black;
+	
+}
+</style>
+{% endblock %}
 
-
-
+		{% block option %}
+			<div class = "col-xs-12 col-sm-2  col-md-2  col-lg-2 col-lg-push-2">
+				<div id = "option" style = "color:black; padding:0px;" class = "col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<h6 style = "margin-left:2px; margin-top:2px; margin-bottom:0; font-weight: bold;  color:#85887F;" >MEMENTHO</h6>
+				<hr style = "margin-bottom: 0px;margin-top:2px;  border-color:#85887F;">
+					<!-- <a class = "select-option col-xs-3 col-sm-12   col-lg-12 " href = "following/" style = "color:black; padding:0px;margin:0px;"><h4 style = " text-align:center;">Readers</h4></a>
+					<a class = "select-option col-xs-3 col-sm-12  col-lg-12 " href = "/bookmark" style = "color:black; padding:0px;margin:0px;"><h4 style = " text-align:center;">Bookmark</h4></a>-->
+					<a  id = "about" class = "select-option col-xs-6 col-sm-12 col-lg-12  " href = "/company/about" style = "color:black; margin:0px;"><h5>About</h5></a>
+					<a  id = "privacy" class = "select-option col-xs-6 col-sm-12 col-lg-12  " href = "/company/privacy" style = "color:black;margin:0px;"><h5>Privacy</h5></a>
+					<a  id = "terms" class = "select-option col-xs-6 col-sm-12 col-lg-12 " href = "/company/terms" style = "color:black; margin:0px;"><h5>Terms</h5></a>
+					<a  id = "acceptable" class = "select-option col-xs-6 col-sm-12 col-lg-12 " href = "/company/acceptable" style = "color:black; margin:0px;"><h5>Acceptable Use</h4></a>
+					<a id = "support" class = "select-option col-xs-6 col-sm-12 col-lg-12 " href = "/company/support" style = "color:black; margin:0px;"><h5 >Support</h5></a>
+					
+				</div>
+			</div>
+			{% endblock %}
 
 {% block content %}
-<div class="row" >
-	<div class = "col-md-10 col-md-push-1 col-lg-10 col-lg-push-1 col-xs-12 col-sm-12">
-		<h1 class = "text-green" style = "margin-bottom:30px;">Terms and Condition</h1>
-		<h2>Mementho products and services are provided by Mementho, Inc. These Terms of Service ("Terms") govern your access to and use of Mementho website, products, and services ("Products"). Please read these Terms carefully, and contact us if you have any questions. By accessing or using our Products, you agree to be bound by these Terms and by our Privacy Policy.</h2>
+	<div class = "col-md-12 col-lg-12 col-xs-12 col-sm-12 card">
+		<h3>Mementho products and services are provided by Mementho, Inc. These Terms of Service ("Terms") govern your access to and use of Mementho website, products, and services ("Products"). Please read these Terms carefully, and contact us if you have any questions. By accessing or using our Products, you agree to be bound by these Terms and by our Privacy Policy.</h3>
 		<h2 style = "font-weight: bold;">1. Using Mementho</h2>
 		<h3 style = "font-weight: bold;">a. Who can use Mementho</h3>
 		<h3>You may use our Products only if you can form a binding contract with Mementho, and only in compliance with these Terms and all applicable laws. When you create your Mementho account, you must provide us with accurate and complete information. Any use or access by anyone under the age of 13 is prohibited. If you open an account on behalf of a company, organization, or other entity, then (a) "you" includes you and that entity, and (b) you represent and warrant that you are authorized to grant all permissions and licenses provided in these Terms and bind the entity to these Terms, and that you agree to these Terms on the entity's behalf. Some of our Products may be software that is downloaded to your computer, phone, tablet, or other device. You agree that we may automatically upgrade those Products, and these Terms will apply to such upgrades.</h3>
@@ -49,9 +116,10 @@
 		<h3>Entire Agreement/Severability. These Terms, together with the Privacy Policy and any amendments and any additional agreements you may enter into with Mementho in connection with the Products, shall constitute the entire agreement between you and Mementho concerning the Products. If any provision of these Terms is deemed invalid, then that provision will be limited or eliminated to the minimum extent necessary, and the remaining provisions of these Terms will remain in full force and effect.</h3>
 		<h3>No Waiver. No waiver of any term of these Terms shall be deemed a further or continuing waiver of such term or any other term, and Mementho’s  failure to assert any right or provision under these Terms shall not constitute a waiver of such right or provision.</h3>
 	</div>
-</div>
 
 
 {% endblock %}
 
+{% block featured %}
 
+{% endblock %}

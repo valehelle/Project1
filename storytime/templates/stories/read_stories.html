@@ -48,7 +48,7 @@
 			{% for item in items %}
 					
 						{% if item.text %}
-						<div class="story-content col-lg-12 card" style=" margin-top:30px; ">
+						<div class="story-content col-lg-12 card" style=" margin-top:30px;">
 							<a  style = "text-decoration: none; " class="fancybox-thumb" rel="fancybox-thumb" href="#inline{{forloop.counter}}" >
 									<h4 style = "text-align:center; color:black; ">{{item.text}}</h4>
 									<div style="display: none;" class = "text_inside" id="inline{{forloop.counter}}">
@@ -57,18 +57,20 @@
 							</a>
 						</div>
 						{% elif item.source %}
+						<div class="col-lg-12"style = "padding:0; margin-top:30px; ">
 									{% thumbnail item.source "x700" as im %}
-									<a class="story-content fancybox-thumb col-lg-12" rel="fancybox-thumb" href="{{im.url}}" style = "padding:0; margin-top:30px; ">
+									<a class="story-content fancybox-thumb" rel="fancybox-thumb" href="{{im.url}}" style = "width:100%;">
 									{% endthumbnail %}
 									{% thumbnail item.source "x700" as im %}
 										{% if im|is_portrait %}
-										<div id = "image-potrait"  style="  background-position: 50% 5%; background-image:url({{im.url}}); height:400px; background-repeat: no-repeat;  background-size: contain;  padding:0;  background-attachment: fixed;">										
+										<div id = "image-potrait"  style="  background-position: 50% 5%; background-image:url({{im.url}}); height:400px; background-repeat: no-repeat;  background-size: auto 100%;  padding:0;  background-attachment: fixed;">										
 										{% else %}
 										<div style=" padding:0; margin:0; margin-top:30px;  background-position: 50% 5%; background-image:url({{im.url}});  height:400px;  background-size: cover;  padding:0;  background-attachment: fixed;">
 										{% endif %}
 									</div>
 									{% endthumbnail %}
 									</a>
+						</div>
 						{% endif %}
 					
 			{% endfor %}
@@ -131,7 +133,11 @@
 					</div>
 				</div>
 				{% else %}
-						<h3 class = "col-md-12 col-lg-8 col-lg-push-2 col-xs-12 col-sm-12 card">Please <a href="{% url 'auth_login' %}">log in</a> to leave a comment.</h3>
+					<div class = "col-lg-12 col-xs-12 " style = "padding-top:25px;">
+						<div class = "col-xs-12 col-md-8 col-md-push-2 col-lg-6 col-lg-push-3 card">
+							<h3>Please <a href="{% url 'auth_login' %}">log in</a> to leave a comment.</h3>
+						</div>
+					</div>
 				{% endif %}
 		
 {% endblock %}

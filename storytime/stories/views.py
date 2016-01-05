@@ -201,7 +201,7 @@ def custom_posted(request):
 	
 def custom_login(request):
 	if request.user.is_authenticated():
-		return HttpResponseRedirect("/following/")
+		return HttpResponseRedirect("/feed/")
 	else:
 		return login(request)
 		

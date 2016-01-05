@@ -36,7 +36,7 @@
 		{% else %}
 			<style>
 				div #content{
-					margin-top:70px;
+					margin-top:50px;
 				}
 			</style>
 		{% endif %}
@@ -55,7 +55,7 @@
 								<div  class = "v-center col-md-1 col-md-push-1 col-lg-1 col-lg-push-1 col-xs-3 col-sm-2" href = "/">
 									<a href = "/"><img id = "logo" class = "img-responsive " src = "{% static "image\welcome_header\MT-Logo.png" %}" style = "float: right; height:35px; width:35px;"  /></a>
 								</div>
-								<div id = "search_bar"  class="v-center visible-lg visible-md visible-sm  col-lg-push-1  col-sm-5  col-md-5 col-md-push-1 col-lg-4" >
+								<div id = "search_bar"  class="v-center visible-lg visible-md visible-sm  col-lg-push-1  col-sm-5  col-md-4 col-md-push-1 col-lg-4" >
 									<div class="input-group">
 										<input id="search_input" type="text" class="form-control" placeholder="Search User">
 											<span class="input-group-btn">
@@ -66,10 +66,10 @@
 										</input>
 									</div><!-- /input-group -->
 								</div>
-							<div id = "notification" class="v-center col-md-1 col-md-push-2 col-lg-1 col-lg-push-2 visible-lg visible-md " style = "margin-left:0;">
+							<div id = "notification" class="v-center col-md-2 col-md-push-1 col-lg-2 col-lg-push-1 visible-lg visible-md " style = "margin-left:0;">
 								<div data-toggle="dropdown" data-target="#">
-									<div class="col-md-12 col-lg-12 button" style = "padding-left:0;">
-										<button class="btn btn-success" type="button" id = "notificationbutton" style = "background-color:transparent; border-color:white; color:white;">
+									<div class="col-md-12 col-lg-12 button" style = "padding:0;">
+										<button class="btn btn-success" type="button" id = "notificationbutton" style = "background-color:transparent; border-color:white; color:white;  float:right;">
 										Notification <span id = "count">{{count}}</span></button>
 									</div>
 								</div>
@@ -105,7 +105,7 @@
 								</a>
 							</div>
 							
-							<div id = "username" class=" col-sm-2 col-md-2 col-md-push-2  col-lg-1 col-lg-push-3 col-xs-2">
+							<div id = "username" class=" col-sm-2 col-md-2 col-md-push-1  col-lg-1 col-lg-push-2 col-xs-2">
 								
 									<h4 class = "visible-lg visible-md visible-sm text-white text-right">
 										<a href = "/profile?u={{ user.username }}" style = "color:white;text-decoration: none;">{{ user.username }}</a>
@@ -115,7 +115,7 @@
 									</h5> 
 								
 							</div>
-							<div id = "user-image" class="col-md-1  col-md-push-2  col-lg-1 v-center  col-xs-3 col-lg-push-3 col-sm-1">
+							<div id = "user-image" class="col-md-1  col-md-push-1  col-lg-1 v-center  col-xs-3 col-lg-push-2 col-sm-1">
 								{% if profile.profile_pic.image %}
 									{% thumbnail profile.profile_pic.image "330x330" crop="center" as im %}
 										<img class = "img-circle img-responsive " style="height: 33px; cursor: pointer;"  src = "{{im.url}}" data-toggle="dropdown" data-target="#"/> 
@@ -146,8 +146,8 @@
 		
 		<div class = "navbar-fixed-top">
 			<div class="container-fluid" >
-				<div class = "row" style="background-image:url({% static "image\welcome_header\header_background.jpg" %})">
-					<a href = "\"><img id = "logo" class="logo-2 col-lg-4 col-sm-6 col-xs-12 col-md-6 col-lg-push-1" src = "{% static "image\welcome_header\logo.png" %} "/></a>
+				<div class = "row" style="background-color:#629632;">
+					<a href = "\"><img id = "logo" class="logo-2 col-lg-2 col-sm-6 col-xs-12 col-md-6 col-lg-push-1" src = "{% static "image\welcome_header\logo.png" %} "/></a>
 				</div>
 			</div>
 		</div>
@@ -159,20 +159,15 @@
 		{% block option %}
 			<div class = "col-xs-12 col-sm-2  col-md-2  col-lg-2 col-lg-push-2">
 				<div id = "option" style = "color:black; padding:0px;" class = "col-xs-12 col-sm-12 col-md-12 col-lg-12">
-				{% if user.is_authenticated %}
-					<h6 style = "margin-left:2px; margin-top:2px; margin-bottom:0; font-weight: bold;  color:#85887F;" >MEMENTHO</h6>
-					<hr style = "margin-bottom: 0px;margin-top:2px;  border-color:#85887F;">
+				<h6 style = "margin-left:2px; margin-top:2px; margin-bottom:0; font-weight: bold;  color:#85887F;" >MEMENTHO</h6>
+				<hr style = "margin-bottom: 0px;margin-top:2px;  border-color:#85887F;">
 					<a id = "feed" class = "select-option col-xs-6 col-sm-12 col-lg-12 " href = "/" style = "color:black; margin:0px;"><h5>News Feed</h5></a>
 					<a id = "discovery" class = "select-option col-xs-6 col-sm-12 col-lg-12 " href = "/discovery/" style = "color:black;margin:0px;"><h5 >Discover</h5></a>
-					<!-- <a class = "select-option col-xs-3 col-sm-12   col-lg-12 " href = "following/" style = "color:black; padding:0px;margin:0px;"><h4 style = " text-align:center;">Readers</h4></a>
-					<a class = "select-option col-xs-3 col-sm-12  col-lg-12 " href = "/bookmark" style = "color:black; padding:0px;margin:0px;"><h4 style = " text-align:center;">Bookmark</h4></a>-->
-				{% else %}
-					<a class = "select-option col-xs-12 col-sm-12  col-lg-12 " href = "/" style = "color:black; padding:0px;margin:0px;"><h4 style = " text-align:center;">Log In</h4></a>
-				{% endif %}
+
 					
 				</div>
 			</div>
-			{% endblock%}
+			{% endblock %}
 			{% block storyboard%}
 				<div class= "col-xs-12 col-sm-6 col-md-6 col-lg-4 col-lg-push-2 col-xs-12 col-sm-6" id = "storyboard" style = "min-height: 100vh; margin-bottom:20px; padding-bottom:20px;">	
 			{% endblock %}
@@ -210,7 +205,7 @@
 			
 			<div id = "footer" class="col-lg-12">
 				<div class="col-lg-8 col-lg-push-2 col-md-8 col-md-push-2 col-sm-12 col-xs-12  " style = "margin-bottom:20px;">
-					© 2015 Mementho |  <a href="/company/about">About</a> | <a href="/company/privacy">Privacy</a> | <a href="/company/terms">Terms</a> | <a href="/company/acceptable">Acceptable Use</a> | <a href="/company/support">Support</a>
+					© 2015 Mementho |  <a style = "color:black;"href="/company/about">About</a> | <a style = "color:black;" href="/company/privacy">Privacy</a> | <a style = "color:black;" href="/company/terms">Terms</a> | <a style = "color:black;" href="/company/acceptable">Acceptable Use</a> | <a style = "color:black;" href="/company/support">Support</a>
 				</div>
 			</div>
 		</div>

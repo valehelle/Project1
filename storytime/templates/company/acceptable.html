@@ -1,11 +1,78 @@
 {% extends "base.html" %}
 {% load staticfiles %}
-
-
+{% block predata %}
+<style>
+#acceptable{
+	border-left:medium solid #629632;	
+}
+#acceptable > h5{
+	color:black;
+	
+}
+#privacy{
+border-left:thick solid transparent;	
+}
+#privacy > h5{
+	color:#A2A2A1;
+	
+}
+#privacy:hover > h5{
+	color:black;
+	
+}
+#support{
+border-left:thick solid transparent;	
+}
+#support > h5{
+	color:#A2A2A1;
+	
+}
+#support:hover > h5{
+	color:black;
+	
+}
+#terms{
+border-left:thick solid transparent;	
+}
+#terms > h5{
+	color:#A2A2A1;
+	
+}
+#terms:hover > h5{
+	color:black;
+	
+}
+#about{
+border-left:thick solid transparent;	
+}
+#about > h5{
+	color:#A2A2A1;
+	
+}
+#about:hover > h5{
+	color:black;
+	
+}
+</style>
+{% endblock %}
+		{% block option %}
+			<div class = "col-xs-12 col-sm-2  col-md-2  col-lg-2 col-lg-push-2">
+				<div id = "option" style = "color:black; padding:0px;" class = "col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<h6 style = "margin-left:2px; margin-top:2px; margin-bottom:0; font-weight: bold;  color:#85887F;" >MEMENTHO</h6>
+				<hr style = "margin-bottom: 0px;margin-top:2px;  border-color:#85887F;">
+					<!-- <a class = "select-option col-xs-3 col-sm-12   col-lg-12 " href = "following/" style = "color:black; padding:0px;margin:0px;"><h4 style = " text-align:center;">Readers</h4></a>
+					<a class = "select-option col-xs-3 col-sm-12  col-lg-12 " href = "/bookmark" style = "color:black; padding:0px;margin:0px;"><h4 style = " text-align:center;">Bookmark</h4></a>-->
+					<a  id = "about" class = "select-option col-xs-6 col-sm-12 col-lg-12  " href = "/company/about" style = "color:black; margin:0px;"><h5>About</h5></a>
+					<a  id = "privacy" class = "select-option col-xs-6 col-sm-12 col-lg-12  " href = "/company/privacy" style = "color:black;margin:0px;"><h5>Privacy</h5></a>
+					<a  id = "terms" class = "select-option col-xs-6 col-sm-12 col-lg-12 " href = "/company/terms" style = "color:black; margin:0px;"><h5>Terms</h5></a>
+					<a  id = "acceptable" class = "select-option col-xs-6 col-sm-12 col-lg-12 " href = "/company/acceptable" style = "color:black; margin:0px;"><h5>Acceptable Use</h4></a>
+					<a id = "support" class = "select-option col-xs-6 col-sm-12 col-lg-12 " href = "/company/support" style = "color:black; margin:0px;"><h5 >Support</h5></a>
+					
+				</div>
+			</div>
+			{% endblock %}
 {% block content %}
-<div class="row" >
-	<div class = "col-md-10 col-md-push-1 col-lg-10 col-lg-push-1 col-xs-12 col-sm-12">
-		<h1 class = "text-green" style = "margin-bottom:30px;">Acceptable Use Policy</h1>
+	<div class = "col-md-12 col-lg-12 col-xs-12 col-sm-12 card">
 		<h2>Mementho is a place to share and read stories. To make Mementho a comfortable place for people to unleash their creativity, we require everyone to agree and follow our rules.</h2>
 		<h3>Stuff you can’t post</h3>
 		<h4>You aren’t allowed to post anything that:</h4>
@@ -47,9 +114,11 @@
 		<h4>We may remove anything for any reason, including if we think it goes against any of these rules or our Terms of Service.</h4>
 		
 	</div>
-</div>
 
 
 {% endblock %}
 
+{% block featured %}
+
+{% endblock %}
 
