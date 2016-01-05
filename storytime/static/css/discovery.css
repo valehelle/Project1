@@ -25,9 +25,6 @@ border-left:thick solid transparent;
 	
 }
 @media screen and (max-width: 768px) {
-	.story-item {
-		max-width:500px;
-	}
 	.select-option {
 		max-width:500px;
 	}

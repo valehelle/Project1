@@ -21,7 +21,7 @@
 						<div id = "card-image" class = "col-md-12 col-lg-12 col-xs-12 col-sm-12" style = "padding:0;" >
 							<a class = "story" href = "/stories/read/?s={{story.storyid}}" >
 								{% thumbnail image.story "500x500" crop="center" as im %}
-									<img class = "img-responsive"  src="{{im.url}}" style = "text-align:center;">
+									<img class = "img-responsive"  src="{{im.url}}" style = "width: 100%; text-align:center;">
 								{% endthumbnail %}
 							</a>
 

@@ -24,10 +24,7 @@ border-left:thick solid transparent;
 	color:black;
 	
 }
-@media screen and (max-width: 768px) {
-	.story-item {
-		max-width:500px;
-	}
+@media screen and (max-width: 768px) { 
 	.select-option {
 		max-width:500px;
 	}
