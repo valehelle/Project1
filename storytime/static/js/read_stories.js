@@ -90,16 +90,16 @@ $(document).ready(function() {
 	}
 	
 	function addLinks() {
-		var list = $(".item");
+		var list = $("#linkimage");
 		
 		if (!list.length) {    
-			list = $('<ul id="linkimage" class = \"col-md-11 col-lg-11 col-sm-11 col-xs-12\">');
+			list = $('<ul id="linkimage" class = \"col-md-11 col-lg-10 col-lg-push-1 col-sm-11 col-xs-12\">');
 		
 			for (var i = 0; i < this.group.length; i++) {
 				$('<li data-index="' + i + '"><label></label></li>').click(function() { $.fancybox.jumpto( $(this).data('index'));}).appendTo( list );
 			}
 			
-			list.appendTo( '#container' );
+			list.appendTo( '.fancybox-prev' );
 		}
 
 		list.find('li').removeClass('active').eq( this.index ).addClass('active');
@@ -134,14 +134,15 @@ $(document).ready(function() {
 		});
 		return false;
 	});
-	$(document).on('click','.button #oldercomment',function(){
+	$(document).on('click','#oldercomment',function(){
 		$data = $( ".comment-item" ).first().attr( "data-id" );
+	
         $.ajax({
             type:"POST",
             url:"/load_comment/",
             data: {
 					'max-id': $data,
-					'id': $( "#oldercomment" ).val(),
+					'id': $( "#oldercomment" ).attr( "value" ),
                   },
             success: function(result){
 				$( "#comment" ).prepend(result.string);

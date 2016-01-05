@@ -140,10 +140,8 @@ a:hover{
 	border-color: #9ed54c;
 	cursor: default;
 }
-.btn.no-effect-hover:active{
-	color: #9ed54c;
-	border-color: #9ed54c;
-	box-shadow: 10px 10px 5px white;
+.btn.btn-success:active{
+
 }
 .no-gutter >  [class*='col-']{
   padding-right:0;

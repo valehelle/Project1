@@ -6,64 +6,47 @@
 	<script type="text/javascript" src="{% static "js/create_story.js"%}"></script>
 	<script type="text/javascript" src="{% static "js/jquery.loading-indicator.min.js"%}"></script>
 {% endblock %}
+{% block option %}
+{% endblock %}
+{% block storyboard%}
+	<div class= "col-xs-12 col-sm-12 col-md-12 col-lg-12" id = "storyboard" style = "margin:0; padding:0; min-height: 100vh; margin-bottom:20px; padding-bottom:20px;">	
+{% endblock %}
 {% block content %}
-
-	<div class = "col-md-12 col-lg-12 col-xs-12 col-sm-12  card">
-		<div class = "col-md-12 col-lg-12 col-sm-12 col-xs-12">
-			<h3 >Create new story</h3>
-		</div>
-		<div class = "col-md-12 col-lg-12 col-sm-12 col-xs-12">
-			<ul>
-			<li><h4>Make sure that the story contain at least an image and a text!</h4></li>
-			<li><h4>The image choosen must be in JPEG format.</h4></li>
-			<li><h4>The maximum size per image is 10mb.</h4></li>
-			<ul>
-		</div>
-		<div class = "col-md-12 col-lg-12 col-sm-12 col-xs-12">
-			{% if messages %}
-			<div class="messages">
-				{% for message in messages %}
-				<div {% if message.tags %} class="{{ message.tags }}"{% endif %}><h4 style = "color:red;" class = "error">{{ message }}</h4></div>
-				{% endfor %}
-			</div>
-			{% endif %}
-			
-			{{ form.source.errors }}
-			{% if form.title.errors %}
-				<h4 class = "error">Please insert your title</h4>
-			{% endif %}
-		</div>
-	</div>
 <form action="/stories/create_stories/" method="post" enctype = "multipart/form-data">{% csrf_token %}
-	<div class = "col-md-12 col-lg-12 col-xs-12 col-sm-12  card">
-						<div class = "col-md-6 col-lg-6 col-sm-12 col-xs-12">
-							<label for="id_Story-title"><h4>Title:</h4></label>
+<div id = "banner" class = "col-md-12 col-lg-12 col-xs-12 col-sm-12 " style = " margin:0; padding:0; color:white; width:100%; height:100%;">
+	<div class = "col-md-12 col-lg-12 col-xs-12 col-sm-12 " style = " min-height:100vh; margin:0; color:white; width:100%; height:100%; background-color: rgba(0, 0, 0, 0.4);">
+						<div class = "col-md-8 col-lg-12 col-sm-12 col-xs-12" style = "margin-top:25vh;">
+							<textarea class = "col-xs-12 col-sm-12 col-md-8 col-md-push-2 col-lg-6 col-lg-push-3" id="id_Story-title" maxlength="200" name="Story-title" type="text" placeholder="eg. Summer Vacation `15" style = "height:50vh;  background-color:transparent; border-color:transparent; font-size:65px; text-align:center;"></textarea>
 						</div>
-						<div class = "col-md-8 col-lg-8 col-sm-12 col-xs-12">
-							<input class = "form-control" id="id_Story-title" maxlength="200" name="Story-title" type="text" placeholder="eg. Summer Vacation `15">
-						</div>
+							<input  name = "source" class = "col-xs-12 col-sm-12 col-md-8 col-md-push-2 col-lg-2 col-lg-push-5" type='file' onchange="readURL(this);" style = "text-align:center;" />
+							<input id="id_position" name="position" type="hidden" value="1">
+						
 	</div>
-	<div id = "choice"  class = "col-md-12 col-lg-12 col-sm-12 col-xs-12 card">
-		<div id="addimage" class = "col-sm-12 col-xs-12 col-md-12 col-lg-5 btn btn-success" style = "margin-bottom:10px;">
-			<h4>Image</h4>
+</div>
+	<div id = "story-content" class = "col-md-12 col-lg-12 col-sm-12 col-xs-12" >
+		<div id = "choice"  class = " col-xs-12 col-md-8 col-md-push-2 col-lg-6 col-lg-push-3" style = "margin-top:25px;">
+			<div id="addimage" class = "col-sm-12 col-xs-12 col-md-12 col-lg-5 btn btn-success" style = "margin-bottom:10px;">
+				<h4>Image</h4>
+			</div>
+			<div id = "addtext" class = "col-sm-12 col-xs-12 col-md-12 col-lg-5 col-lg-push-2 btn btn-success">
+				<h4>Text</h4>
+			</div>
 		</div>
-		<div id = "addtext" class = "col-sm-12 col-xs-12 col-md-12 col-lg-5 col-lg-push-2 btn btn-success">
-			<h4>Text</h4>
-		</div>
+	</div>		
+	<div class = "col-md-12 col-lg-12 col-sm-12 col-xs-12">
+		<br>
+		<br>
+	</div>		
+				
+	<div class = "item col-xs-10 col-xs-push-1 col-md-8 col-md-push-2 col-lg-6 col-lg-push-3">
+		<input id = "submit" type = "submit"  class = "col-md-12 col-lg-12 col-sm-12 col-xs-12 btn btn-success" name = "submit" value = "Upload Story">
 	</div>
 				
-				<div class = "col-md-12 col-lg-12 col-sm-12 col-xs-12">
-					<br>
-					<br>
-				</div>		
-				<div class = "col-md-12 col-lg-12 col-sm-12 col-xs-12">
-					<input id = "submit" type = "submit"  class = "col-md-12 col-lg-12 col-sm-12 col-xs-12 btn btn-success" name = "submit" value = "Upload Story">
-				</div>
 </form>
 			
 
 
 {% endblock %}
-{% block footer %}
+{% block subscribe %}
 footer
 {% endblock %}

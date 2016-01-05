@@ -316,10 +316,10 @@ def read_stories(request):
 			#Fetch the data necessary from database
 			story = Story.objects.get(storyid = r_id,delete = False)
 			
-			image = Image.objects.filter(storyid = story.id)
+			image = Image.objects.filter(storyid = story.id)[1:]
 			text = Text.objects.filter(storyid = story.id)
-			
-			
+			banner = Image.objects.filter(storyid = story.id).first()
+			banner = banner.source
 			if request.user.is_authenticated():
 				profile = User_Info.objects.get(user_id = request.user.id)
 				count = get_notification_count(request)
@@ -338,6 +338,7 @@ def read_stories(request):
 							key=attrgetter('position'))
 			
 			args['story'] = story
+			args['banner'] = banner
 			args['items'] = combine
 			args['author'] = author
 			args['profile'] = profile
@@ -879,7 +880,7 @@ def load_comment(request):
 		comments = get_comment_previous(story.id,int(max_id))
 		divcom = []
 		for comment in comments:
-			div = "<div data-id = \"" + str(comment['id']) +  "\" class = \"comment-item col-xs-12 col-sm-12 col-md-10 col-lg-10\"><div class = \"visible-md visible-lg col-md-1 col-lg-1\" style = \"padding-left:0px; padding-right:0px; \">"
+			div = "<div data-id = \"" + str(comment['id']) +  "\" class = \"comment-item col-xs-12 col-sm-12 col-md-12 col-lg-12\"><div class = \"visible-md visible-lg col-md-1 col-lg-1\" style = \"padding-left:0px; padding-right:0px; \">"
 			try:
 				image = comment['image']
 				im = get_thumbnail(image, '330x330', crop='center', quality=99)

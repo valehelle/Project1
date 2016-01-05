@@ -38,7 +38,7 @@
   width: 0;
   height: 97%;
   position: absolute;
-  border: 3px solid #9ed54c;
+  border: 3px solid #AEB1AC;
   top: 0;
   left: 49.4%;
 }
@@ -102,7 +102,10 @@
 		font-size:36px !important;
 	}
 
+	.story-content{
+		padding:0 !important;
 	
+	}
 }
 	#story-title{
 		font-size:65px;
@@ -110,3 +113,6 @@
 #content{
 	margin-top:30px;
 }
+	#image-potrait{
+		background-color: rgba(0, 0, 0, 0.4);
+	}
