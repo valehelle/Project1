@@ -38,6 +38,7 @@ $(document).ready(function() {
 		afterLoad   : addLinks,
 		beforeClose : removeLinks,
 		loop		: false,
+		helpers : { overlay : { locked : false } },
 		beforeShow: function () {
 			$("#body").addClass("blur");
 			$(".fancybox-skin").css("backgroundColor","transparent");
@@ -49,8 +50,9 @@ $(document).ready(function() {
 			$("#body").removeClass("blur");			
 		}
 	});
-var def = "default";
-	
+
+
+
 //Autoplay
 	$(document).on('click','.button #autoplay',function(event){
 		$(".fancybox-thumb").fancybox({
@@ -61,6 +63,8 @@ var def = "default";
 			afterLoad   : addLinks,
 			beforeClose : removeLinks,
 			loop		: false,
+			locked     : false,
+			helpers : { overlay : { locked : false } },
 			afterShow: function(){          
 				if(this.index  == this.group.length - 1){
 					setTimeout(closefancybox, 4000);
@@ -77,7 +81,8 @@ var def = "default";
 				$("#body").removeClass("blur");
 			}
 		});
-		def = "autoplay";
+		
+
 		var $a = $('.item').find("a")[0].click();	
 	});
 	function closefancybox(){
@@ -85,7 +90,7 @@ var def = "default";
 	}
 	
 	function addLinks() {
-		var list = $("#linkimage");
+		var list = $(".item");
 		
 		if (!list.length) {    
 			list = $('<ul id="linkimage" class = \"col-md-11 col-lg-11 col-sm-11 col-xs-12\">');
@@ -140,6 +145,23 @@ var def = "default";
                   },
             success: function(result){
 				$( "#comment" ).prepend(result.string);
+            }
+		});
+	});
+	
+	$(document).on('click','#delete-submit',function(){
+		$id = $( "#delete-submit" ).attr("data-id");
+		 $(this).val('Please wait ...')
+		.attr('disabled','disabled');
+        $.ajax({
+            type:"POST",
+            url:"/delete_story/",
+            data: {
+					'id': $id,
+                  },
+            success: function(result){
+				$( "#server-feedback" ).replaceWith(result.string);
+				$("#delete-submit").removeAttr('disabled');
             }
 		});
 	});

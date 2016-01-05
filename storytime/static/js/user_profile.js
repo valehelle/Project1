@@ -30,7 +30,7 @@ $(document).ready(function() {
 	});
 	
 
-	$(document).on('click','.button #unfollow',function(){
+	$(document).on('click',' #unfollow',function(){
         $.ajax({
             type:"POST",
             url:"/relationship/unfollow/",
@@ -44,7 +44,7 @@ $(document).ready(function() {
 		});
 	});
 	
-	$(document).on('click','.button #follow',function(){
+	$(document).on('click',' #follow',function(){
         $.ajax({
             type:"POST",
             url:"/relationship/follow/",

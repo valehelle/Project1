@@ -3,12 +3,12 @@
 {% load thumbnail %}
 	
 {% block content %}
-<div class = "col-lg-10 col-lg-push-1">
-	 <h1 class = "col-lg-12 text-green">Username</h1>
+<div class = "col-lg-12 card">
+	 <h1 class = "col-lg-12 ">Username</h1>
 	<form class = "col-lg-12" action="/profile/edit/name/" method="post">
 		 {% csrf_token %}
 		<div class = "col-lg-12">
-			<input class = "col-lg-3" id="id_username" maxlength="30" name="username" type="text" value="{{profile.username}}" style = "margin-top:20px;">
+			<input class = "col-lg-5" id="id_username" maxlength="30" name="username" type="text" value="{{profile.username}}" style = "margin-top:20px;">
 		</div>
 		{% if messages %}
         {% for message in messages %}
@@ -18,12 +18,11 @@
         {% endfor %}
 		{% endif %}
 		<div class = "col-lg-12">
-			<input type="submit" class = "col-lg-3 btn btn-success " value="Edit Username" style = "margin-top:20px;">
+			<input type="submit" class = "col-lg-5 btn btn-success " value="Edit Username" style = "margin-top:20px;">
 		</div>
 	
 	</form>
 </div>
 {% endblock %}
-{% block footer %}
-footer
-{% endblock %}
+			{% block featured %}
+			{% endblock %}

@@ -25,13 +25,7 @@
   cursor: pointer;
 }
 .item{
-	margin-top: 20px;
 	color: #80c90a
 	text-color:white;
 	width: 100%;
-}
-.btn-success {
-    background: #9ed54c;
-	border-color: #9ed54c;
-    color: #ffffff;
 }

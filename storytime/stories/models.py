@@ -20,6 +20,7 @@ class Story(models.Model):
 	storyid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 	complete = models.BooleanField(default=False)
 	commentcount = models.IntegerField(default = 0)
+	delete = models.BooleanField(default=False)
 	
 #Text will be inside story
 class Text(models.Model):

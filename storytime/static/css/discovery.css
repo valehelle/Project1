@@ -6,21 +6,21 @@ html,body
     padding: 0px;
 	
 }
-#feed{
+#discovery{
 	border-left:medium solid #629632;	
 }
-#feed > h5{
+#discovery > h5{
 	color:black;
 	
 }
-#discovery{
+#feed{
 border-left:thick solid transparent;	
 }
-#discovery > h5{
+#feed > h5{
 	color:#A2A2A1;
 	
 }
-#discovery:hover > h5{
+#feed:hover > h5{
 	color:black;
 	
 }

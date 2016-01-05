@@ -7,21 +7,18 @@ html,body
 	max-width: 100%;
 }
 
-#body{
 
- 
-
-}
 #small-noti{
  position: relative;
   top: 50%;
-  transform: translateY(1%);
+  transform: translateY(3%);
 }
 
 #small-search{
+
  position: relative;
   top: 50%;
-  transform: translateY(1%);
+  transform: translateY(3%);
 }
 
 .v-center{
@@ -52,24 +49,70 @@ html,body
   transform: translateY(7%);
 }
 #body {
-	background-color: #E9F1DE;
+	background-color: #E8EAE6;
 }
 #content{
 	margin-top:50px;
 }
+a:link {
+    color: #9ed54c;
 
+}
+.navbar-fixed-top{
+    border: 0;
+    border-bottom: 1px solid #65961D;
+    box-shadow: 0 2px 2px -2px rgba(0, 0, 0, .52);
+}
 .card{
+	border: 1px solid;
+    border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+    border-radius: 3px;
+
 	padding-top:15px;
 	padding-bottom:15px;
 	background-color: white; 
 	margin-bottom:10px;
-	box-shadow: 1px 1px 5px #888888;
+	
 }
+.select-option:hover{
+	text-decoration:none;
+	background-color:#DADADA;
+}
+ .sub-info{
+	 color:#85887F;
+ }
+.select-option:hover > .sub-info{
+	color:black;
+}
+.dont-break-out{
+  /* These are technically the same, but use both */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 
+  -ms-word-break: break-all;
+  /* This is the dangerous one in WebKit, as it breaks things wherever */
+  word-break: break-all;
+  /* Instead use this non-standard one: */
+  word-break: break-word;
 
+  /* Adds a hyphen where the word breaks, if supported (No Blink) */
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+#feedback:hover{
+	cursor:pointer;
+}
 .btn-success{
-	background: #9ed54c;
-	border-color: #9ed54c;
+	background: white;
+	color:black;
+	border-color: #629632;
+}
+.btn-success:hover{
+	background: white;
+	color:black;
+	border-color: #629632;
 }
 .text-white{
 	color: white;
@@ -87,11 +130,11 @@ textarea {
 .text-green{
 	color: #9ed54c;
 }
-a:link {
-    color: #9ed54c;
-	
-}
+
 a:visited { text-decoration: none; color: #9ed54c; }
+a:hover{
+	text-decoration: none;
+}
 .no-effect-hover:hover{
 	color: #9ed54c;
 	border-color: #9ed54c;
@@ -106,3 +149,29 @@ a:visited { text-decoration: none; color: #9ed54c; }
   padding-right:0;
     padding-left:0;
 }
+
+@media screen and (max-width: 768px) {
+	.logo-2{
+		min-height:70px;
+		max-height:80px;
+	}
+
+	
+}
+#discovery > h5{
+	color:#A2A2A1;
+	
+}
+#discovery:hover > h5{
+	color:black;
+	
+}
+#feed > h5{
+	color:#A2A2A1;
+	
+}
+#feed:hover > h5{
+	color:black;
+	
+}
+

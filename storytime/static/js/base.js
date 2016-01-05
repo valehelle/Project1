@@ -42,11 +42,30 @@ $(document).ready(function() {
             }
 		});
 	});
+
+	$(document).on('click','#feedback-submit',function(){
+		$feedback = $("#text-feedback").val();
+		 $(this).val('Please wait ...')
+		.attr('disabled','disabled');
+        $.ajax({
+				type:"POST",
+				url:"/feedback/",
+				data: {
+						'feedback': $feedback
+					  },
+				success: function(result){
+					$( "#server-feedback" ).replaceWith(result.string);
+					$("#feedback-submit").removeAttr('disabled');
+				}
+			});
+	});
 	
 	$(document).on('click',' #search',function(){
 		$string = "/profile?u=" + $( "#search_input" ).val();
 		window.location.replace($string)
 	});
+	
+
 	
 });
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -46,9 +46,31 @@ def register_closed(request):
 	args.update(csrf(request))
 	return render(request,'registration_closed.html',args)	
 	
+	
+def feedback(request):
+	from django.core.mail import send_mail
+	from django.contrib import messages
+	from django.core.exceptions import ValidationError
+	from django.core.validators import validate_email
+
+	if request.POST:
+		feedback = request.POST.get('feedback')	
+		
+		send_mail("Feedback:" + request.user.email,request.user.username + ":" + feedback, 'mementhoactivate@google.com',['hazmiirfan92@gmail.com'], fail_silently=False)
+
+		div = "<h4 id = \"server-feedback\">Thank Your for the feedback! :D</h4>"
+		data = {}
+		data['string'] = div
+		import json
+		return HttpResponse(json.dumps(data), content_type = "application/json")		
+
+	
 def request_access(request):
 	from django.core.mail import send_mail
 	from django.contrib import messages
+	from django.core.exceptions import ValidationError
+	from django.core.validators import validate_email
+
 	if request.POST:
 		email = request.POST.get('email')
 		if not email:
@@ -61,17 +83,40 @@ def request_access(request):
 			messages.add_message(request, messages.SUCCESS, 'Please insert your username')
 			args = {}
 			args.update(csrf(request))
+			return render(request,'login.html',args)
+		try:
+			validate_email(email)
+		except ValidationError as e:
+			messages.add_message(request, messages.SUCCESS, 'Please enter a valid email address')
+		else:			
+			send_mail('Mementho Registration', username + " : " + email, 'mementhoactivate@google.com',['hazmiirfan92@gmail.com','bakhtiarateyz@gmail.com','syahmi2555@gmail.com'], fail_silently=False)
+			send_mail('Mementho', 'Thank You ' + username + ' for subscribing to Mementho. We hope that in the long run we can provide you with a platform for great communities. It will usually take up to 1 day to create an account. Thank You for your patience', 'mementhoactivate@google.com',[email], fail_silently=False)
+			messages.add_message(request, messages.SUCCESS, 'Thank You for joining to our community!. Please check your email and we will create an account for you as soon as possible!')
+			args = {}
+			args.update(csrf(request))
 			return render(request,'login.html',args)	
-		send_mail('Mementho Registration', username + ":" + email, 'mementhoactivate@google.com',['hazmiirfan92@gmail.com','bakhtiarateyz@gmail.com','syahmi2555@gmail.com'], fail_silently=False)
-		send_mail('Mementho', 'Thank You ' + username + ' for subscribing to Mementho. We hope to maintain this relationship and will update you everytime we can.', 'mementhoactivate@google.com',[email], fail_silently=False)
-		messages.add_message(request, messages.SUCCESS, 'Thank You for subscribing to our website. We will be in touch :D')
-		args = {}
-		args.update(csrf(request))
-		return render(request,'login.html',args)	
 	args = {}
 	args.update(csrf(request))
 	return render(request,'login.html',args)
 
+def delete_stories(request):
+	if request.user.is_authenticated():
+		if request.POST:
+			id = request.POST.get('id')
+			story = Story.objects.get(storyid = id)
+			#Check if it is really the user of the story who requested it
+			if (story.user_id == request.user.id):
+				story.delete = True
+				story.save()
+				import json
+				data = {}
+				data['string'] = "<h4 id = \"server-feedback\">Your story have been deleted. Please refresh the page.</h4>"
+				return HttpResponse(json.dumps(data), content_type = "application/json")				
+			else:
+				return False
+		else:
+			return False
+	return False
 	
 def stream_feed(id,string):
 	#Stream to all users who follows.
@@ -164,7 +209,6 @@ def custom_login(request):
 def create_stories(request):
 	if request.user.is_authenticated():
 		if request.POST:
-			print request.POST
 			current_user = request.user
 			list_form = []
 			#Get the story form
@@ -174,7 +218,6 @@ def create_stories(request):
 				from django.contrib import messages
 				messages.add_message(request, messages.WARNING, 'Please insert at least 1 text and 1 image')
 				return render_page(request,"create_stories.html","custom error")	
-			print storyform
 			#Handle insertion for the title.
 			if storyform.is_valid():
 				story = storyform.save(commit = False)
@@ -261,53 +304,75 @@ def read_stories(request):
 	if request.GET:
 		#Get the story id from url.
 		r_id = request.GET.get('s')
+		args = {}
 		try:
 			val = UUID(r_id, version=4)
 		except ValueError:
 			# If it's a value error, then the string 
 			# is not a valid hex code for a UUID.
-			return HttpRespondeRedirect("/home")
-			
-		#Fetch the data necessary from database
-		story = Story.objects.get(storyid = r_id)
-		image = Image.objects.filter(storyid = story.id)
-		text = Text.objects.filter(storyid = story.id)
-		args = {}
+			return HttpResponseRedirect("/feed/")
 		
-		if request.user.is_authenticated():
-			profile = User_Info.objects.get(user_id = request.user.id)
-			count = get_notification_count(request)
-			notification = get_notification_latest(request)
-			args.update(csrf(request))
-		else:
-			profile = None
-			count = None
-			notification = None
+		try:					
+			#Fetch the data necessary from database
+			story = Story.objects.get(storyid = r_id,delete = False)
 			
-		author = User_Info.objects.get(user_id = story.user_id)		
-		comment = get_comment_latest(story.id)
-			#Combine result for text and image. Sort according to position
-		combine = sorted(
-						chain(text,image),
-						key=attrgetter('position'))
-
-		args['story'] = story
-		args['items'] = combine
-		args['author'] = author
-		args['profile'] = profile
-		args['notification'] = notification
-		args['count'] = count
-		args['comments'] = comment
-		args['metaimage'] = image
+			image = Image.objects.filter(storyid = story.id)
+			text = Text.objects.filter(storyid = story.id)
+			
+			
+			if request.user.is_authenticated():
+				profile = User_Info.objects.get(user_id = request.user.id)
+				count = get_notification_count(request)
+				notification = get_notification_latest(request)
+				args.update(csrf(request))
+			else:
+				profile = None
+				count = None
+				notification = None
+			
+			author = User_Info.objects.get(user_id = story.user_id)		
+			comment = get_comment_latest(story.id)
+				#Combine result for text and image. Sort according to position
+			combine = sorted(
+							chain(text,image),
+							key=attrgetter('position'))
+			
+			args['story'] = story
+			args['items'] = combine
+			args['author'] = author
+			args['profile'] = profile
+			args['notification'] = notification
+			args['count'] = count
+			args['comments'] = comment
+			args['metaimage'] = image
+		except:
+			return HttpResponseRedirect("/feed/")
+		
 		return render (request,"read_stories.html",args)
-	else:
-		return HttpRespondeRedirect("/")
-
 		
+	else:
+		return HttpResponseRedirect("/feed/")
+
+#Get featured author. For now only show those who recently joined.
+def featured_author():
+	users = User.objects.filter().order_by('-id')[:5]
+	featured = []
+	for user in users:
+		user_info = User_Info.objects.get(user_id = user.id)
+		list = {}
+		try:
+			list['image'] = user_info.profile_pic.image
+		except:
+			list['image'] = None
+		list['username'] = user.username
+		list['desc'] = user_info.desc
+		featured.append(list)
+	return featured
 		
 	
 #Show story from people who you followed	
 def feed(request):
+	
 	if request.user.is_authenticated():
 		#Create profile for user the first time.
 		user,created = User_Info.objects.get_or_create(username = request.user.username,user_id = request.user.id)
@@ -318,35 +383,41 @@ def feed(request):
 		for item in items:
 			#Split the string into the user id and story id
 			object = item.content.split(":")
-			story = Story.objects.get(storyid = object[1])
-			user_info = User_Info.objects.get(user_id = story.user_id)
-			image = {}
-			storyimage = Image.objects.filter(storyid = story.id).first()
-			image['story'] = storyimage.source
-			image['time'] = timesince(story.datetime).split(', ')[0]
-			image['id'] = item.id
 			try:
-				image['user'] = user_info.profile_pic.image
-			except:
-				image['user'] = None
+				story = Story.objects.get(storyid = object[1],delete = False)
+				user_info = User_Info.objects.get(user_id = story.user_id)
+				image = {}
+				storyimage = Image.objects.filter(storyid = story.id).first()
+				image['story'] = storyimage.source
+				image['time'] = timesince(story.datetime).split(', ')[0]
+				image['id'] = item.id
+				try:
+					image['user'] = user_info.profile_pic.image
+				except:
+					image['user'] = None
 
-			imagelist.append(image)
-			storylist.append(story)
+				imagelist.append(image)
+				storylist.append(story)
+			except:
+				object = None
 		profile = User_Info.objects.get(user_id = request.user.id)
 		list = zip(storylist,imagelist)
 		notification = get_notification_latest(request)
 		count = get_notification_count(request)
-
+		f_author = featured_author()
 		args = {}
 		args.update(csrf(request))
 		args['list'] = list
 		args['profile'] = profile
 		args['notification'] = notification
 		args['count'] = count
+		args['featured'] = f_author
 		return render (request,"feed.html",args)
 	else:
 		return HttpResponseRedirect("/accounts/login/")
 
+
+	
 #Get previous feed
 def feed_previous(request):
 	if request.user.is_authenticated():
@@ -381,6 +452,149 @@ def html_feed(list):
 		string = ""
 		#Split the string into the user id and story id
 		object = item.content.split(":")
+		try:
+			story = Story.objects.get(storyid = object[1],delete = False)
+			user_info = User_Info.objects.get(user_id = story.user_id)
+			image = {}
+			storyimage = Image.objects.filter(storyid = story.id).first()
+			im = get_thumbnail(storyimage.source, '500x500', crop='center', quality=99)
+			time = timesince(story.datetime).split(', ')[0]
+
+			string = "<div data-id = \" " + str(item.id) + " \" class = \"story-item col-md-6 col-lg-6\" style =\"padding:3px; background-color:#DCE0D5\">"
+			string = string + "<div class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12 card\" style = \"padding:0; margin-bottom:0px;\">"
+			string = string + "<div class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12\" style = \"padding:0;\">"
+			string = string + "<a class = \"story\" href = \"/stories/read/?s=" + str(story.storyid) + "\" >"
+			string = string + "<img class = \"img-responsive\"  src=\"" + str(im.url) +"\" style = \"text-align:center;\" width = \"" + str(im.width) + "\"  height = \"" + str(im.height) + "\"></a></div>"
+			string = string + "<div class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12\" >"
+			string = string + "<h3 class = \"visible-lg visible-md\" style = \"text-align: center\">" + str(story.title) + "</h3>"
+			string = string + "<h4 class = \"visible-xs visible-sm col-xs-12 col-sm-12\" style = \"text-align: center\">" + str(story.title) + "</h4></div>"
+			string = string + "<div  class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12\"  style=\"margin-bottom:20px;\">"
+			string = string + "<div class = \"col-lg-12\" style=\"margin-bottom:10px;\">"
+			string = string + "<div class = \" col-xs-4 col-xs-push-4 col-sm-4 col-sm-push-4 col-md-8 col-md-push-2 col-lg-8 col-lg-push-2\" style=\"margin-bottom:10px;\">"
+
+			try:
+				#Try to get user profile
+				story_user = user_info.profile_pic.image
+				user_im =  get_thumbnail(story_user, '330x330', crop='center', quality=99)
+				string = string + "<img class = \"img-circle img-responsive user-pic\"  src = \"" + str(user_im.url) + "\"/> </div> </div>"
+			except:
+				string = string + "<img class = \"img-circle img-responsive user-pic\"  src = \""  + static('image/default/DefaultIconBlack_1.png') + "\"/> </div></div>"
+					
+			string = string + "<div  class = \"story-profile col-md-12 col-lg-12 col-xs-12 col-sm-12\" style = \"text-align:center;\">"
+			string = string + "<h4 class = \"dont-break-out\">by <a href = \"/profile?u=" + str(story.user.username) + "\">" +  str(story.user.username)  + "</a> </h4>"
+			string = string + "<h5>" + time + " ago</h5> </div> </div>"
+			string = string + "<div  class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12\">"
+			string = string + "<div class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12 btn btn-success text-green no-effect-hover\" style=\"background-color:white; margin-bottom:2px;\">"
+			string = string + "	" + str(story.commentcount) + " comments </div>"
+			string = string + "<div class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12 btn btn-success text-green no-effect-hover\" style=\"background-color:white; margin-bottom:15px;\">"
+			string = string + "	" + str(story.starcount) + " stars </div> </div> </div></div>"		
+			storylist.append(string)
+		except:
+			story = None
+
+	return storylist
+	
+	
+#Get the latest story from everyone
+	
+#Show story from people who you followed	
+def discovery(request):
+	if request.user.is_authenticated():
+		#Create profile for user the first time.
+		user,created = User_Info.objects.get_or_create(username = request.user.username,user_id = request.user.id)
+		#Get the data streams for the user
+		items = get_discovery_latest(request.user)
+		imagelist = []
+		storylist = []
+		for item in items:
+			#Split the string into the user id and story id
+			object = item['content'].split(":")
+			story = Story.objects.get(storyid = object[1])
+			user_info = User_Info.objects.get(user_id = story.user_id)
+			image = {}
+			storyimage = Image.objects.filter(storyid = story.id).first()
+			image['story'] = storyimage.source
+			image['time'] = timesince(story.datetime).split(', ')[0]
+			#This is for ordering of the list when fetching
+			image['id'] = item['id']
+			try:
+				image['user'] = user_info.profile_pic.image
+			except:
+				image['user'] = None
+
+			imagelist.append(image)
+			storylist.append(story)
+		profile = User_Info.objects.get(user_id = request.user.id)
+		list = zip(storylist,imagelist)
+		notification = get_notification_latest(request)
+		count = get_notification_count(request)
+		f_author = featured_author()
+		args = {}
+		args.update(csrf(request))
+		args['list'] = list
+		args['profile'] = profile
+		args['notification'] = notification
+		args['count'] = count
+		args['featured'] = f_author
+		return render (request,"discovery.html",args)
+	else:
+		return HttpResponseRedirect("/accounts/login/")
+
+#Get previous feed
+def discovery_previous(request):
+	if request.user.is_authenticated():
+		if request.POST:
+			max_id = request.POST.get('max-id')
+			max_id = int(max_id)
+			list = get_discovery_previous(request.user,max_id)	
+			string = html_discovery(list)
+			import json
+			data = {}
+			data['string'] = string
+			
+			return HttpResponse(json.dumps(data), content_type = "application/json")
+
+	
+#Return feed previous
+def get_discovery_latest(user,max_id=0,count=10):
+	list = []
+	
+	stories = Story.objects.filter(delete = False).order_by('-id')[:count]
+	for story in stories:
+		id = story.id
+		hex = story.storyid
+		storylist = {}
+		string = str(id) + ":" + str(hex)
+		storylist['content'] = string
+		storylist['id'] = id
+		list.append(storylist)
+	return list
+	
+#Return feed latest
+def get_discovery_previous(user,max_id=0,count=10):
+	import user_streams
+	list = []
+	
+	stories = Story.objects.filter(id__lt = max_id,delete = False).order_by('-id')[:count]
+	for story in stories:
+		id = story.id
+		hex = story.storyid
+		storylist = {}
+		string = str(id) + ":" + str(hex)
+		storylist['content'] = string
+		storylist['id'] = id
+		list.append(storylist)
+
+	return list
+	
+#Given a list, return a string of html
+def html_discovery(list):
+	storylist = []
+
+	for item in list:
+		string = ""
+		#Split the string into the user id and story id
+		object = item['content'].split(":")
 		story = Story.objects.get(storyid = object[1])
 		user_info = User_Info.objects.get(user_id = story.user_id)
 		image = {}
@@ -388,35 +602,38 @@ def html_feed(list):
 		im = get_thumbnail(storyimage.source, '500x500', crop='center', quality=99)
 		time = timesince(story.datetime).split(', ')[0]
 
-		string = "<div data-id = \" " + str(item.id) + " \" class = \"story-item col-md-12 col-lg-6 col-xs-12 col-sm-6\" style =\"margin-top:30px; margin-bottom:10px; \">"
+		string = "<div data-id = \" " + str(item['id']) + " \" class = \"story-item col-md-6 col-lg-6\" style =\"padding:3px; background-color:#DCE0D5\">"
+		string = string + "<div class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12 card\" style = \"padding:0; margin-bottom:0px;\">"
+		string = string + "<div class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12\" style = \"padding:0;\">"
+		string = string + "<a class = \"story\" href = \"/stories/read/?s=" + str(story.storyid) + "\" >"
+		string = string + "<img class = \"img-responsive\"  src=\"" + str(im.url) +"\" style = \"text-align:center;\" width = \"" + str(im.width) + "\"  height = \"" + str(im.height) + "\"></a></div>"
 		string = string + "<div class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12\" >"
-		string = string + "<a class = \"story\" href = \"/stories/read/?s=" + str(story.id) + "\" >"
-		string = string + "<img class = \"img-responsive img-rounded\"  src=\"" + str(im.url) +"\" style = \"text-align:center;\"></a></div>"
-		string = string + "<div class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12\" style = \"height:80px;\">"
 		string = string + "<h3 class = \"visible-lg visible-md\" style = \"text-align: center\">" + str(story.title) + "</h3>"
 		string = string + "<h4 class = \"visible-xs visible-sm col-xs-12 col-sm-12\" style = \"text-align: center\">" + str(story.title) + "</h4></div>"
 		string = string + "<div  class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12\"  style=\"margin-bottom:20px;\">"
-		string = string + "<div class = \"col-md-4 col-lg-4 visible-lg visible-md\" style=\"margin-bottom:10px;\">"
+		string = string + "<div class = \"col-lg-12\" style=\"margin-bottom:10px;\">"
+		string = string + "<div class = \"col-xs-4 col-xs-push-4 col-sm-4 col-sm-push-4 col-md-8 col-md-push-2 col-lg-8 col-lg-push-2\" style=\"margin-bottom:10px;\">"
 
 		try:
 			#Try to get user profile
 			story_user = user_info.profile_pic.image
 			user_im =  get_thumbnail(story_user, '330x330', crop='center', quality=99)
-			string = string + "<img class = \"img-circle img-responsive user-pic\"  src = \"" + str(user_im.url) + "\"/> </div> "
+			string = string + "<img class = \"img-circle img-responsive user-pic\"  src = \"" + str(user_im.url) + "\"/> </div></div>"
 		except:
-			string = string + "<img class = \"img-circle img-responsive user-pic\"  src = \""  + static('image/default/DefaultIconBlack_1.png') + "\"/> </div>"
+			string = string + "<img class = \"img-circle img-responsive user-pic\"  src = \""  + static('image/default/DefaultIconBlack_1.png') + "\"/> </div></div>"
 				
-		string = string + "<div  class = \"v-center story-profile col-md-6 col-lg-6 col-xs-12 col-sm-12\">"
-		string = string + "<h4>by <a href = \"/profile?u=" + str(story.user.username) + "\">" +  str(story.user.username)  + "</a> </h4>"
+		string = string + "<div  class = \"dont-break-out col-md-12 col-lg-12 col-xs-12 col-sm-12\" style = \"text-align:center;\">"
+		string = string + "<h4 class = \"dont-break-out\">by <a href = \"/profile?u=" + str(story.user.username) + "\">" +  str(story.user.username)  + "</a> </h4>"
 		string = string + "<h4>" + time + " ago</h4> </div> </div>"
 		string = string + "<div  class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12\">"
 		string = string + "<div class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12 btn btn-success text-green no-effect-hover\" style=\"background-color:white; margin-bottom:2px;\">"
 		string = string + "	" + str(story.commentcount) + " comments </div>"
-		string = string + "<div class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12 btn btn-success text-green no-effect-hover\" style=\"background-color:white; margin-bottom:2px;\">"
-		string = string + "	" + str(story.starcount) + " stars </div> </div> </div>"		
+		string = string + "<div class = \"col-md-12 col-lg-12 col-xs-12 col-sm-12 btn btn-success text-green no-effect-hover\" style=\"background-color:white; margin-bottom:15px;\">"
+		string = string + "	" + str(story.starcount) + " stars </div> </div> </div></div>"		
 		storylist.append(string)
 
 	return storylist
+	
 
 #Show story from people who you starred	
 def bookmark(request):
@@ -700,7 +917,7 @@ def get_comment_latest(id,max_id=0,count=5):
 
 #Get the latest comment
 def get_comment_previous(id,max_id=0,count=5):
-	print max_id
+	
 	comments = Comment.objects.filter(object_pk = id,id__lt = max_id).order_by('-id')[:count]
 	list = []
 	for comment in comments:
@@ -751,19 +968,19 @@ def load_notification(request):
 		list = get_notification_previous(request,int(max_id))
 		divnoti = ""
 		for notification in list:
-			div = "<div data-id= \"" + str(notification['id']) + "\" class = \"notification-item  col-sm-12 col-xs-12 col-md-12 col-lg-12\">"	
+			div = "<div data-id= \"" + str(notification['id']) + "\" class = \"notification-item col-sm-12 col-xs-12 col-md-12 col-lg-12 card\">"	
 			try:
 				image = notification['story_image']
 				im = get_thumbnail(image, '330x330', crop='center', quality=99)
-				div = div + "<div class = \"col-sm-10 col-xs-12  col-md-10 col-lg-10\">"
-				div = div + "<h3><a href = \"/profile?u=" + str(notification['username']) + "\">" + str(notification['username']) + "</a> " + str(notification['topic']) +" <h6>" + notification['time'] + " ago</h6></h3></div>"
-				div = div + "<div class = \"col-sm-2 col-xs-12  col-md-2 col-lg-2\">"
+				div = div + "<div class = \"col-sm-8 col-xs-12 col-md-9 col-lg-9\">"
+				div = div + "<h4><a href = \"/profile?u=" + str(notification['username']) + "\">" + str(notification['username']) + "</a> " + str(notification['topic']) +" <h6>" + notification['time'] + " ago</h6></h4></div>"
+				div = div + "<div class = \"col-sm-4 col-xs-12  col-md-3 col-lg-2 col-lg-push-1\">"
 				div = div + "<a href = \"/stories/read/?s=" + str(notification['story']) + "\"><img class = \"img-rounded img-responsive\"   src = \"" + str(im.url) + "\" /></a> </div>"
 			except :
-				div = div + "<div class = \"col-sm-10 col-xs-8  col-md-10 col-lg-10\">"
-				div = div  + "<h3><a href = \"/profile?u=" + str(notification['username']) + "\">" + str(notification['username'])  + "</a> " + str(notification['topic']) + "<h6> " +  notification['time'] + " ago</h6></h3></div>"
+				div = div + "<div class = \"col-sm-12 col-xs-12  col-md-12 col-lg-12\">"
+				div = div  + "<h4><a href = \"/profile?u=" + str(notification['username']) + "\">" + str(notification['username'])  + "</a> " + str(notification['topic']) + "<h6> " +  notification['time'] + " ago</h6></h4></div>"
 
-			div = div + "<div class = \"col-sm-12 col-xs-12  col-md-12 col-lg-12\"><hr></div></div>"
+			div = div + "</div>"
 			divnoti = divnoti + div
 		import json
 		data = {}
@@ -938,7 +1155,6 @@ def image_edit(request):
 				user.save()
 				return HttpResponseRedirect("/profile?u=" + str(user.username))
 			else:
-				print image_info
 				return render_page(request,"image_edit.html",{'form': image_info})
 		
 		
@@ -984,12 +1200,11 @@ def user_profile(request):
 				return HttpResponseRedirect("/user_search/?u=" + str(name))
 			
 			#Count number of story
-			stories = Story.objects.filter(user_id = person.id,complete = 1)
+			stories = Story.objects.filter(user_id = person.id,complete = 1,delete = False).order_by('-id')
 			
 			storycount = stories.count()
 			#Get the first image of the story
 			imagelist = []
-			stories.reverse()
 			for story in stories:
 				#Get the first image of every story and append to image list.
 				image = Image.objects.filter(storyid = story.id).first()
@@ -1059,6 +1274,7 @@ def unfollow(request):
 def follow(request):
 	if request.POST:
 		#Get the username for the user and the person he/she want to unfollow
+		print "sfddsf"
 		person = User.objects.get(username=request.POST.get("username"))
 		user = request.user
 		#Get the person object for both of the person

@@ -6,20 +6,22 @@
 	<script type="text/javascript" src="{% static "js/user_edit.js"%}"></script>
 {% endblock %}
 {% block content %}
-	<div class = "col-lg-10 col-lg-push-1">
-		<h1 class = "col-lg-12 text-green" >Edit Profile</h1>
+	<div class = "col-lg-12 card">
+		<h1 class = "col-lg-12" >Edit Profile</h1>
 		<div class = "col-lg-12"><br></div>
 		<hr class = "col-lg-12"/>
 		<h4 class = "col-lg-10">Name: {{profile.username}}</h4>
-		<a class = "col-lg-2 btn btn-success" href = "/profile/edit/name/" style = "color:white;">Edit</a>
+		<a class = "col-lg-2 btn btn-success" href = "/profile/edit/name/" style = "color:black;">Edit</a>
 		<hr class = "col-lg-12"/>
 		<h4 class = "col-lg-10">Description:</h4>
-		<a class = "col-lg-2 btn btn-success" href = "/profile/edit/desc/" style = "color:white;" >Edit</a>
+		<a class = "col-lg-2 btn btn-success" href = "/profile/edit/desc/" style = "color:black;" >Edit</a>
 		<h4 class = "col-lg-10">{{profile.desc}}</h4>
 		<hr class = "col-lg-12"/>
-		<h4 class = "col-lg-10">Password:</h4>
-		<a class = "col-lg-2 btn btn-success" href="{% url 'auth_password_change' %}" style = "color:white;">Edit</a>
+		<h4 class = "col-lg-10">Password</h4>
+		<a class = "col-lg-2 btn btn-success" href="{% url 'auth_password_change' %}" style = "color:black;">Edit</a>
 		<hr class = "col-lg-12"/>
 	</div>
 
 {% endblock %}
+			{% block featured %}
+			{% endblock %}

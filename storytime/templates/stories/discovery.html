@@ -2,18 +2,17 @@
 {% load staticfiles %}
 {% load thumbnail %}
 {% block predata %}
-	<link rel="stylesheet" type="text/css" href="{% static "css/option.css" %}">
-	<link rel="stylesheet" type="text/css" href="{% static "css/option_1.css" %}">
-	<link rel="stylesheet" type="text/css" href="{% static "css/feed.css" %}">
+	<link rel="stylesheet" type="text/css" href="{% static "css/discovery.css" %}">
 	<script type="text/javascript" src="{% static "js/masonry.pkgd.min.js"%}"></script>
 	<script type="text/javascript" src="{% static "js/imagesloaded.pkgd.min.js"%}"></script>
-		<script type="text/javascript" src="{% static "js/feed.js"%}"></script>
+		<script type="text/javascript" src="{% static "js/discovery.js"%}"></script>
+
 {% endblock %}
 	
 {% block content %}
 
 	<div id = "itemcontent">
-		<a class = " col-xs-12  col-sm-12 col-md-12 col-lg-12  card" href = "/stories/create_stories/" style = "color:black;padding:1px; margin-bottom:15px;"><h4 style = " text-align:center;">Create Story</h4></a>
+		<a class = "col-xs-12  col-sm-12 col-md-12 col-lg-12 card" href = "/stories/create_stories/" style = "color:black; padding:1px; margin-bottom:15px;"><h4 style = " text-align:center;">Create Story</h4></a>
 		{% if list %}
 			<div id = "feedcontent" class = "col-xs-12 col-md-12 col-lg-12" style = "padding:0">
 			{% for story,image in list %}
