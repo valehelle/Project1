@@ -21,6 +21,7 @@ class Story(models.Model):
 	complete = models.BooleanField(default=False)
 	commentcount = models.IntegerField(default = 0)
 	delete = models.BooleanField(default=False)
+	type = models.IntegerField(default = 0)
 	
 #Text will be inside story
 class Text(models.Model):
@@ -38,6 +39,7 @@ class Image(models.Model):
 	position = models.IntegerField(default = 0)
 	storyid = models.ForeignKey(Story)
 	user = models.ForeignKey(settings.AUTH_USER_MODEL,default = 1)
+	caption = models.CharField(max_length = 100,null=True, blank=True)
 	
 class Profile_Image(models.Model):
 	user = models.ForeignKey(settings.AUTH_USER_MODEL)

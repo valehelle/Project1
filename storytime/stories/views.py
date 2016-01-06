@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from forms import TextForm,ImageForm,StoryForm,EditFormImage
+from forms import TextForm,ImageForm,StoryForm,EditFormImage,AlbumForm
 from django.template.context_processors import csrf
 from django.forms.formsets import formset_factory
 from models import Story,Text,Image,Person,RELATIONSHIP_FOLLOWING,User_Info,Profile_Image,Star
@@ -206,6 +206,70 @@ def custom_login(request):
 		return login(request)
 		
 # Create your views here.
+def album_finish(request):
+	if request.user.is_authenticated:
+		if request.POST:
+			storyid = request.POST.get('story-id')
+			story = Story.objects.get(id = storyid)
+			story.complete = True
+			story.type = 1
+			story.save()
+			#Stream to all users who follows.				
+			stream_feed(request.user.id,str(request.user.id) + ':' + str(story.storyid))
+			data = {}
+			data['result'] = "/stories/read/?s=" + str(story.storyid)
+			import json
+			return HttpResponse(json.dumps(data), content_type = "application/json")
+		else:
+			return False;
+	else:
+			return False;
+	
+# Create your views here.
+def store_image(request):
+	if request.user.is_authenticated():
+		if request.POST:
+			image = AlbumForm(request.POST, request.FILES)
+			if image.is_valid():
+				imageform = image.save(commit = False)
+				imageform.user_id = request.user.id
+				imageform.save()
+				import json
+				data = {}
+				data['result'] = "Success"
+				print request.POST
+				return HttpResponse(json.dumps(data), content_type = "application/json")
+			else:
+				print "image is invalid"
+				print request.POST
+				return False
+		else:
+			print "request is not a POST"
+			return False
+
+	else:
+	
+		print("user not authenticated") 
+		return False
+		
+def store_album(request):
+	if request.user.is_authenticated():
+		if request.POST:
+			storyform = StoryForm(request.POST,prefix = "Story")
+			if storyform.is_valid():
+				story = storyform.save(commit = False)
+				story.user_id = request.user.id
+				story.save()
+				import json
+				data = {}
+				data['id'] = str(story.id)
+			return HttpResponse(json.dumps(data), content_type = "application/json")
+		else:
+			return False
+	else:
+		return False
+		
+# Create your views here.
 def create_stories(request):
 	if request.user.is_authenticated():
 		if request.POST:
@@ -217,6 +281,7 @@ def create_stories(request):
 			if not (request.POST.getlist('text') and request.FILES.getlist('source')):
 				from django.contrib import messages
 				messages.add_message(request, messages.WARNING, 'Please insert at least 1 text and 1 image')
+				print "error image"
 				return render_page(request,"create_stories.html","custom error")	
 			#Handle insertion for the title.
 			if storyform.is_valid():
@@ -263,12 +328,22 @@ def create_stories(request):
 				
 				return HttpResponseRedirect("/stories/read/?s=" + str(story.storyid))
 			else:
+				print "not valid"
 				return render_page(request,"create_stories.html",{'form': storyform})
 		else:
 			return render_page(request,"create_stories.html","no error")
 	else:
 		return HttpRespondeRedirect("home.html")
-		
+
+# Create your views here.
+def create_album(request):
+	if request.user.is_authenticated():
+		args = {}
+		args.update(csrf(request))
+		return render (request,"create_album.html",args)
+	else:
+		return HttpRespondeRedirect("/")
+
 #Render page. This is for create_stories
 def render_page(request,html,form):
 	#Create all the form required for the page
@@ -316,9 +391,10 @@ def read_stories(request):
 			#Fetch the data necessary from database
 			story = Story.objects.get(storyid = r_id,delete = False)
 			
-			image = Image.objects.filter(storyid = story.id)[1:]
+			image = Image.objects.filter(storyid = story.id)
+			image = sorted(image,key=attrgetter('position'))
 			text = Text.objects.filter(storyid = story.id)
-			banner = Image.objects.filter(storyid = story.id).first()
+			banner = image.pop(0)
 			banner = banner.source
 			if request.user.is_authenticated():
 				profile = User_Info.objects.get(user_id = request.user.id)
@@ -332,10 +408,10 @@ def read_stories(request):
 			
 			author = User_Info.objects.get(user_id = story.user_id)		
 			comment = get_comment_latest(story.id)
-				#Combine result for text and image. Sort according to position
 			combine = sorted(
 							chain(text,image),
 							key=attrgetter('position'))
+
 			
 			args['story'] = story
 			args['banner'] = banner
@@ -348,9 +424,10 @@ def read_stories(request):
 			args['metaimage'] = image
 		except:
 			return HttpResponseRedirect("/feed/")
-		
-		return render (request,"read_stories.html",args)
-		
+		if story.type == 0:
+			return render (request,"read_stories.html",args)
+		else:
+			return render (request,"read_album.html",args)
 	else:
 		return HttpResponseRedirect("/feed/")
 

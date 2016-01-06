@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block predata %}
+	<script type="text/javascript" src="{% static "js/masonry.pkgd.min.js"%}"></script>
+	<script type="text/javascript" src="{% static "js/imagesloaded.pkgd.min.js"%}"></script>
+	<link rel="stylesheet" type="text/css" href="{% static "css/create_story.css" %}">
+	<link rel="stylesheet" type="text/css" href="{% static "css/jquery.loading-indicator.css" %}">
+	<script type="text/javascript" src="{% static "js/create_album.js"%}"></script>
+	<script type="text/javascript" src="{% static "js/jquery.loading-indicator.min.js"%}"></script>
+
+{% endblock %}
+{% block option %}
+{% endblock %}
+{% block storyboard%}
+	<div class= "col-xs-12 col-sm-12 col-md-12 col-lg-12" id = "storyboard" style = "margin:0; padding:0; min-height: 100vh; margin-bottom:20px; padding-bottom:20px;">	
+{% endblock %}
+{% block content %}
+<form id = "story" action="/stories/create_stories/" method="post" enctype = "multipart/form-data">{% csrf_token %}
+<div id = "banner" class = "col-md-12 col-lg-12 col-xs-12 col-sm-12 " style = " margin:0; padding:0; color:white; width:100%; height:100%;">
+	<div class = "col-md-12 col-lg-12 col-xs-12 col-sm-12 " style = " min-height:100vh; margin:0; color:white; width:100%; height:100%; background-color: rgba(0, 0, 0, 0.4);">
+						<div class = "col-md-8 col-lg-12 col-sm-12 col-xs-12" style = "margin-top:25vh;">
+							<textarea class = "col-xs-12 col-sm-12 col-md-8 col-md-push-2 col-lg-6 col-lg-push-3" id="id_Story-title" maxlength="200" name="Story-title" type="text" placeholder="eg. Summer Vacation `15" style = "height:50vh;  background-color:transparent; border-color:transparent; font-size:65px; text-align:center;"></textarea>
+						</div>
+</form>
+<form id = "image0" class = "image-content" action="/stories/create_stories/" method="post" enctype = "multipart/form-data">
+
+	<input  id = "banner-image"class = "col-xs-12 col-sm-12 col-md-8 col-md-push-2 col-lg-2 col-lg-push-5" type='file' onchange="readURL(this);" style = "text-align:center;" />
+	<input id="id_position" name="position" type="hidden" value="0">
+</form>
+	</div>
+</div>
+<div id = "album-content" class = "col-md-12 col-lg-12 col-sm-12 col-xs-12" style = "padding:0; min-height:500px;">
+
+</div>
+	<div id = "story-content" class = "col-md-12 col-lg-12 col-sm-12 col-xs-12" >
+<div  class=" col-lg-2 image-content" style = "visibility:hidden; padding:0;"><div class = "col-lg-12" style = "padding:3px;"><div class = "col-lg-12 card" style = "margin-bottom:2px; padding-top:0; padding-left:0; padding-right:0;"><img style = "border-top-left-radius: 5px; border-top-right-radius: 5px;" class="img-responsive" src=" " alt="Ignore this" ></div></div></div>	
+			<input style="visibility: hidden;" id="id_source" name="source" type="file" multiple>
+			<div id="addimage" class = "col-sm-12 col-xs-12 col-md-12 col-lg-6 col-lg-push-1 btn btn-success" style = "margin-bottom:10px;">
+				<h4>Image</h4>
+			</div>
+	</div>		
+	<div class = "col-md-12 col-lg-12 col-sm-12 col-xs-12">
+		<br>
+		<br>
+	</div>		
+				
+	<div class = "item col-xs-10 col-xs-push-1 col-md-8 col-md-push-2 col-lg-6 col-lg-push-3">
+		<input id = "submit"  class = "col-md-12 col-lg-12 col-sm-12 col-xs-12 btn btn-success" name = "submit" value = "Upload Story">
+	</div>
+				
+
+
+
+
+{% endblock %}
+{% block subscribe %}
+footer
+{% endblock %}

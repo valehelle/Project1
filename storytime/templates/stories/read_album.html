@@ -16,7 +16,12 @@
 	<link rel="stylesheet" href="{% static "fancybox/source/jquery.fancybox.css"%}?v=2.1.5" type="text/css" media="screen" />
 	<script type="text/javascript" src="{% static "fancybox/source/jquery.fancybox.pack.js"%}?v=2.1.5"></script>
 	<script type="text/javascript" src="{% static "js/read_stories.js"%}"></script>
+	<script type="text/javascript" src="{% static "js/read_album.js"%}"></script>
 	<link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+	
+	<script type="text/javascript" src="{% static "js/masonry.pkgd.min.js"%}"></script>
+	<script type="text/javascript" src="{% static "js/imagesloaded.pkgd.min.js"%}"></script>
+
 {% endblock %}
 {% block option %}
 {% endblock %}
@@ -25,15 +30,15 @@
 {% endblock %}
 {% block content %}
 
-	<div id = "line">
-		<div id = "story-author" class="col-md-12 col-xs-12 col-sm-12 col-lg-12" style="padding:0; margin:0; padding-bottom:20px;">
+	<div id = "ine">
+		<div id = "story-author" class="col-md-12 col-xs-12 col-sm-12 col-lg-12" style="padding:0; margin:0; padding-bottom:5px;">
 			{% thumbnail banner "x700" as im %}
 			<div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" style="background-position: 50% 50%;background-image:url({{im.url}}); height:100vh; padding:0; background-repeat:no-repeat;   background-size: cover;  background-repeat: no-repeat; background-attachment: fixed; ">
 			{% endthumbnail %}
 			<div class="col-md-12 col-sm-12  col-xs-12 col-lg-12 " style="color:white;	padding:0;width:100%; height:100%; background-color: rgba(0, 0, 0, 0.4);">
 					<div class="col-xs-12 col-sm-12 col-md-8 col-md-push-2 col-lg-6 col-lg-push-3" style="margin-top:25vh;">
 					<h1 id = "story-title" style = "text-align:center;">{{story.title}}</h1>
-					<h4 style = "text-align:center;">Story by  <a href="/profile?u={{author.username}}">{{author.username}}</a> </h4>
+					<h4 style = "text-align:center;">Album by  <a href="/profile?u={{author.username}}">{{author.username}}</a> </h4>
 					</div>
 					<div class ="col-xs-12 col-sm-12 col-md-12 col-lg-12 button"style = "margin-top:20px;">
 						<button type="button" class="col-xs-4 col-xs-push-1 col-sm-2 col-sm-push-3 col-md-2 col-md-push-3 col-lg-1 col-lg-push-4 btn btn-success" id = "star" value = "{{story.storyid}}" style = "border-color:white; background-color:transparent; color:white;"><span class = "glyphicon glyphicon-star"></span><span id = "starcount"> {{story.starcount}}</span></button>
@@ -44,33 +49,28 @@
 			</div>
 
 		</div>
-		<div  class = "story-content item col-xs-10 col-xs-push-1 col-md-8 col-md-push-2 col-lg-6 col-lg-push-3" >
+		<div id = "album-content" class = "story-content item col-xs-12 col-md-2 col-lg-12 " style = "padding:0;" >
 			{% for item in items %}
 					
 						{% if item.text %}
-						<div class="story-content col-lg-12 card" style=" margin-top:30px;">
-							<a  style = "text-decoration: none; " class="fancybox-thumb" rel="fancybox-thumb" href="#inline{{forloop.counter}}" >
-									<h4 style = "text-align:center; color:black; ">{{item.text}}</h4>
-									<div style="display: none;" class = "text_inside" id="inline{{forloop.counter}}">
-										<h2>{{item.text}}</h2>
-									</div>
-							</a>
-						</div>
 						{% elif item.source %}
-						<div class="col-lg-12 "style = "padding:0; margin-top:30px; ">
-									{% thumbnail item.source "x700" as im %}
-									<a class="story-content fancybox-thumb" rel="fancybox-thumb" href="{{im.url}}" style = "width:100%;">
-									{% endthumbnail %}
-									{% thumbnail item.source "x700" as im %}
-										{% if im|is_portrait %}
-										<div id = "image-potrait"  style="  background-position: 50% 5%; background-image:url({{im.url}}); height:400px; background-repeat: no-repeat;  background-size: auto 100%;  padding:0;  background-attachment: fixed;">										
-										{% else %}
-										<div style=" padding:0; margin:0; margin-top:30px;  background-position: 50% 5%; background-image:url({{im.url}});  height:400px;  background-size: cover;  padding:0;  background-attachment: fixed;">
-										{% endif %}
+						{% thumbnail item.source "x700" as im %}
+							<div pos = "{{item.position}}"  class=" col-lg-2 image-content" style = " padding:0;">
+									<div class = "col-lg-12" style = "padding:3px;">
+										
+										<a class=" fancybox-thumb" rel="fancybox-thumb" href="{{im.url}}" style = "width:100%;">
+		
+											<div class = "col-lg-12 card" style = "margin-bottom:2px; padding-top:0; padding-left:0; padding-right:0;">
+												<img style = "border-top-left-radius: 5px; border-top-right-radius: 5px	;" class="img-responsive" src="{{im.url}}" alt="Chania" >
+												<h5 style = "text-align:center; color:black; margin-top:10px;"> {{item.caption}} asfasdfasdfsfd</h5>
+											</div>
+									
+										
+										</a>
+									
 									</div>
-									{% endthumbnail %}
-									</a>
-						</div>
+							</div>
+						{% endthumbnail %}
 						{% endif %}
 					
 			{% endfor %}
